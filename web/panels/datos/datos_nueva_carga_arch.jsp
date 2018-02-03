@@ -1,0 +1,156 @@
+<%-- 
+    Document   : base
+    Created on : 14/11/2016, 10:07:54 AM
+    Author     : D4V3
+--%>
+
+
+<%@page import="java.util.List"%>
+<%@page import="javax.persistence.EntityManager"%>
+<%@page import="javax.persistence.TypedQuery"%>
+<%@page import="com.statics.dao.CampanasJpaController"%>
+<%@page import="com.statics.vo.Campanas"%>
+<%@page import="com.statics.dao.FormatofechasJpaController"%>
+<%@page import="com.statics.vo.Formatofechas"%>
+<%@page import="com.statics.dao.SeparadoresJpaController"%>
+<%@page import="com.statics.vo.Separadores"%>
+<%@page import="com.statics.dao.EstacionesJpaController"%>
+<%@page import="com.statics.vo.Estaciones"%>
+<%@page import="com.statics.vo.Roles"%>
+<%@page import="com.statics.dao.RolesJpaController"%>
+<%@page import="com.statics.dao.RolfuncionalidadJpaController"%>
+<%@page import="com.statics.vo.Rolfuncionalidad"%>
+<%@page import="javax.persistence.Persistence"%>
+<%@page import="javax.persistence.EntityManagerFactory"%>
+<%@page import="com.statics.util.Cadenas"%>
+<%@page import="com.statics.vo.Usuarios"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    try {
+        Usuarios user = (Usuarios) session.getAttribute("usuarioVO");
+        if (user != null && user.getUsuaId() != null) {
+            Cadenas o = new Cadenas(request);
+            String rfid = o.getvariable("rfid");
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory("RPU");
+
+
+%>
+<!-- begin breadcrumb -->
+<ol class="breadcrumb pull-right">
+    <li>Inicio</li>
+    <li>Datos</li>
+    <li class="active">Nueva carga</li>
+</ol>
+<!-- end breadcrumb -->
+<!-- begin page-header -->
+<h1 class="page-header">Nueva carga paso 2</h1>
+<!-- end page-header -->
+
+<div class="panel panel-inverse">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+        </div>
+        <h2 class="panel-title">&zwj;</h2>
+    </div>
+    <form id="FormAplication" action="Login" method="POST" class="margin-bottom-0" data-parsley-validate="true">
+        <div class="panel-body">
+            <div id="myId" class="row">
+                <form enctype="multipart/form-data">
+                    <input name="file_name" type="file" required  />
+                    <input id="btnUpload" type="button" value="Upload_File"  />
+                </form>
+                <progress></progress>
+            </div> 
+        </div> 
+
+        <div class="modal-footer">
+            <div>
+                <input type="hidden" name="modulo" value="1"/>
+                <input type="hidden" name="rfid" value="<%=rfid%>"/>
+               
+                <button type="button"  onclick="RecargaPanel('panels/datos/datos_nueva_carga.jsp?rfid=<%=rfid%>', 'content')" class="pull-right btn btn-default m-r-5 m-b-5">Atras</button>
+
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+
+
+
+    $(':file').change(function () {
+        var file = this.files[0];
+        var fileName = file.name;
+        var fileSize = file.size;
+        var fileType = file.type;
+        console.log('type-->' + file.type)
+        //Add validation code here
+    });
+
+
+
+    $('#btnUpload').click(function () {
+        var formData = new FormData($('form')[0]);
+        $.ajax({
+            url: 'car_arc.jsp',
+            type: 'POST',
+            xhr: function () {  // Custom XMLHttpRequest
+                var myXhr = $.ajaxSettings.xhr();
+                if (myXhr.upload) { // Check if upload property exists
+                    myXhr.upload.addEventListener('progress', progressHandlingFunction, false);
+                    // For handling the progress of the upload
+                }
+                return myXhr;
+            },
+            //Ajax events
+//        beforeSend: beforeSendHandler,
+            success: function (e) {
+                eval(e.trim())
+
+            },
+            error: function (e) {
+                alert(e);
+
+            },
+            // Form data
+            data: formData,
+            //Options to tell jQuery not to process data or worry about content-type.
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    });
+
+
+
+
+    function progressHandlingFunction(e) {
+        if (e.lengthComputable) {
+            $('progress').attr({value: e.loaded, max: e.total});
+        }
+    }
+
+    function cargaOK() {
+alerta('OK','¡Cargado con exito!');  RecargaPanel('panels/datos/datos.jsp?rfid=<%=o.getvariable("rfid")%>','content');
+
+    }
+
+
+
+
+
+</script>
+<%        } else {
+%>
+<script type="text/javascript">
+    location.href = 'logout.jsp';
+</script>
+<%        }
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }%>

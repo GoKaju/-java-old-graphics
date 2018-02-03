@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="RPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>com.statics.vo.GrupoUsuarios</class>
+    <class>com.statics.vo.Estaciones</class>
+    <class>com.statics.vo.Usuariorol</class>
+    <class>com.statics.vo.Grupo</class>
+    <class>com.statics.vo.Estados</class>
+    <class>com.statics.vo.Datos</class>
+    <class>com.statics.vo.TipoEstado</class>
+    <class>com.statics.vo.ParametroLabels</class>
+    <class>com.statics.vo.Rolfuncionalidad</class>
+    <class>com.statics.vo.Parametros</class>
+    <class>com.statics.vo.CaerCampos</class>
+    <class>com.statics.vo.Campanas</class>
+    <class>com.statics.vo.PuntoMuestral</class>
+    <class>com.statics.vo.CargaParametro</class>
+    <class>com.statics.vo.Graficas</class>
+    <class>com.statics.vo.Usuarios</class>
+    <class>com.statics.vo.Cargas</class>
+    <class>com.statics.vo.Formatofechas</class>
+    <class>com.statics.vo.Roles</class>
+    <class>com.statics.vo.Funcionalidades</class>
+    <class>com.statics.vo.CargaErrores</class>
+    <class>com.statics.vo.Separadores</class>
+    <class>com.statics.vo.ParametrizacionApp</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/rstatics?zeroDateTimeBehavior=convertToNull"/>
+      <property name="javax.persistence.jdbc.user" value="graphics"/>
+      <!--<property name="javax.persistence.jdbc.user" value="root"/>-->
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.password" value="gr4ph1cs"/>
+      <!--<property name="javax.persistence.jdbc.password" value=""/>-->
+      <property name="eclipselink.query-results-cache" value="false"/>
+      <property name="eclipselink.refresh" value="true"/>
+    </properties>
+  </persistence-unit>
+</persistence>
