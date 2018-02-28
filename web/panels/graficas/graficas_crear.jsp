@@ -28,28 +28,36 @@
             if (datos != null) {
 %>
 
+<style type="text/css">
+    .c3 svg {
+        width: 100%;
+    }
+</style>
 <div class="panel panel-inverse">
     <div class="panel-heading">
         <div class="panel-heading-btn">
-            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+            <a onclick="resizechart()" href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
             <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
             <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
             <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
         </div>
         <h2 class="panel-title"><%=o.notEmpty(datos.getNombreGraphic())%></h2>
     </div>
-    <div class="panel-body">
+    <div class="panel-body" >
 
-        <div class="row" id="<%=o.getvariable("var")%>" >
+        <div  style="width: 100%" id="<%=o.getvariable("var")%>" >
 
         </div> 
 
-
-    </div>
-
-</div>
-
 <script type="text/javascript">
+    function resizechart() {
+        setTimeout(function () {
+            chart.resize();
+            chart.internal.selectChart.style('max-height', 'none');
+        }, 200);
+
+    }
+
 
     var chart = c3.generate({
         bindto: '#<%=o.getvariable("var")%>',
@@ -86,22 +94,23 @@
 
         }%>
 
-            ],type:'area'
+            ], type: 'area'
         },
         axis: {
             x: {
                 type: 'timeseries',
                 tick: {
-                    format: '%Y-%m-%d %H:%M'
+                    format: '%Y-%m-%d %H:%M',
+                    rotate: 25
                 }
             }
         },
         subchart: {
             show: true
         },
-          zoom: {
-        enabled: true
-    },
+        zoom: {
+            enabled: true
+        },
         point: {
             r: false,
             focus: {
@@ -110,6 +119,7 @@
                 }
             }
         }
+    
     });
 
 

@@ -123,7 +123,7 @@
                     <div class="form-group ">
                         <label>Cargas *</label>
 
-                        <select id="carg_sel" name="carg_sel" class="form-control"  required="" data-parsley-id="7052" multiple="">
+                        <select id="carg_sel" name="carg_sel" style="height: 150px" class=" form-control"  required="" data-parsley-id="7052" multiple="">
 
                         </select>
                         <ul class="parsley-errors-list" id="parsley-id-7052"></ul>
@@ -133,7 +133,7 @@
                     <div class="form-group ">
                         <label>Parametros *</label>
 
-                        <select id="para_sel" name="para_sel" class="form-control"  required="" data-parsley-id="7052" multiple="">
+                        <select id="para_sel" name="para_sel" style="height: 150px" class=" form-control"  required="" data-parsley-id="7052" multiple>
                             <%
                                 TypedQuery<Parametros> consultaPara = em.createNamedQuery("Parametros.findByTipoGraf", Parametros.class);
                                 consultaPara.setParameter("tipo", Constantes.TIPO_GRAFICA_LINEA);
@@ -211,8 +211,10 @@
 
 <div class="row" id="graphiContainer"></div>
 <link href="assets/plugins/bootstrap-datepicker/css/datepicker.css" rel="stylesheet" />
+<!--<link href="assets/plugins/bootstrap-select/bootstrap-select.min.css" rel="stylesheet" />-->
 <script src="assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
 <script src="assets/plugins/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js"></script>
+<!--<script src="assets/plugins/bootstrap-select/bootstrap-select.min.js"></script>-->
 <script>
 
                     $('.datepicker').datepicker({
@@ -220,6 +222,8 @@
                         language: 'es',
                         format: 'dd/mm/yyyy'
                     });
+              
+
 
 
 

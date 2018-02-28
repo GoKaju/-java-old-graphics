@@ -12,7 +12,7 @@ package com.statics.util;
 public class Constantes {
     
   public static final String APPNAME="SICA  ";
-  public static final String APP_DESC="Sistema de información de calidad del aire ";
+  public static final String APP_DESC="Sistema de Información de Calidad del Aire ";
   public static final String TIPO_GRAFICA_LINEA="1";
   public static final String TIPO_GRAFICA_MAPA="2";
     

@@ -53,10 +53,10 @@
                     <img src="assets/img/login-bg/bg-7.jpg" data-id="login-cover-image" alt="" />
                 </div>
                 <div class="news-caption">
-                    <h4 class="caption-title"><i class="fa fa-diamond text-success"></i><%=Constantes.APPNAME%>
+                    <h4 class="caption-title"><i class="fa fa-diamond text-success"></i>  <%=Constantes.APPNAME%>
                         <small><%=Constantes.APP_DESC %></small></h4>
                     <p>
-                        Analisis de Datos Especializado
+                        
                     </p>
                 </div>
             </div>
@@ -70,7 +70,7 @@
                         <small><%=Constantes.APP_DESC %></small>
                     </div>
                     <div class="icon">
-                        <i class="fa fa-sign-in"></i>
+                        <!--<i class="fa fa-sign-in"></i>-->
                     </div>
                 </div>
                 <!-- end login-header -->
@@ -107,7 +107,7 @@
                         </div>-->
                         <hr />
                         <p class="text-center text-inverse">
-                           SICA &copy;
+                        SICA &copy; powered by Ambientalia 
                         </p>
                     </form>
                 </div>
@@ -119,7 +119,7 @@
         <!-- end login -->
         
         <!-- begin theme-panel -->
-        <div class="theme-panel">
+        <div class="theme-panel" hidden="">
             <a href="javascript:;" data-click="theme-panel-expand" class="theme-collapse-btn"><i class="fa fa-cog"></i></a>
             <div class="theme-panel-content">
                 <h5 class="m-t-0">Color </h5>

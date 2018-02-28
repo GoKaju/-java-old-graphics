@@ -43,14 +43,14 @@
 
 <style type="text/css">
     .panelFloatGraf{
-        width: 400px;
+        width: 420px;
        background: rgba(0,0,0,0.7); 
        overflow:hidden;  
        color: white
         
         
     }
-    .graficaDialMap<%=ramdom%>{
+    #graficaDialMap<%=ramdom%>{
       position: fixed;
       top: <%=o.getvariable("ypos") %>px;
     left: <%=o.getvariable("xpos") %>px;    
@@ -61,10 +61,13 @@
         
         
     }
-    
+    svg{
+        width: 390px;
+    }
+    .panel{background: rgba(0,0,0,0.7)}
     
 </style>
-<div  class="panel graficaDialMap<%=ramdom%> panelFloatGraf" style="" >
+<div id="graficaDialMap<%=ramdom%>" class="panel  panelFloatGraf" style="" >
     <div class="panel-heading fixed">
         <div class="panel-heading-btn">
             <a href="javascript:;" class="" data-click="panel-remove"><i style="color: white" class="fa fa-times"></i></a>
@@ -76,18 +79,18 @@
     <div id="scrollSlim<%=ramdom%>">
         
         <div class="panel-body" style="">
-            <div class="row">
+            <div id="accordion<%=ramdom%>" class="row"   >
                 
                <%
                    boolean isFirst = true;
                     for (DataJson.DataUnit dat : datos.getDatos()) {%>
-               <div class="col-md-12 data_header"  >
+               <div class=" panel col-md-12 data_header"  >
                     
-                   <span data-toggle="collapse" style="cursor: pointer" data-target="#collapse<%=dat.hashCode()+ramdom%>"><%=dat.getLabel()%></span>
-                    <i data-toggle="collapse" style="cursor: pointer" data-target="#collapse<%=dat.hashCode()+ramdom%>" class="glyphicon glyphicon glyphicon-chevron-down pull-right"></i>
+                   <span data-parent="#accordion<%=ramdom%>" data-toggle="collapse" style="cursor: pointer" data-target="#collapse<%=dat.hashCode()+ramdom%>"><%=dat.getLabel()%></span>
+                    <i   data-parent="#accordion<%=ramdom%>" data-toggle="collapse" style="cursor: pointer" data-target="#collapse<%=dat.hashCode()+ramdom%>" class="glyphicon glyphicon glyphicon-chevron-down pull-right"></i>
                     
 
-                    <div id="collapse<%=dat.hashCode()+ramdom%>" class="collapse <%=isFirst?"in":"" %>">
+                    <div  id="collapse<%=dat.hashCode()+ramdom%>" class="collapse <%=isFirst?"in":"" %>">
                         <div id="chart<%=dat.hashCode()+ramdom%>" class="height-sm"></div>
                     </div>
                 
@@ -104,10 +107,10 @@
 </div>
 
 <script>
-    $(".graficaDialMap<%=ramdom%>").draggable({
+    $("#graficaDialMap<%=ramdom%>").draggable({
         //containment: "parent"
     });
-    $(".graficaDialMap<%=ramdom%>").resizable({
+    $("#graficaDialMap<%=ramdom%>").resizable({
 //        containment: "parent",
 //        maxHeight: 250,
 //        maxWidth: 350,
@@ -171,10 +174,10 @@ var colors = ['#00FFFF','#00FF00','#fdfe02','#fe00f6','#fe0000','#FF9A00','#45FD
         x: {
             type: 'timeseries',
             tick: {
-                format: ' %d-%m-%y',
+                format: '%Y-%m-%d %H:%M',
                    rotate: 75,
                 multiline: false
-            },
+            }
 //            height: 130
         }
     },

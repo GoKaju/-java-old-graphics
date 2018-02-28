@@ -303,10 +303,12 @@ public class Servlet_graficas extends HttpServlet {
                     datos.setDatos(new ArrayList());
 
                     List<Integer> cargasList = new ArrayList();
-                    for (Cargas carga : pumu.getCargasList()) {
-                        cargasList.add(carga.getCargId());
+                   
+                    if(pumu.getCargasList()!=null &&!pumu.getCargasList().isEmpty()){
+                    int ultima = pumu.getCargasList().get( pumu.getCargasList().size()-1).getCargId();
+                    cargasList.add(ultima);
                     }
-
+                 
                     if (!cargasList.isEmpty() ) {
 
                         TypedQuery<Parametros> consulta = em.createNamedQuery("Parametros.findByCargaParametro", Parametros.class);
@@ -317,7 +319,6 @@ public class Servlet_graficas extends HttpServlet {
 
                         int con = 0;
                         for (Parametros parametro : lista) {
-
                             TypedQuery<CargaParametro> cons = em.createNamedQuery("CargaParametroGrafica1", CargaParametro.class);
                             cons.setParameter("cargas", cargasList);
                             cons.setParameter("para", parametro);
