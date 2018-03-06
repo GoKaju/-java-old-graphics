@@ -46,7 +46,7 @@
 </ol>
 <!-- end breadcrumb -->
 <!-- begin page-header -->
-<h1 class="page-header">Campañas <small><%=index.isEmpty()?"Nueva":"Editar" %> campaña</small></h1>
+<h1 class="page-header">Campañas <small> <%=index.isEmpty()?"Nueva":"Editar" %> campaña</small></h1>
 <!-- end page-header -->
 
 <div class="panel panel-inverse">

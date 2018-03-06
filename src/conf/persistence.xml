@@ -25,14 +25,32 @@
     <class>com.statics.vo.CargaErrores</class>
     <class>com.statics.vo.Separadores</class>
     <class>com.statics.vo.ParametrizacionApp</class>
+    <class>com.statics.vo.Cliente</class>
+    <class>com.statics.vo.ClimaPM</class>
+    <class>com.statics.vo.CriterioMicrolocalizacion</class>
+    <class>com.statics.vo.CriterioPM</class>
+    <class>com.statics.vo.DatosAdcionalesPM</class>
+    <class>com.statics.vo.DatosAdicionalesMicrolocalizacion</class>
+    <class>com.statics.vo.Departamento</class>
+    <class>com.statics.vo.EmisionDominantePM</class>
+    <class>com.statics.vo.FotoPM</class>
+    <class>com.statics.vo.ItemLogistica</class>
+    <class>com.statics.vo.ItemPM</class>
+    <class>com.statics.vo.LogisticaPM</class>
+    <class>com.statics.vo.MacrolocalizacionPM</class>
+    <class>com.statics.vo.MicrolocalizacionPM</class>
+    <class>com.statics.vo.Municipio</class>
+    <class>com.statics.vo.TiempoPM</class>
+    <class>com.statics.vo.TipoAreaPM</class>
+    <class>com.statics.vo.UbicacionPM</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/rstatics?zeroDateTimeBehavior=convertToNull"/>
-      <property name="javax.persistence.jdbc.user" value="graphics"/>
-      <!--<property name="javax.persistence.jdbc.user" value="root"/>-->
+      <!--      <property name="javax.persistence.jdbc.user" value="graphics"/>-->
+      <property name="javax.persistence.jdbc.user" value="root"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
-      <property name="javax.persistence.jdbc.password" value="gr4ph1cs"/>
-      <!--<property name="javax.persistence.jdbc.password" value=""/>-->
+      <!--      <property name="javax.persistence.jdbc.password" value="gr4ph1cs"/>-->
+      <property name="javax.persistence.jdbc.password" value=""/>
       <property name="eclipselink.query-results-cache" value="false"/>
       <property name="eclipselink.refresh" value="true"/>
     </properties>

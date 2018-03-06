@@ -12,6 +12,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,6 +21,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -47,37 +49,64 @@ import org.eclipse.persistence.annotations.Cache;
     , @NamedQuery(name = "PuntoMuestral.findByPumuFechacambio", query = "SELECT p FROM PuntoMuestral p WHERE p.pumuFechacambio = :pumuFechacambio")})
 public class PuntoMuestral implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    @JoinColumn(name = "id_macrolocalizacion", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private MacrolocalizacionPm idMacrolocalizacion;
+    @JoinColumn(name = "id_microlocalizacion", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private MicrolocalizacionPm idMicrolocalizacion;
+    @JoinColumn(name = "id_ubicacion", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private UbicacionPm idUbicacion;
+    @JoinColumn(name = "id_cliente", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Cliente idCliente;
+    @JoinColumn(name = "id_logistica", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private LogisticaPm idLogistica;
+    @OneToMany(mappedBy = "idPunto", fetch = FetchType.LAZY)
+    private List<FotoPuntomuestral> fotoPuntomuestralList;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "pumu_id")
     private Integer pumuId;
+    
     @Column(name = "pumu_nombre")
     private String pumuNombre;
+    
     @Column(name = "pumu_descripcion")
     private String pumuDescripcion;
+    
     @Column(name = "pumu_long")
     private String pumuLong;
+    
     @Column(name = "pumu_lat")
     private String pumuLat;
+    
     @Column(name = "pumu_fechainicial")
     @Temporal(TemporalType.TIMESTAMP)
     private Date pumuFechainicial;
+    
     @Column(name = "pumu_registradopor")
     private Integer pumuRegistradopor;
+    
     @Column(name = "pumu_fechacambio")
     @Temporal(TemporalType.TIMESTAMP)
     private Date pumuFechacambio;
+    
     @JoinColumn(name = "esta_id", referencedColumnName = "esta_id")
     @ManyToOne
     private Estaciones estaId;
+    
     @JoinColumn(name = "camp_id", referencedColumnName = "camp_id")
     @ManyToOne
     private Campanas campId;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pumuId")
     private List<Cargas> cargasList;
-
+    
     public PuntoMuestral() {
     }
 
@@ -197,6 +226,54 @@ public class PuntoMuestral implements Serializable {
     @Override
     public String toString() {
         return "com.statics.vo.PuntoMuestral[ pumuId=" + pumuId + " ]";
+    }    
+
+    public MacrolocalizacionPm getIdMacrolocalizacion() {
+        return idMacrolocalizacion;
     }
-    
+
+    public void setIdMacrolocalizacion(MacrolocalizacionPm idMacrolocalizacion) {
+        this.idMacrolocalizacion = idMacrolocalizacion;
+    }
+
+    public MicrolocalizacionPm getIdMicrolocalizacion() {
+        return idMicrolocalizacion;
+    }
+
+    public void setIdMicrolocalizacion(MicrolocalizacionPm idMicrolocalizacion) {
+        this.idMicrolocalizacion = idMicrolocalizacion;
+    }
+
+    public UbicacionPm getIdUbicacion() {
+        return idUbicacion;
+    }
+
+    public void setIdUbicacion(UbicacionPm idUbicacion) {
+        this.idUbicacion = idUbicacion;
+    }
+
+    public Cliente getIdCliente() {
+        return idCliente;
+    }
+
+    public void setIdCliente(Cliente idCliente) {
+        this.idCliente = idCliente;
+    }
+
+    public LogisticaPm getIdLogistica() {
+        return idLogistica;
+    }
+
+    public void setIdLogistica(LogisticaPm idLogistica) {
+        this.idLogistica = idLogistica;
+    }
+
+    @XmlTransient
+    public List<FotoPuntomuestral> getFotoPuntomuestralList() {
+        return fotoPuntomuestralList;
+    }
+
+    public void setFotoPuntomuestralList(List<FotoPuntomuestral> fotoPuntomuestralList) {
+        this.fotoPuntomuestralList = fotoPuntomuestralList;
+    }
 }
