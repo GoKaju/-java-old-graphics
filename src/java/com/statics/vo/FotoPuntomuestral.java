@@ -19,7 +19,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.eclipse.persistence.annotations.Cache;
 
 /**
  *
@@ -27,7 +26,6 @@ import org.eclipse.persistence.annotations.Cache;
  */
 @Entity
 @Table(name = "foto_puntomuestral")
-@Cache(expiry = -1)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "FotoPuntomuestral.findAll", query = "SELECT f FROM FotoPuntomuestral f")

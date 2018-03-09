@@ -9,6 +9,7 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,7 +19,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.eclipse.persistence.annotations.Cache;
 
 /**
  *
@@ -26,7 +26,6 @@ import org.eclipse.persistence.annotations.Cache;
  */
 @Entity
 @Table(name = "item_logistica")
-@Cache(expiry = -1)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "ItemLogistica.findAll", query = "SELECT i FROM ItemLogistica i")
@@ -39,17 +38,17 @@ public class ItemLogistica implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Integer id;
-    @Column(name = "respuesta", length = 20)
+    @Column(name = "respuesta")
     private String respuesta;
-    @Column(name = "observacion", length = 100)
+    @Column(name = "observacion")
     private String observacion;
     @JoinColumn(name = "id_item", referencedColumnName = "id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private ItemPm idItem;
     @JoinColumn(name = "id_logistica", referencedColumnName = "id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private LogisticaPm idLogistica;
 
     public ItemLogistica() {
@@ -57,6 +56,13 @@ public class ItemLogistica implements Serializable {
 
     public ItemLogistica(Integer id) {
         this.id = id;
+    }
+
+    public ItemLogistica(String respuesta, String observacion, ItemPm idItem, LogisticaPm idLogistica) {
+        this.respuesta = respuesta;
+        this.observacion = observacion;
+        this.idItem = idItem;
+        this.idLogistica = idLogistica;
     }
 
     public Integer getId() {

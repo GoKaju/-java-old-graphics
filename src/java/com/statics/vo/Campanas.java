@@ -46,6 +46,9 @@ import org.eclipse.persistence.annotations.Cache;
     , @NamedQuery(name = "Campanas.findByCampFechacambio", query = "SELECT c FROM Campanas c WHERE c.campFechacambio = :campFechacambio")})
 public class Campanas implements Serializable {
 
+    @Column(name = "camp_bucket")
+    private String campBucket;
+
     @Basic(optional = false)
     @Column(name = "esta_id")
     private int estaId;
@@ -176,6 +179,14 @@ public class Campanas implements Serializable {
 
     public void setEstaId(int estaId) {
         this.estaId = estaId;
+    }
+
+    public String getCampBucket() {
+        return campBucket;
+    }
+
+    public void setCampBucket(String campBucket) {
+        this.campBucket = campBucket;
     }
     
 }

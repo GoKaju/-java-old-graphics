@@ -19,7 +19,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.eclipse.persistence.annotations.Cache;
 
 /**
  *
@@ -27,7 +26,6 @@ import org.eclipse.persistence.annotations.Cache;
  */
 @Entity
 @Table(name = "criterio_microlocalizacion")
-@Cache(expiry = -1)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "CriterioMicrolocalizacion.findAll", query = "SELECT c FROM CriterioMicrolocalizacion c")
@@ -58,6 +56,13 @@ public class CriterioMicrolocalizacion implements Serializable {
 
     public CriterioMicrolocalizacion(Integer id) {
         this.id = id;
+    }
+
+    public CriterioMicrolocalizacion(Boolean cumpleCriterio, String observacionCriterio, MicrolocalizacionPm idMicrolocalizacion, CriterioPm idCriterio) {
+        this.cumpleCriterio = cumpleCriterio;
+        this.observacionCriterio = observacionCriterio;
+        this.idMicrolocalizacion = idMicrolocalizacion;
+        this.idCriterio = idCriterio;
     }
 
     public Integer getId() {

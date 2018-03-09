@@ -32,6 +32,7 @@ function peticionAjax(ctr, datos) {
 
 }
 
+
 function peticionAjaxConfirm(ctr, datos, msj) {
     bootbox.confirm({
         message: msj,
@@ -89,15 +90,15 @@ function cerrarModal(script) {
 }
 
 
-function RecargaPanel(Url, Panel,callback) {
-   
-if(callback===undefined){
-    $("#" + Panel).load(Url);
-    }else{
-    $("#" + Panel).load(Url,function (){
-            eval(callback);  
-    });
-        
+function RecargaPanel(Url, Panel, callback) {
+
+    if (callback === undefined) {
+        $("#" + Panel).load(Url);
+    } else {
+        $("#" + Panel).load(Url, function () {
+            eval(callback);
+        });
+
     }
 }
 function cadenaAleatoria(length)
@@ -134,31 +135,31 @@ function encodeImageFileAsURL() {
 
 
 var activeModals = [];
-function modalDialog(title,url,data,size) {
-     var next = activeModals.length;
+function modalDialog(title, url, data, size) {
+    var next = activeModals.length;
 //     console.log(next);
-      var dialog;
-                $.ajax({
-                    url: url, // url a cargar en el dialogo
-                    data: data, // datos necesarios para esa url
-                    cache: false
-                })
-                 .done(function (html) {
-                            activeModals[next] = bootbox.dialog({
-                                message: html,
-                                title: title, // titulo del dialogo
-                                size: size===undefined?"large":size, // tamaÃ±o del dialogo (large, small, null)
-                                onEscape: true
-                            });
-                        });
+    var dialog;
+    $.ajax({
+        url: url, // url a cargar en el dialogo
+        data: data, // datos necesarios para esa url
+        cache: false
+    })
+            .done(function (html) {
+                activeModals[next] = bootbox.dialog({
+                    message: html,
+                    title: title, // titulo del dialogo
+                    size: size === undefined ? "large" : size, // tamaÃ±o del dialogo (large, small, null)
+                    onEscape: true
+                });
+            });
 }
-            
+
 function closeModal() {
-    setTimeout(function(){
-  var x =   $(document).find(' div.bootbox.modal.fade.in');
-  $(x[x.length-1]).modal("hide");
-    },1000);
+    setTimeout(function () {
+        var x = $(document).find(' div.bootbox.modal.fade.in');
+        $(x[x.length - 1]).modal("hide");
+    }, 1000);
 }
 function closeModalAll() {
-bootbox.hideAll();
+    bootbox.hideAll();
 }

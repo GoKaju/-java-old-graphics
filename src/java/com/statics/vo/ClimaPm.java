@@ -20,7 +20,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import org.eclipse.persistence.annotations.Cache;
 
 /**
  *
@@ -28,7 +27,6 @@ import org.eclipse.persistence.annotations.Cache;
  */
 @Entity
 @Table(name = "clima_pm")
-@Cache(expiry = -1)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "ClimaPm.findAll", query = "SELECT c FROM ClimaPm c")

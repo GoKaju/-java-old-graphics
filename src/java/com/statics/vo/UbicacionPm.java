@@ -22,7 +22,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import org.eclipse.persistence.annotations.Cache;
 
 /**
  *
@@ -30,7 +29,6 @@ import org.eclipse.persistence.annotations.Cache;
  */
 @Entity
 @Table(name = "ubicacion_pm")
-@Cache(expiry = -1)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "UbicacionPm.findAll", query = "SELECT u FROM UbicacionPm u")
@@ -61,6 +59,13 @@ public class UbicacionPm implements Serializable {
     public UbicacionPm(Integer id) {
         this.id = id;
     }
+
+    public UbicacionPm(String direccion, Departamento idDepartamento, Municipio idMunicipio) {
+        this.direccion = direccion;
+        this.idDepartamento = idDepartamento;
+        this.idMunicipio = idMunicipio;
+    }
+    
 
     public Integer getId() {
         return id;

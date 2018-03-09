@@ -12,7 +12,6 @@
     <class>com.statics.vo.ParametroLabels</class>
     <class>com.statics.vo.Rolfuncionalidad</class>
     <class>com.statics.vo.Parametros</class>
-    <class>com.statics.vo.CaerCampos</class>
     <class>com.statics.vo.Campanas</class>
     <class>com.statics.vo.PuntoMuestral</class>
     <class>com.statics.vo.CargaParametro</class>
@@ -43,6 +42,21 @@
     <class>com.statics.vo.TiempoPM</class>
     <class>com.statics.vo.TipoAreaPM</class>
     <class>com.statics.vo.UbicacionPM</class>
+    <class>com.statics.vo.MicrolocalizacionPm</class>
+    <class>com.statics.vo.Ruta</class>
+    <class>com.statics.vo.CriterioPm</class>
+    <class>com.statics.vo.ItemPm</class>
+    <class>com.statics.vo.MacrolocalizacionPm</class>
+    <class>com.statics.vo.TiempoPm</class>
+    <class>com.statics.vo.EmisionDominantePm</class>
+    <class>com.statics.vo.FotoPuntomuestral</class>
+    <class>com.statics.vo.UbicacionPm</class>
+    <class>com.statics.vo.LogisticaPm</class>
+    <class>com.statics.vo.TipoAreaPm</class>
+    <class>com.statics.vo.DatosAdicionalesPm</class>
+    <class>com.statics.vo.DatosadicionalesMicrolocalizacion</class>
+    <class>com.statics.vo.ClimaPm</class>
+    <class>com.statics.vo.Products</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/rstatics?zeroDateTimeBehavior=convertToNull"/>

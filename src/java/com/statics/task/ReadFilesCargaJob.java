@@ -53,16 +53,16 @@ public class ReadFilesCargaJob implements Runnable {
                                 diasBusqueda = Integer.parseInt(app.getPaapValor());
                                 diasBusqueda--;
                             } catch (Exception e) {
-                                System.out.println("ERROR:: --> no se pudo convertir a int el valor del parametro id=2 ");
+                               // System.out.println("ERROR:: --> no se pudo convertir a int el valor del parametro id=2 ");
                             }
 
                         }
 
                         for (int i = diasBusqueda; i >= 0; i--) {
                             String nombre_arc = Fechas.DevuelveFormato(Fechas.subtractDays(Fechas.getFechaHora(), i), "yyyyMMdd");
-                            System.out.println("####--> " + pumu.getPumuNombre() + " ::dia-->" + nombre_arc);
-                            System.out.println("### RFC_JOB INFO ::" + nombre_job + ":: --> ruta lectura: " + ruta);
-                            System.out.println("### RFC_JOB INFO ::" + nombre_job + ":: -->archivo xml: " + nombre_arc);
+                            //System.out.println("####--> " + pumu.getPumuNombre() + " ::dia-->" + nombre_arc);
+                            //System.out.println("### RFC_JOB INFO ::" + nombre_job + ":: --> ruta lectura: " + ruta);
+                            //System.out.println("### RFC_JOB INFO ::" + nombre_job + ":: -->archivo xml: " + nombre_arc);
                             File file = new File(ruta + nombre_arc + ".xml");
 
                             if (file.exists()) {
@@ -99,24 +99,24 @@ public class ReadFilesCargaJob implements Runnable {
                                 XMLReaderDOM.LeerXmlCarga(file, carga, emf);
 
                             } else {
-                                System.out.println("### RFC_JOB INFO ::" + nombre_job + ":: --> No se encontro el archivo :: " + ruta + nombre_arc + ".xml");
+                                //System.out.println("### RFC_JOB INFO ::" + nombre_job + ":: --> No se encontro el archivo :: " + ruta + nombre_arc + ".xml");
 
                             }
                         }
                     }
                 }
             } else {
-                System.out.println("### RFC_JOB INFO ::" + nombre_job + ":: --> No hay campañas activas");
+                //System.out.println("### RFC_JOB INFO ::" + nombre_job + ":: --> No hay campañas activas");
 
             }
 
         } catch (Exception ex) {
-            System.out.println("### RFC_JOB ERROR ::" + nombre_job + ":: -->" + Fechas.getFechaHoraTimeStamp());
+           // System.out.println("### RFC_JOB ERROR ::" + nombre_job + ":: -->" + Fechas.getFechaHoraTimeStamp());
             ex.printStackTrace();
         } finally {
 
-            System.out.println("### RFC_JOB END ::" + nombre_job + ":: -->" + Fechas.getFechaHoraTimeStamp());
-            System.out.flush();
+           // System.out.println("### RFC_JOB END ::" + nombre_job + ":: -->" + Fechas.getFechaHoraTimeStamp());
+           // System.out.flush();
             em.close();
         }
     }

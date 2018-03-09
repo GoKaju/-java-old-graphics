@@ -21,7 +21,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import org.eclipse.persistence.annotations.Cache;
 
 /**
  *
@@ -29,7 +28,6 @@ import org.eclipse.persistence.annotations.Cache;
  */
 @Entity
 @Table(name = "datos_adicionales_pm")
-@Cache(expiry = -1)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "DatosAdicionalesPm.findAll", query = "SELECT d FROM DatosAdicionalesPm d")
@@ -53,7 +51,7 @@ public class DatosAdicionalesPm implements Serializable {
     @Column(name = "nombre_apellido")
     private String nombreApellido;
     @Column(name = "celular")
-    private BigInteger celular;
+    private Long celular;
     @Column(name = "fijo")
     private Integer fijo;
     @Column(name = "email")
@@ -68,6 +66,15 @@ public class DatosAdicionalesPm implements Serializable {
 
     public DatosAdicionalesPm(Integer id) {
         this.id = id;
+    }
+
+    public DatosAdicionalesPm(String decripcion, String nombreApellido, Long celular, Integer fijo, String email, String otros) {
+        this.decripcion = decripcion;
+        this.nombreApellido = nombreApellido;
+        this.celular = celular;
+        this.fijo = fijo;
+        this.email = email;
+        this.otros = otros;
     }
 
     public Integer getId() {
@@ -94,11 +101,11 @@ public class DatosAdicionalesPm implements Serializable {
         this.nombreApellido = nombreApellido;
     }
 
-    public BigInteger getCelular() {
+    public Long getCelular() {
         return celular;
     }
 
-    public void setCelular(BigInteger celular) {
+    public void setCelular(Long celular) {
         this.celular = celular;
     }
 

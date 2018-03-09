@@ -20,7 +20,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import org.eclipse.persistence.annotations.Cache;
 
 /**
  *
@@ -28,7 +27,6 @@ import org.eclipse.persistence.annotations.Cache;
  */
 @Entity
 @Table(name = "logistica_pm")
-@Cache(expiry = -1)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "LogisticaPm.findAll", query = "SELECT l FROM LogisticaPm l")
@@ -44,14 +42,20 @@ public class LogisticaPm implements Serializable {
     private Integer id;
     @Column(name = "descripcion_ruta")
     private String descripcionRuta;
-    //@OneToMany(mappedBy = "idLogistica", fetch = FetchType.LAZY)
-    //private List<PuntoMuestral> puntoMuestralList;
+    @OneToMany(mappedBy = "idLogistica", fetch = FetchType.LAZY)
+    private List<PuntoMuestral> puntoMuestralList;
+    @OneToMany(mappedBy = "idLogistica", fetch = FetchType.LAZY)
+    private List<ItemLogistica> itemLogisticaList;
 
     public LogisticaPm() {
     }
 
     public LogisticaPm(Integer id) {
         this.id = id;
+    }
+
+    public LogisticaPm(String descripcionRuta) {
+        this.descripcionRuta = descripcionRuta;
     }
 
     public Integer getId() {
@@ -68,6 +72,24 @@ public class LogisticaPm implements Serializable {
 
     public void setDescripcionRuta(String descripcionRuta) {
         this.descripcionRuta = descripcionRuta;
+    }
+
+    @XmlTransient
+    public List<PuntoMuestral> getPuntoMuestralList() {
+        return puntoMuestralList;
+    }
+
+    public void setPuntoMuestralList(List<PuntoMuestral> puntoMuestralList) {
+        this.puntoMuestralList = puntoMuestralList;
+    }
+
+    @XmlTransient
+    public List<ItemLogistica> getItemLogisticaList() {
+        return itemLogisticaList;
+    }
+
+    public void setItemLogisticaList(List<ItemLogistica> itemLogisticaList) {
+        this.itemLogisticaList = itemLogisticaList;
     }
 
     @Override

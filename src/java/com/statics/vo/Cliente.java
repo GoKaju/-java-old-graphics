@@ -23,7 +23,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import org.eclipse.persistence.annotations.Cache;
 
 /**
  *
@@ -31,7 +30,6 @@ import org.eclipse.persistence.annotations.Cache;
  */
 @Entity
 @Table(name = "cliente")
-@Cache(expiry = -1)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Cliente.findAll", query = "SELECT c FROM Cliente c")
@@ -62,6 +60,12 @@ public class Cliente implements Serializable {
 
     public Cliente(Integer id) {
         this.id = id;
+    }
+
+    public Cliente(String nombre, Integer creadoPor, Date creadoFecha) {
+        this.nombre = nombre;
+        this.creadoPor = creadoPor;
+        this.creadoFecha = creadoFecha;
     }
 
     public Integer getId() {

@@ -19,7 +19,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.eclipse.persistence.annotations.Cache;
 
 /**
  *
@@ -27,7 +26,6 @@ import org.eclipse.persistence.annotations.Cache;
  */
 @Entity
 @Table(name = "datosadicionales_microlocalizacion")
-@Cache(expiry = -1)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "DatosadicionalesMicrolocalizacion.findAll", query = "SELECT d FROM DatosadicionalesMicrolocalizacion d")
@@ -52,6 +50,11 @@ public class DatosadicionalesMicrolocalizacion implements Serializable {
 
     public DatosadicionalesMicrolocalizacion(Integer id) {
         this.id = id;
+    }
+
+    public DatosadicionalesMicrolocalizacion(DatosAdicionalesPm idDatosAdicionales, MicrolocalizacionPm idMicrolocalizacion) {
+        this.idDatosAdicionales = idDatosAdicionales;
+        this.idMicrolocalizacion = idMicrolocalizacion;
     }
 
     public Integer getId() {

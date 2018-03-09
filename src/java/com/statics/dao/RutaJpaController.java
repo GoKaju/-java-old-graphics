@@ -5,8 +5,8 @@
  */
 package com.statics.dao;
 
-import com.statics.dao.exceptions.NonexistentEntityException;
-import com.statics.vo.Graficas;
+import com.statics.carga.exceptions.NonexistentEntityException;
+import com.statics.vo.Ruta;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -18,11 +18,11 @@ import javax.persistence.criteria.Root;
 
 /**
  *
- * @author Usuario
+ * @author FoxHG
  */
-public class GraficasJpaController implements Serializable {
+public class RutaJpaController implements Serializable {
 
-    public GraficasJpaController(EntityManagerFactory emf) {
+    public RutaJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
@@ -31,12 +31,12 @@ public class GraficasJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Graficas graficas) {
+    public void create(Ruta ruta) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            em.persist(graficas);
+            em.persist(ruta);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -45,19 +45,19 @@ public class GraficasJpaController implements Serializable {
         }
     }
 
-    public void edit(Graficas graficas) throws NonexistentEntityException, Exception {
+    public void edit(Ruta ruta) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            graficas = em.merge(graficas);
+            ruta = em.merge(ruta);
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = graficas.getGrafId();
-                if (findGraficas(id) == null) {
-                    throw new NonexistentEntityException("The graficas with id " + id + " no longer exists.");
+                Integer id = ruta.getId();
+                if (findRuta(id) == null) {
+                    throw new NonexistentEntityException("The ruta with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -73,14 +73,14 @@ public class GraficasJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Graficas graficas;
+            Ruta ruta;
             try {
-                graficas = em.getReference(Graficas.class, id);
-                graficas.getGrafId();
+                ruta = em.getReference(Ruta.class, id);
+                ruta.getId();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The graficas with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The ruta with id " + id + " no longer exists.", enfe);
             }
-            em.remove(graficas);
+            em.remove(ruta);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -89,19 +89,19 @@ public class GraficasJpaController implements Serializable {
         }
     }
 
-    public List<Graficas> findGraficasEntities() {
-        return findGraficasEntities(true, -1, -1);
+    public List<Ruta> findRutaEntities() {
+        return findRutaEntities(true, -1, -1);
     }
 
-    public List<Graficas> findGraficasEntities(int maxResults, int firstResult) {
-        return findGraficasEntities(false, maxResults, firstResult);
+    public List<Ruta> findRutaEntities(int maxResults, int firstResult) {
+        return findRutaEntities(false, maxResults, firstResult);
     }
 
-    private List<Graficas> findGraficasEntities(boolean all, int maxResults, int firstResult) {
+    private List<Ruta> findRutaEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Graficas.class));
+            cq.select(cq.from(Ruta.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -113,20 +113,20 @@ public class GraficasJpaController implements Serializable {
         }
     }
 
-    public Graficas findGraficas(Integer id) {
+    public Ruta findRuta(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Graficas.class, id);
+            return em.find(Ruta.class, id);
         } finally {
             em.close();
         }
     }
 
-    public int getGraficasCount() {
+    public int getRutaCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Graficas> rt = cq.from(Graficas.class);
+            Root<Ruta> rt = cq.from(Ruta.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();

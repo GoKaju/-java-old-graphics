@@ -6,6 +6,7 @@
 package com.statics.vo;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -18,9 +19,10 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import org.eclipse.persistence.annotations.Cache;
 
 /**
  *
@@ -28,11 +30,11 @@ import org.eclipse.persistence.annotations.Cache;
  */
 @Entity
 @Table(name = "microlocalizacion_pm")
-@Cache(expiry = -1)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "MicrolocalizacionPm.findAll", query = "SELECT m FROM MicrolocalizacionPm m")
-    , @NamedQuery(name = "MicrolocalizacionPm.findById", query = "SELECT m FROM MicrolocalizacionPm m WHERE m.id = :id")})
+    , @NamedQuery(name = "MicrolocalizacionPm.findById", query = "SELECT m FROM MicrolocalizacionPm m WHERE m.id = :id")
+    , @NamedQuery(name = "MicrolocalizacionPm.findByFechaCreado", query = "SELECT m FROM MicrolocalizacionPm m WHERE m.fechaCreado = :fechaCreado")})
 public class MicrolocalizacionPm implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -41,6 +43,9 @@ public class MicrolocalizacionPm implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @Column(name = "fechaCreado")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaCreado;
     @OneToMany(mappedBy = "idMicrolocalizacion", fetch = FetchType.LAZY)
     private List<PuntoMuestral> puntoMuestralList;
     @OneToMany(mappedBy = "idMicrolocalizacion", fetch = FetchType.LAZY)
@@ -55,12 +60,24 @@ public class MicrolocalizacionPm implements Serializable {
         this.id = id;
     }
 
+    public MicrolocalizacionPm(Date fechaCreado) {
+        this.fechaCreado = fechaCreado;
+    }
+
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Date getFechaCreado() {
+        return fechaCreado;
+    }
+
+    public void setFechaCreado(Date fechaCreado) {
+        this.fechaCreado = fechaCreado;
     }
 
     @XmlTransient

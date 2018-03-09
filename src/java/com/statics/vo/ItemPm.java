@@ -20,7 +20,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import org.eclipse.persistence.annotations.Cache;
 
 /**
  *
@@ -28,7 +27,6 @@ import org.eclipse.persistence.annotations.Cache;
  */
 @Entity
 @Table(name = "item_pm")
-@Cache(expiry = -1)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "ItemPm.findAll", query = "SELECT i FROM ItemPm i")
@@ -47,6 +45,8 @@ public class ItemPm implements Serializable {
     private String nombre;
     @Column(name = "descripcion")
     private String descripcion;
+    @OneToMany(mappedBy = "idItem", fetch = FetchType.LAZY)
+    private List<ItemLogistica> itemLogisticaList;
 
     public ItemPm() {
     }
@@ -77,6 +77,15 @@ public class ItemPm implements Serializable {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    @XmlTransient
+    public List<ItemLogistica> getItemLogisticaList() {
+        return itemLogisticaList;
+    }
+
+    public void setItemLogisticaList(List<ItemLogistica> itemLogisticaList) {
+        this.itemLogisticaList = itemLogisticaList;
     }
 
     @Override

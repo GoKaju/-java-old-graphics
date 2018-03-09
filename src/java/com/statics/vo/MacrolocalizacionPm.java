@@ -6,7 +6,6 @@
 package com.statics.vo;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -21,11 +20,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import org.eclipse.persistence.annotations.Cache;
 
 /**
  *
@@ -33,7 +29,6 @@ import org.eclipse.persistence.annotations.Cache;
  */
 @Entity
 @Table(name = "macrolocalizacion_pm")
-@Cache(expiry = -1)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "MacrolocalizacionPm.findAll", query = "SELECT m FROM MacrolocalizacionPm m")
@@ -83,8 +78,7 @@ public class MacrolocalizacionPm implements Serializable {
     @Column(name = "estado_via")
     private String estadoVia;
     @Column(name = "tiempo_muestreo")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date tiempoMuestreo;
+    private Integer tiempoMuestreo;
     @Column(name = "tipo")
     private String tipo;
     @Column(name = "distancia_fuente")
@@ -125,6 +119,32 @@ public class MacrolocalizacionPm implements Serializable {
 
     public MacrolocalizacionPm(Integer id) {
         this.id = id;
+    }
+
+    public MacrolocalizacionPm(String observacionEmisionDominante, Double distanciaAlBorde, Double anchoVia, Boolean traficoDiario1, Boolean traficoDiario2, Double velocidadPromedio, Integer porcentajeVehiculosPesados, String estadoVia, Integer tiempoMuestreo, String tipo, Double distanciaFuente, String direccionGrados, String fuenteEvaluada, Boolean encajonada, Boolean libre, String observacionPuntoCritico, String ciudadesCercanas, String regionales, String observacionesRuralesFondo, TipoAreaPm idTipoArea, TiempoPm idTiempo, EmisionDominantePm idEmisionDominante, ClimaPm idClima) {
+        this.observacionEmisionDominante = observacionEmisionDominante;
+        this.distanciaAlBorde = distanciaAlBorde;
+        this.anchoVia = anchoVia;
+        this.traficoDiario1 = traficoDiario1;
+        this.traficoDiario2 = traficoDiario2;
+        this.velocidadPromedio = velocidadPromedio;
+        this.porcentajeVehiculosPesados = porcentajeVehiculosPesados;
+        this.estadoVia = estadoVia;
+        this.tiempoMuestreo = tiempoMuestreo;
+        this.tipo = tipo;
+        this.distanciaFuente = distanciaFuente;
+        this.direccionGrados = direccionGrados;
+        this.fuenteEvaluada = fuenteEvaluada;
+        this.encajonada = encajonada;
+        this.libre = libre;
+        this.observacionPuntoCritico = observacionPuntoCritico;
+        this.ciudadesCercanas = ciudadesCercanas;
+        this.regionales = regionales;
+        this.observacionesRuralesFondo = observacionesRuralesFondo;
+        this.idTipoArea = idTipoArea;
+        this.idTiempo = idTiempo;
+        this.idEmisionDominante = idEmisionDominante;
+        this.idClima = idClima;
     }
 
     public Integer getId() {
@@ -199,11 +219,11 @@ public class MacrolocalizacionPm implements Serializable {
         this.estadoVia = estadoVia;
     }
 
-    public Date getTiempoMuestreo() {
+    public Integer getTiempoMuestreo() {
         return tiempoMuestreo;
     }
 
-    public void setTiempoMuestreo(Date tiempoMuestreo) {
+    public void setTiempoMuestreo(Integer tiempoMuestreo) {
         this.tiempoMuestreo = tiempoMuestreo;
     }
 

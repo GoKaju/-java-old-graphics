@@ -5,6 +5,12 @@
 --%>
 
 
+<%@page import="com.statics.dao.CriterioPmJpaController"%>
+<%@page import="com.statics.vo.CriterioPm"%>
+<%@page import="com.statics.dao.ItemPmJpaController"%>
+<%@page import="com.statics.vo.ItemPm"%>
+<%@page import="com.statics.dao.ClimaPmJpaController"%>
+<%@page import="com.statics.vo.ClimaPm"%>
 <%@page import="com.statics.dao.EmisionDominantePmJpaController"%>
 <%@page import="com.statics.vo.EmisionDominantePm"%>
 <%@page import="com.statics.dao.TiempoPmJpaController"%>
@@ -53,247 +59,568 @@
                 campana = new CampanasJpaController(emf).findCampanas(Integer.parseInt(campa));
 
             }
-
-
 %>
-<form id="FormModalAplication" action="Login" method="POST" class="margin-bottom-0" data-parsley-validate="true">
+<form id="FormModalAplication" action="Login" method="POST" class="margin-bottom-0" data-parsley-validate="true" enctype="multipart/form-data">
     <div class="panel-body">
-        <div class="row">   
-            <div class="divider"></div>
-            <div class="col-md-4">
-                <div class="form-group ">
-                    <label>Nombre del punto *</label>
-                    <input type="text" name="nombrePunto" placeholder="Nombre del punto" 
-                           class="form-control " value="<%=elem.getPumuId() != null ? elem.getPumuNombre() : ""%>"  
-                           required="" data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Datos basicos</a>
+                    </h4>
+                </div>
+                <div id="collapse1" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div class="divider"></div>
+                        <div class="col-md-4">
+                            <div class="form-group ">
+                                <label>Nombre del punto *</label>
+                                <input type="text" name="nombrePunto" placeholder="Nombre del punto" 
+                                       class="form-control " value="<%=elem.getPumuId() != null ? elem.getPumuNombre() : ""%>"  
+                                       required="" data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group ">
+                                <label>Cliente *</label>
+                                <input type="text" name="cliente" placeholder="Cliente" 
+                                       class="form-control " value="<%=elem.getPumuId() != null ? elem.getPumuNombre() : ""%>"  
+                                       required="" data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group ">
+                                <label>Estacion *</label>
+                                <select name="estacion" class="form-control"  required="" data-parsley-id="7052">
+                                    <%
+                                        for (Estaciones s : new EstacionesJpaController(emf).findEstacionesEntities()) {
+                                            String sel = "";
+                                            if (elem.getPumuId() != null && elem.getEstaId().equals(s)) {
+                                                sel = "selected";
+                                            }
+                                    %>
+                                    <option <%=sel%> value="<%= s.getEstaId()%>" title=""><%=o.notEmpty(s.getEstaNombre())%></option>
+                                    <%}
+                                    %>
+                                </select>
+                                <ul class="parsley-errors-list" id="parsley-id-7052"></ul>
+                            </div>
+                        </div> 
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Descripción del punto</label>
+                                <textarea class="form-control" type="text" name="descripcionPunto"
+                                          placeholder="Descripción"></textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-8">
-                <div class="form-group ">
-                    <label>Cliente *</label>
-                    <input type="text" name="cliente" placeholder="Cliente" 
-                           class="form-control " value="<%=elem.getPumuId() != null ? elem.getPumuNombre() : ""%>"  
-                           required="" data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Ubicacion del punto</a>
+                    </h4>
+                </div>
+                <div id="collapse2" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Departamento</label>
+                                <select class="form-control" name="departamento">
+                                    <%
+                                        for (Departamento m : new DepartamentoJpaController(emf).findDepartamentoEntities()) {
+                                            String sel = "";
+                                            if (elem.getPumuId() != null && elem.getIdUbicacion().getIdMunicipio().equals(m)) {
+                                                sel = "selected";
+                                            }
+                                    %>
+                                    <option <%=sel%> value="<%= m.getId()%>"><%= o.notEmpty(m.getNombre())%></option>
+                                    <%
+                                        }
+                                    %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Municipio</label>
+                                <select class="form-control" name="municipio" >
+                                    <%
+                                        for (Municipio m : new MunicipioJpaController(emf).findMunicipioEntities()) {
+                                            String sel = "";
+                                            if (elem.getPumuId() != null && elem.getIdUbicacion().getIdMunicipio().equals(m)) {
+                                                sel = "selected";
+                                            }
+                                    %>
+                                    <option <%=sel%> value="<%= m.getId()%>"><%=o.notEmpty(m.getNombre())%></option>
+                                    <%
+                                        }
+                                    %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Dirección</label>
+                                <input class="form-control" type="text" name="direccion"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group ">
+                                <label>Coordenadas * <i class="glyphicon glyphicon-question-sign info" onclick="alertaCoordenadas()"></i></label>
+                                <input type="text" name="longitud" placeholder="Longitud" class="form-control " value="<%=elem.getPumuId() != null ? elem.getPumuLong() : ""%>"  data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group ">
+                                <label><i class="glyphicon glyphicon-question-sign info" onclick="alertaCoordenadas()"></i></label>
+                                <input type="text" name="latitud" placeholder="Latitud" class="form-control " value="<%=elem.getPumuId() != null ? elem.getPumuLat() : ""%>"  data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label>Descripción del punto</label>
-                    <textarea class="form-control" type="text" name="descripcion"
-                              placeholder="Descripción"></textarea>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Fotos del punto</a>
+                    </h4>
+                </div>
+                <div id="collapse3" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="row col-md-12">
+                            <div class="col-md-4">
+                                <label>Foto1</label>
+                                <div class="input-group">
+                                    <label class="input-group-btn">
+                                        <span class="btn btn-default">
+                                            Examinar&hellip; <input type="file" style="display:none" id="fileImg1" onchange="readURL(this)" name="img1"/>
+                                        </span>
+                                    </label>
+                                    <input type="text" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <img class="fileImg1" src="" alt="No image here" />
+                            </div>
+                        </div>
+                        <div class="row col-md-12">
+                            <div class="col-md-4">
+                                <label>Foto2</label>
+                                <div class="input-group">
+                                    <label class="input-group-btn">
+                                        <span class="btn btn-default">
+                                            Examinar&hellip; <input type="file" style="display:none" id="fileImg2" onchange="readURL(this)" name="img2"/>
+                                        </span>
+                                    </label>
+                                    <input type="text" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <img class="fileImg2" src="" alt="No image here" />
+                            </div>
+                        </div>
+                        <div class="row col-md-12">
+                            <div class="col-md-4">
+                                <label>Foto3</label>
+                                <div class="input-group">
+                                    <label class="input-group-btn">
+                                        <span class="btn btn-default">
+                                            Examinar&hellip; <input type="file" style="display:none" id="fileImg3" onchange="readURL(this)" name="img3"/>
+                                        </span>
+                                    </label>
+                                    <input type="text" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <img class="fileImg3" src="" alt="No image here" />
+                            </div>
+                        </div>
+                        <div class="row col-md-12">
+                            <div class="col-md-4">
+                                <label>Foto4</label>
+                                <div class="input-group">
+                                    <label class="input-group-btn">
+                                        <span class="btn btn-default">
+                                            Examinar&hellip; <input type="file" style="display:none" id="fileImg4" onchange="readURL(this)" name="img4"/>
+                                        </span>
+                                    </label>
+                                    <input type="text" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <img class="fileImg4" src="" alt="No image here" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label>Municipio</label>
-                    <select class="form-control" name="municipio" >
-                        <%
-                            for (Municipio m : new MunicipioJpaController(emf).findMunicipioEntities()) {
-                                String sel = "";
-                                if (elem.getPumuId() != null && elem.getIdUbicacion().getIdMunicipio().equals(m)) {
-                                    sel = "selected";
-                                }
-                        %>
-                        <option <%=sel%> value="<%=o.notEmpty(m.getNombre().toString())%>"><%=o.notEmpty(m.getNombre())%></option>
-                        <%
-                            }
-                        %>
-                    </select>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">Niveles I a III</a>
+                    </h4>
+                </div>
+                <div id="collapse4" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Tipo de area</label>
+                                <select class="form-control" name="tipoArea">
+                                    <%
+                                        for (TipoAreaPm m : new TipoAreaPmJpaController(emf).findTipoAreaPmEntities()) {
+                                            String sel = "";
+                                            if (elem.getPumuId() != null && elem.getIdMacrolocalizacion().getIdTipoArea().equals(m)) {
+                                                sel = "selected";
+                                            }
+                                    %>
+                                    <option <%=sel%> value="<%= m.getId()%>"><%=o.notEmpty(m.getNombre())%></option>
+                                    <%
+                                        }
+                                    %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Tiempo</label>
+                                <select class="form-control" name="tiempo">
+                                    <%
+                                        for (TiempoPm m : new TiempoPmJpaController(emf).findTiempoPmEntities()) {
+                                            String sel = "";
+                                            if (elem.getPumuId() != null && elem.getIdMacrolocalizacion().getIdTiempo().getNombre().equals(m)) {
+                                                sel = "selected";
+                                            }
+                                    %>
+                                    <option <%=sel%> value="<%= m.getId()%>"><%= o.notEmpty(m.getNombre())%></option>
+                                    <%
+                                        }
+                                    %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Emision dominante</label>
+                                <select class="form-control" name="emisionDominante">
+                                    <%
+                                        for (EmisionDominantePm m : new EmisionDominantePmJpaController(emf).findEmisionDominantePmEntities()) {
+                                            String sel = "";
+                                            if (elem.getPumuId() != null && elem.getIdMacrolocalizacion().getIdEmisionDominante().getNombre().equals(m)) {
+                                                sel = "selected";
+                                            }
+                                    %>
+                                    <option <%=sel%> value="<%= m.getId()%>"><%=o.notEmpty(m.getNombre())%></option>
+                                    <%
+                                        }
+                                    %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Observaciones lvl i-iv</label>
+                                <textarea class="form-control" name="observacionesLv1"></textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label>Departamento</label>
-                    <select class="form-control" name="departamento">
-                        <%
-                            for (Departamento m : new DepartamentoJpaController(emf).findDepartamentoEntities()) {
-                                String sel = "";
-                                if (elem.getPumuId() != null && elem.getIdUbicacion().getIdMunicipio().equals(m)) {
-                                    sel = "selected";
-                                }
-                        %>
-                        <option <%=sel%> value="<%=o.notEmpty(m.getNombre().toString())%>"><%=o.notEmpty(m.getNombre())%></option>
-                        <%
-                            }
-                        %>
-                    </select>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse5">Nivel IV</a>
+                    </h4>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Dirección</label>
-                    <input class="form-control" type="text" name="direccion"/>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <label>Foto1</label>
-                <div class="input-group">
-                    <label class="input-group-btn" for="fileImg1">
-                        <span class="btn btn-primary">
-                            Examinar&hellip; <input id="fileImg1" 
-                                                    class="fileInputs" 
-                                                    type="file" 
-                                                    style="display: none;" 
-                                                    accept="image/*"
-                                                    onchange="readURL(event)">
-                        </span>
-                    </label>
-                    <input type="text" class="form-control" readonly>
-                </div>
-            </div>
-            <div class="col-md-8">
-                <div class="fileImg1" src="" alt="No image here"></div>
-            </div>
-            <div class="col-md-12">
-                <label for="fileImg2">Foto2</label>
-                <input id="fileImg2" type="file" class="btn btn-default" value="Subir" name="foto2" accept="image/*"/>
-                <div clas="img1"></div>
-            </div>
-            <div class="col-md-12">
-                <label>Foto3</label>
-                <input type="file" class="btn btn-default" value="Subir" name="foto3"/>
-                <div clas="img1"></div>
-            </div>
-            <div class="col-md-12">
-                <label>Foto4</label>
-                <input type="file" class="btn btn-default" value="Subir" name="foto4"/>
-                <div clas="img1"></div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label>Tipo de area</label>
-                    <select class="form-control" name="tipoArea">
-                        <%
-                            for (TipoAreaPm m : new TipoAreaPmJpaController(emf).findTipoAreaPmEntities()) {
-                                String sel = "";
-                                if (elem.getPumuId() != null && elem.getIdMacrolocalizacion().getIdTipoArea().equals(m)) {
-                                    sel = "selected";
-                                }
-                        %>
-                        <option <%=sel%> value="<%=o.notEmpty(m.getNombre().toString())%>"><%=o.notEmpty(m.getNombre())%></option>
-                        <%
-                            }
-                        %>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label>Tiempo</label>
-                    <select class="form-control" name="tiempo">
-                        <%
-                            for (TiempoPm m : new TiempoPmJpaController(emf).findTiempoPmEntities()) {
-                                String sel = "";
-                                if (elem.getPumuId() != null && elem.getIdMacrolocalizacion().getIdTiempo().getNombre().equals(m)) {
-                                    sel = "selected";
-                                }
-                        %>
-                        <option <%=sel%> value="<%=o.notEmpty(m.getNombre().toString())%>"><%=o.notEmpty(m.getNombre())%></option>
-                        <%
-                            }
-                        %>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label>Emision dominante</label>
-                    <select class="form-control" name="emisionDominante">
-                        <%
-                            for (EmisionDominantePm m : new EmisionDominantePmJpaController(emf).findEmisionDominantePmEntities()) {
-                                String sel = "";
-                                if (elem.getPumuId() != null && elem.getIdMacrolocalizacion().getIdEmisionDominante().getNombre().equals(m)) {
-                                    sel = "selected";
-                                }
-                        %>
-                        <option <%=sel%> value="<%=o.notEmpty(m.getNombre().toString())%>"><%=o.notEmpty(m.getNombre())%></option>
-                        <%
-                            }
-                        %>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label>Observaciones lvl i-iv</label>
-                    <textarea class="form-control" name="obslvl1"></textarea>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label>Distancia al borde</label>
-                    <input type="number" class="form-control" name="distanciaBorde" placeholder="Kms"/>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label>Ancho vía</label>
-                    <input type="number" class="form-control" name="anchoVia" placeholder="Mts"/>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label>Velocidad promedio</label>
-                    <input type="number" class="form-control" name="velocidadPromedio" placeholder="Kms/h"/>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <!--<label>Sentidos de trafico</label>-->
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" name="sentidoUno"> Trafico sentido 1
-                    </label>
-                    <label>
-                        <input type="checkbox" name="sentidoDos"> Trafico sentido 2
-                    </label>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group ">
-                    <label>Estacion  *</label>
-                    <select name="Estacion" class="form-control"  required="" data-parsley-id="7052">
-                        <%
-                            for (Estaciones s : new EstacionesJpaController(emf).findEstacionesEntities()) {
-                                String sel = "";
-                                if (elem.getPumuId() != null && elem.getEstaId().equals(s)) {
-                                    sel = "selected";
-                                }
-                        %>
-                        <option <%=sel%> value="<%=o.notEmpty(s.getEstaId().toString())%>" title=""><%=o.notEmpty(s.getEstaNombre())%></option>
-                        <%}
-                        %>
-                    </select>
-                    <ul class="parsley-errors-list" id="parsley-id-7052"></ul>
-                </div>
+                <div id="collapse5" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="panel-group" id="accordion2">
+                            <div class="panel panel-default">
+                                <div class="panel-heading accordionSub">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSub1">Trafico</a>
+                                    </h4>
+                                </div>
+                                <div id="collapseSub1" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Distancia al borde</label>
+                                                <input type="number" class="form-control" name="distanciaBorde" placeholder="Kms"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Ancho vía</label>
+                                                <input type="number" class="form-control" name="anchoVia" placeholder="Mts"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Velocidad promedio</label>
+                                                <input type="number" class="form-control" name="velocidadPromedio" placeholder="Kms/h"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label>Sentidos de trafico</label>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" name="sentidoUno"> Trafico sentido 1
+                                                </label>
+                                                <label>
+                                                    <input type="checkbox" name="sentidoDos"> Trafico sentido 2
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Vehiculos pesados</label>
+                                                <input type="number" class="form-control" name="vehiculosPesados" placeholder="xx%"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Estado de la via</label>
+                                                <input type="text" class="form-control" name="estadoVia" placeholder="via"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading accordionSub">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSub2">Indicativas</a>
+                                    </h4>
+                                </div>
+                                <div id="collapseSub2" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="col-md-6">
+                                            <div class="form-group ">
+                                                <label>Tiempo de muestreo</label>
+                                                <input type="number" name="tiempoMuestreo" placeholder="Días" 
+                                                       class="form-control " value=""  data-parsley-id="7052">
+                                                <ul class="parsley-errors-list" id="parsley-id-7052"></ul>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Clima</label>
+                                                <select class="form-control" name="clima">
+                                                    <%
+                                                        for (ClimaPm c : new ClimaPmJpaController(emf).findClimaPmEntities()) {
+                                                            String selected = "";
+                                                            if (elem.getPumuId() != null && elem.getIdMacrolocalizacion().getIdClima().equals(c)) {
+                                                                selected = "selected";
+                                                            }
+                                                    %>
+                                                    <option <%= selected%> value="<%= c.getId()%>"><%= c.getNombre()%></option>
+                                                    <%
+                                                        }
+                                                    %>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading accordionSub">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSub3">Industrial</a>
+                                    </h4>
+                                </div>
+                                <div id="collapseSub3" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="form-group col-md-4">
+                                            <label>Tipo</label>
+                                            <input class="form-control" type="text" name="tipo" placeholder="Tipo"/>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Distancia de la fuente</label>
+                                            <input class="form-control" type="number" name="distanciaFuente" placeholder="Distancia de la fuente"/>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Direccion grados</label>
+                                            <input class="form-control" type="text" name="direccionGrados" placeholder="Direccion en grados"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading accordionSub">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSub4">Punto critico</a>
+                                    </h4>
+                                </div>
+                                <div id="collapseSub4" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="form-group col-md-9">
+                                            <label>Fuente evaluada</label>
+                                            <input class="form-control" type="text" name="fuenteEvaluada" placeholder="Fuente evaluada"/>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label>Libre o encajonada</label>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" name="calleLibre"/> Libre
+                                                </label>
+                                                <label>
+                                                    <input type="checkbox" name="calleEncajonada"/> Encajonada
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <label>Observacion</label>
+                                            <textarea class="form-control" name="observacionPuntoCritico" placeholder="Observacion"></textarea>
+                                        </div>
+                                    </div> 
+                                </div> 
+                            </div> 
+                            <div class="panel panel-default">
+                                <div class="panel-heading accordionSub">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSub5">Rurales de fondo</a>
+                                    </h4>
+                                </div>
+                                <div id="collapseSub5" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="form-group col-md-6">
+                                            <label>Ciudades cercanas</label>
+                                            <input class="form-control" type="text" name="cercanaCiudades" placeholder="Ciudades cercanas"/>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label>Regionales</label>
+                                            <input class="form-control" type="text" name="regionales" placeholder="Regionales"/>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <label>Observacion</label>
+                                            <textarea class="form-control" name="observacionRuralesFondo" placeholder="Observaciones"></textarea>
+                                        </div>
+                                    </div> 
+                                </div> 
+                            </div> 
+                        </div> 
+                    </div> 
+                </div> 
             </div> 
-            <div class="col-md-3">
-                <div class="form-group ">
-                    <label>Longitud <i class="glyphicon glyphicon-question-sign info" onclick="alertaCoordenadas()"></i></label>
-                    <input type="text" name="Longitud" placeholder="Longitud" class="form-control " value="<%=elem.getPumuId() != null ? elem.getPumuLong() : ""%>"  data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse6">Datos de logistica</a>
+                    </h4>
+                </div>
+                <div id="collapse6" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <%
+                            String rta = "";
+                            String obs = "";
+                            for (ItemPm i : new ItemPmJpaController(emf).findItemPmEntities()) {
+                                rta = "rta" + i.getId();
+                                obs = "obs" + i.getId();
+                        %>
+                        <div class="row">
+                            <div class="col-md-3"><%= i.getNombre()%></div>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" 
+                                       name="<%= rta%>" placeholder="<%= i.getDescripcion()%>"/>
+                            </div>
+                            <div class="col-md-6">
+                                <textarea class="form-control" name="<%= obs%>" rows="2" placeholder="Observacion"></textarea>
+                            </div>
+                        </div>
+                        <hr class="half-rule"/>
+                        <%
+                            }
+                        %>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="form-group ">
-                    <label>Latitud <i class="glyphicon glyphicon-question-sign info" onclick="alertaCoordenadas()"></i></label>
-                    <input type="text" name="Latitud" placeholder="Latitud" class="form-control " value="<%=elem.getPumuId() != null ? elem.getPumuLat() : ""%>"  data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse7">Criterios de microlocalizacion</a>
+                    </h4>
+                </div>
+                <div id="collapse7" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <%
+                            String cumpleCriterio = "";
+                            String obsCriterio = "";
+                            for (CriterioPm i : new CriterioPmJpaController(emf).findCriterioPmEntities()) {
+                                cumpleCriterio = "cumpleCriterio" + i.getId();
+                                obsCriterio = "obsCriterio" + i.getId();
+                        %>
+                        <div class="row">
+                            <div class="col-md-4"><%= i.getNombre()%></div>
+                            <div class="col-md-1">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" 
+                                               data-toggle="toggle" 
+                                               data-size="mini"
+                                               class="toggleCheck"
+                                               data-onstyle="success" 
+                                               name="<%= cumpleCriterio%>">
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <textarea class="form-control" name="<%= obsCriterio%>" 
+                                          rows="2" placeholder="Observacion"></textarea>
+                            </div>
+                        </div>
+                        <hr class="half-rule"/>
+                        <%
+                            }
+                        %>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-12">
-                <div class="form-group ">
-                    <label>Descripcion *</label>
-                    <textarea name="descripcion" class="form-control" placeholder="Descripcion" rows="5" required data-parsley-id="7052"><%=elem.getPumuId() != null ? elem.getPumuDescripcion() : ""%></textarea>
-                    <ul class="parsley-errors-list" id="parsley-id-7052"></ul>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse8">Datos adicionales</a>
+                    </h4>
                 </div>
-            </div>    
-
-
+                <div id="collapse8" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="form-group col-md-2">
+                            <label>Descripcion</label>
+                            <input class="form-control" type="text" name="descripcionDA1">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>Nombres</label>
+                            <input class="form-control" type="text" name="nombresDA1">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>Celular</label>
+                            <input class="form-control" type="text" name="celularDA1">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>Fijo</label>
+                            <input class="form-control" type="text" name="fijoDA1">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>Email</label>
+                            <input class="form-control" type="text" name="emailDA1">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>Otros</label>
+                            <input class="form-control" type="text" name="otrosDA1">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
 
     <div class="modal-footer">
         <div>
+            <input type="hidden" name="cantDatosAdicionales" value="1"/>
             <input type="hidden" name="modulo" value="3"/>
             <input type="hidden" name="rfid" value="<%=rfid%>"/>
             <input type="hidden" name="index" value="<%=index%>"/>
@@ -302,7 +629,6 @@
 
                     if ($('#FormModalAplication').parsley().isValid()) {
                         peticionAjax('Campanas', $('#FormModalAplication').serialize());
-
                     } else {
                         $('#FormModalAplication').submit();
                     }
@@ -312,7 +638,38 @@
         </div>
     </div>
 </form>
-<script type="text/javascript">
+<script>
+
+    function peticionAjaxImagenes() {
+        var img1 = $('#fileImg1')[0].files[0];
+        var img2 = $('#fileImg2')[0].files[0];
+        var img3 = $('#fileImg3')[0].files[0];
+        var img4 = $('#fileImg4')[0].files[0];
+        var form=$('#FormModalAplication')[0];
+        var formData = new FormData(form);
+        console.log(formData);
+        //formData.append('img1', img1);
+        //formData.append('img2', img2);
+        //formData.append('img3', img3);
+        //formData.append('img4', img4);
+        $.ajax({
+            url: 'UploadImages.jsp',
+            type: 'POST',
+            success: function (e) {
+                alerta('OK', '¡Operacion exitosa!');
+                RecargaPanel('panels/campanas/campanas_agregarpm.jsp?rfid=<%=rfid%>&index=<%=index%>#pumuContent','pumuContainer','closeModal()');
+
+                eval(e.trim())
+            },
+            error: function (e) {
+                alert(e);
+            },
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    }
     function alertaCoordenadas() {
 
         bootbox.alert({
@@ -325,16 +682,19 @@
 
         });
     }
-    function readURL(event) {
+
+
+    function readURL(input) {
         var reader = new FileReader();
-        reader.onload = function () {
-            var divImage = $("." + event.target.id);
-            divImage.src = reader.result;
+        reader.onload = function (e) {
+            var divImage = $("." + input.id);
+            console.log(divImage);
+            divImage.attr('src', e.target.result);
         }
-        console.log(event);
-        console.log(divImage);
-        reader.readAsDataURL(event.target.files[0]);
+        reader.readAsDataURL(input.files[0]);
     }
+
+
     $(document).on('change', ':file', function () {
         var input = $(this),
                 numFiles = input.get(0).files ? input.get(0).files.length : 1,
@@ -342,7 +702,6 @@
         input.trigger('fileselect', [numFiles, label]);
     });
 
-    // We can watch for our custom `fileselect` event like this
     $(document).ready(function () {
         $(':file').on('fileselect', function (event, numFiles, label) {
 
@@ -356,6 +715,10 @@
                     alert(log);
             }
 
+        });
+        $('.toggleCheck').bootstrapToggle({
+            on: 'Sí',
+            off: 'No'
         });
     });
 </script>
