@@ -84,7 +84,7 @@
                             <div class="form-group ">
                                 <label>Cliente *</label>
                                 <input type="text" name="cliente" placeholder="Cliente" 
-                                       class="form-control " value="<%=elem.getPumuId() != null ? elem.getPumuNombre() : ""%>"  
+                                       class="form-control " value="<%=elem.getPumuId() != null ? elem.getIdCliente().getNombre() : ""%>"  
                                        required="" data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
                             </div>
                         </div>
@@ -109,8 +109,8 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>Descripción del punto</label>
-                                <textarea class="form-control" type="text" name="descripcionPunto"
-                                          placeholder="Descripción"></textarea>
+                                <textarea class="form-control" type="text" name="descripcionPunto" placeholder="Descripción" 
+                                          ><%=elem.getPumuId() != null ? elem.getPumuDescripcion() : ""%></textarea>
                             </div>
                         </div>
                     </div>
@@ -163,19 +163,24 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Dirección</label>
-                                <input class="form-control" type="text" name="direccion"/>
+                                <input class="form-control" type="text" name="direccion" 
+                                       value="<%=elem.getPumuId() != null ? elem.getIdUbicacion().getDireccion() : ""%>"/>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group ">
                                 <label>Coordenadas * <i class="glyphicon glyphicon-question-sign info" onclick="alertaCoordenadas()"></i></label>
-                                <input type="text" name="longitud" placeholder="Longitud" class="form-control " value="<%=elem.getPumuId() != null ? elem.getPumuLong() : ""%>"  data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
+                                <input type="text" name="longitud" placeholder="Longitud" 
+                                       class="form-control " value="<%=elem.getPumuId() != null ? elem.getPumuLong() : ""%>"  
+                                       data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group ">
                                 <label><i class="glyphicon glyphicon-question-sign info" onclick="alertaCoordenadas()"></i></label>
-                                <input type="text" name="latitud" placeholder="Latitud" class="form-control " value="<%=elem.getPumuId() != null ? elem.getPumuLat() : ""%>"  data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
+                                <input type="text" name="latitud" placeholder="Latitud" class="form-control " 
+                                       value="<%=elem.getPumuId() != null ? elem.getPumuLat() : ""%>"  
+                                       data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
                             </div>
                         </div>
                     </div>
@@ -195,7 +200,9 @@
                                 <div class="input-group">
                                     <label class="input-group-btn">
                                         <span class="btn btn-default">
-                                            Examinar&hellip; <input type="file" style="display:none" id="fileImg1" onchange="readURL(this)" name="img1"/>
+                                            Examinar&hellip; 
+                                            <input type="file" style="display:none" 
+                                                   id="fileImg1" onchange="readURL(this)" name="img1"/>
                                         </span>
                                     </label>
                                     <input type="text" class="form-control" readonly>
@@ -211,7 +218,9 @@
                                 <div class="input-group">
                                     <label class="input-group-btn">
                                         <span class="btn btn-default">
-                                            Examinar&hellip; <input type="file" style="display:none" id="fileImg2" onchange="readURL(this)" name="img2"/>
+                                            Examinar&hellip; 
+                                            <input type="file" style="display:none" 
+                                                   id="fileImg2" onchange="readURL(this)" name="img2"/>
                                         </span>
                                     </label>
                                     <input type="text" class="form-control" readonly>
@@ -227,7 +236,9 @@
                                 <div class="input-group">
                                     <label class="input-group-btn">
                                         <span class="btn btn-default">
-                                            Examinar&hellip; <input type="file" style="display:none" id="fileImg3" onchange="readURL(this)" name="img3"/>
+                                            Examinar&hellip; 
+                                            <input type="file" style="display:none" 
+                                                   id="fileImg3" onchange="readURL(this)" name="img3"/>
                                         </span>
                                     </label>
                                     <input type="text" class="form-control" readonly>
@@ -243,7 +254,9 @@
                                 <div class="input-group">
                                     <label class="input-group-btn">
                                         <span class="btn btn-default">
-                                            Examinar&hellip; <input type="file" style="display:none" id="fileImg4" onchange="readURL(this)" name="img4"/>
+                                            Examinar&hellip; 
+                                            <input type="file" style="display:none" 
+                                                   id="fileImg4" onchange="readURL(this)" name="img4"/>
                                         </span>
                                     </label>
                                     <input type="text" class="form-control" readonly>
@@ -289,7 +302,7 @@
                                     <%
                                         for (TiempoPm m : new TiempoPmJpaController(emf).findTiempoPmEntities()) {
                                             String sel = "";
-                                            if (elem.getPumuId() != null && elem.getIdMacrolocalizacion().getIdTiempo().getNombre().equals(m)) {
+                                            if (elem.getPumuId() != null && elem.getIdMacrolocalizacion().getIdTiempo().equals(m)) {
                                                 sel = "selected";
                                             }
                                     %>
@@ -307,7 +320,7 @@
                                     <%
                                         for (EmisionDominantePm m : new EmisionDominantePmJpaController(emf).findEmisionDominantePmEntities()) {
                                             String sel = "";
-                                            if (elem.getPumuId() != null && elem.getIdMacrolocalizacion().getIdEmisionDominante().getNombre().equals(m)) {
+                                            if (elem.getPumuId() != null && elem.getIdMacrolocalizacion().getIdEmisionDominante().equals(m)) {
                                                 sel = "selected";
                                             }
                                     %>
@@ -321,7 +334,8 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>Observaciones lvl i-iv</label>
-                                <textarea class="form-control" name="observacionesLv1"></textarea>
+                                <textarea class="form-control" name="observacionesLv1"
+                                          ><%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getObservacionEmisionDominante() : ""%></textarea>
                             </div>
                         </div>
                     </div>
@@ -347,42 +361,49 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label>Distancia al borde</label>
-                                                <input type="number" class="form-control" name="distanciaBorde" placeholder="Kms"/>
+                                                <input type="number" class="form-control" name="distanciaBorde" placeholder="Kms" 
+                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getDistanciaAlBorde() : 0%>"/>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label>Ancho vía</label>
-                                                <input type="number" class="form-control" name="anchoVia" placeholder="Mts"/>
+                                                <input type="number" class="form-control" name="anchoVia" placeholder="Mts"
+                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getAnchoVia() : 0%>"/>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label>Velocidad promedio</label>
-                                                <input type="number" class="form-control" name="velocidadPromedio" placeholder="Kms/h"/>
+                                                <input type="number" class="form-control" name="velocidadPromedio" placeholder="Kms/h"
+                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getVelocidadPromedio() : 0%>"/>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
-                                            <label>Sentidos de trafico</label>
+                                            <label> </label>
                                             <div class="checkbox">
                                                 <label>
-                                                    <input type="checkbox" name="sentidoUno"> Trafico sentido 1
-                                                </label>
+                                                    <input type="checkbox" name="sentidoUno" 
+                                                           <%= elem.getPumuId() != null && elem.getIdMacrolocalizacion().getTraficoDiario1() ? "checked" : ""%>> Trafico sentido 1
+                                                </label>   
                                                 <label>
-                                                    <input type="checkbox" name="sentidoDos"> Trafico sentido 2
+                                                    <input type="checkbox" name="sentidoDos"
+                                                           <%= elem.getPumuId() != null && elem.getIdMacrolocalizacion().getTraficoDiario2() ? "checked" : ""%>> Trafico sentido 2
                                                 </label>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label>Vehiculos pesados</label>
-                                                <input type="number" class="form-control" name="vehiculosPesados" placeholder="xx%"/>
+                                                <input type="number" class="form-control" name="vehiculosPesados" placeholder="%"
+                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getPorcentajeVehiculosPesados() : 0%>"/>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label>Estado de la via</label>
-                                                <input type="text" class="form-control" name="estadoVia" placeholder="via"/>
+                                                <input type="text" class="form-control" name="estadoVia" placeholder="via"
+                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getAnchoVia() : ""%>"/>
                                             </div>
                                         </div>
                                     </div>
@@ -400,7 +421,8 @@
                                             <div class="form-group ">
                                                 <label>Tiempo de muestreo</label>
                                                 <input type="number" name="tiempoMuestreo" placeholder="Días" 
-                                                       class="form-control " value=""  data-parsley-id="7052">
+                                                       class="form-control " data-parsley-id="7052"
+                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getTiempoMuestreo() : 0%>">
                                                 <ul class="parsley-errors-list" id="parsley-id-7052"></ul>
                                             </div>
                                         </div>
@@ -435,15 +457,18 @@
                                     <div class="panel-body">
                                         <div class="form-group col-md-4">
                                             <label>Tipo</label>
-                                            <input class="form-control" type="text" name="tipo" placeholder="Tipo"/>
+                                            <input class="form-control" type="text" name="tipo" placeholder="Tipo"
+                                                   value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getTipo() : ""%>"/>
                                         </div>
                                         <div class="form-group col-md-4">
                                             <label>Distancia de la fuente</label>
-                                            <input class="form-control" type="number" name="distanciaFuente" placeholder="Distancia de la fuente"/>
+                                            <input class="form-control" type="number" name="distanciaFuente" placeholder="Distancia de la fuente"
+                                                   value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getDistanciaFuente() : 0%>"/>
                                         </div>
                                         <div class="form-group col-md-4">
                                             <label>Direccion grados</label>
-                                            <input class="form-control" type="text" name="direccionGrados" placeholder="Direccion en grados"/>
+                                            <input class="form-control" type="text" name="direccionGrados" placeholder="Direccion en grados"
+                                                   value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getDireccionGrados() : ""%>"/>
                                         </div>
                                     </div>
                                 </div>
@@ -458,22 +483,29 @@
                                     <div class="panel-body">
                                         <div class="form-group col-md-9">
                                             <label>Fuente evaluada</label>
-                                            <input class="form-control" type="text" name="fuenteEvaluada" placeholder="Fuente evaluada"/>
+                                            <input class="form-control" type="text" name="fuenteEvaluada" placeholder="Fuente evaluada"
+                                                   value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getFuenteEvaluada() : ""%>"/>
                                         </div>
-                                        <div class="form-group col-md-3">
-                                            <label>Libre o encajonada</label>
+                                        <div class="col-md-3">
                                             <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" name="calleLibre"/> Libre
-                                                </label>
-                                                <label>
-                                                    <input type="checkbox" name="calleEncajonada"/> Encajonada
-                                                </label>
+                                                <p>
+                                                    <label>
+                                                        <input type="checkbox" name="calleLibre" 
+                                                               <%= elem.getPumuId() != null && elem.getIdMacrolocalizacion().getLibre() ? "checked" : ""%> > Libre
+                                                    </label>
+                                                </p>
+                                                <p>
+                                                    <label>
+                                                        <input type="checkbox" name="calleEncajonada"
+                                                               <%= elem.getPumuId() != null && elem.getIdMacrolocalizacion().getEncajonada() ? "checked" : ""%>/> Encajonada
+                                                    </label>
+                                                </p>
                                             </div>
                                         </div>
                                         <div class="form-group col-md-12">
                                             <label>Observacion</label>
-                                            <textarea class="form-control" name="observacionPuntoCritico" placeholder="Observacion"></textarea>
+                                            <textarea class="form-control" name="observacionPuntoCritico" placeholder="Observacion"
+                                                      ><%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getObservacionPuntoCritico() : ""%></textarea>
                                         </div>
                                     </div> 
                                 </div> 
@@ -488,15 +520,18 @@
                                     <div class="panel-body">
                                         <div class="form-group col-md-6">
                                             <label>Ciudades cercanas</label>
-                                            <input class="form-control" type="text" name="cercanaCiudades" placeholder="Ciudades cercanas"/>
+                                            <input class="form-control" type="text" name="cercanaCiudades" placeholder="Ciudades cercanas"
+                                                   value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getCiudadesCercanas() : ""%>"/>
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label>Regionales</label>
-                                            <input class="form-control" type="text" name="regionales" placeholder="Regionales"/>
+                                            <input class="form-control" type="text" name="regionales" placeholder="Regionales"
+                                                   value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getRegionales() : ""%>"/>
                                         </div>
                                         <div class="form-group col-md-12">
                                             <label>Observacion</label>
-                                            <textarea class="form-control" name="observacionRuralesFondo" placeholder="Observaciones"></textarea>
+                                            <textarea class="form-control" name="observacionRuralesFondo" placeholder="Observaciones"
+                                                      ><%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getObservacionesRuralesFondo() : ""%></textarea>
                                         </div>
                                     </div> 
                                 </div> 
@@ -523,7 +558,7 @@
                         <div class="row">
                             <div class="col-md-3"><%= i.getNombre()%></div>
                             <div class="col-md-3">
-                                <input class="form-control" type="text" 
+                                <input class="form-control" type="text" value=""
                                        name="<%= rta%>" placeholder="<%= i.getDescripcion()%>"/>
                             </div>
                             <div class="col-md-6">
@@ -615,9 +650,7 @@
                 </div>
             </div>
         </div>
-
     </div>
-
     <div class="modal-footer">
         <div>
             <input type="hidden" name="cantDatosAdicionales" value="1"/>
@@ -645,19 +678,14 @@
         var img2 = $('#fileImg2')[0].files[0];
         var img3 = $('#fileImg3')[0].files[0];
         var img4 = $('#fileImg4')[0].files[0];
-        var form=$('#FormModalAplication')[0];
+        var form = $('#FormModalAplication')[0];
         var formData = new FormData(form);
-        console.log(formData);
-        //formData.append('img1', img1);
-        //formData.append('img2', img2);
-        //formData.append('img3', img3);
-        //formData.append('img4', img4);
         $.ajax({
             url: 'UploadImages.jsp',
             type: 'POST',
             success: function (e) {
                 alerta('OK', '¡Operacion exitosa!');
-                RecargaPanel('panels/campanas/campanas_agregarpm.jsp?rfid=<%=rfid%>&index=<%=index%>#pumuContent','pumuContainer','closeModal()');
+                RecargaPanel('panels/campanas/campanas_agregarpm.jsp?rfid=<%=rfid%>&index=<%=index%>  #pumuContent', 'pumuContainer');
 
                 eval(e.trim())
             },

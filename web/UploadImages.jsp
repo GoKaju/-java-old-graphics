@@ -39,27 +39,27 @@
             List<FileItem> items = upload.parseRequest(request);
             Ruta ruta = rutaDao.findRuta(1);
             MinioClient minioClient = new MinioClient(ruta.getUrl(), ruta.getAccessKey(), ruta.getSecretKey());
-            String bucketName = campana.getCampId()+campana.getCampNombre().trim().replaceAll(" ", "").replaceAll("ñ", "n");
+            String bucketName = campana.getCampId() + "-" + campana.getCampNombre().trim().toLowerCase().replaceAll(" ", "").replaceAll("ñ", "n");
+            boolean bucketExist = minioClient.bucketExists(bucketName);
+            if (!bucketExist) {
+                minioClient.makeBucket(bucketName);
+            }
             for (FileItem item : items) {
                 if (!item.isFormField()) {
-                    String[] imageNameSplit=item.getName().split("\\.");
-                    String extencionFile=imageNameSplit[imageNameSplit.length-1];
-                    String fileName = punto.getPumuId()+item.getFieldName()+"."+extencionFile;
-                    String rutaFileTemporal=rutaTempFolder + fileName;
+                    String[] imageNameSplit = item.getName().split("\\.");
+                    String extencionFile = imageNameSplit[imageNameSplit.length - 1];
+                    String fileName = punto.getPumuId() + item.getFieldName() + "." + extencionFile;
+                    String rutaFileTemporal = rutaTempFolder + fileName;
                     file = new File(rutaFileTemporal);
                     item.write(file);
                     //Imagenes
-                    boolean bucketExist = minioClient.bucketExists(bucketName);
-                    if (!bucketExist) {
-                        minioClient.makeBucket(bucketName);
-                    }
                     minioClient.putObject(bucketName, fileName, rutaFileTemporal);
                     file.delete();
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }finally{
+        } finally {
             session.removeAttribute("campana");
             session.removeAttribute("punto");
         }

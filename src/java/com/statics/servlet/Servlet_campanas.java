@@ -145,37 +145,38 @@ public class Servlet_campanas extends HttpServlet {
                 } else if (modulo.equals("3")) {
 //                    agregar punto muestral
                     System.out.println("INGRESO POR ACÁ");
-                    int cantDatosAdicionales = Integer.parseInt(o.getvariable("cantDatosAdicionales"));
-                    int idCampana = Integer.parseInt(o.getvariable("campa"));
+                    int cantDatosAdicionales = !o.getvariable("cantDatosAdicionales").equals("") ? Integer.parseInt(o.getvariable("cantDatosAdicionales")) : 0;
+                    int idCampana = !o.getvariable("campa").equals("") ? Integer.parseInt(o.getvariable("campa")) : 0;
 
                     String nombrePM = o.getvariable("nombrePunto");
                     String clientePM = o.getvariable("cliente");
-                    int estacionPM = Integer.parseInt(o.getvariable("estacion"));
+                    int estacionPM = !o.getvariable("estacion").equals("") ? Integer.parseInt(o.getvariable("estacion")) : 0;
                     String descripcionPM = o.getvariable("descripcionPunto");
-                    int departamentoPM = Integer.parseInt(o.getvariable("departamento"));
+                    int departamentoPM = !o.getvariable("departamento").equals("") ? Integer.parseInt(o.getvariable("departamento")) : 0;
                     int municipioPM = Integer.parseInt(o.getvariable("municipio"));
                     String direccionPM = o.getvariable("direccion");
                     String longitudPM = o.getvariable("longitud");
                     String latitudPM = o.getvariable("latitud");
-                    int tipoAreaPM = Integer.parseInt(o.getvariable("tipoArea"));
-                    int tiempoPM = Integer.parseInt(o.getvariable("tiempo"));
+                    int tipoAreaPM = !o.getvariable("tipoArea").equals("") ? Integer.parseInt(o.getvariable("tipoArea")) : 0;
+                    int tiempoPM = !o.getvariable("tiempo").equals("") ? Integer.parseInt(o.getvariable("tiempo")) : 0;
                     int emisionDominantePM = Integer.parseInt(o.getvariable("emisionDominante"));
                     String observacionesLv1PM = o.getvariable("observacionesLv1");
-                    double distanciaBordePM = Double.parseDouble(o.getvariable("distanciaBorde"));
-                    double anchoViaPM = Double.parseDouble(o.getvariable("anchoVia"));
-                    double velocidadPromedioPM = Double.parseDouble(o.getvariable("velocidadPromedio"));
-                    boolean sentidoUnoPM = Boolean.parseBoolean(o.getvariable("sentidoUno"));
-                    boolean sentidoDosPM = Boolean.parseBoolean(o.getvariable("sentidoDos"));
-                    int vehiculosPesadosPM = Integer.parseInt(o.getvariable("vehiculosPesados"));
+                    double distanciaBordePM = !o.getvariable("distanciaBorde").equals("") ? Double.parseDouble(o.getvariable("distanciaBorde")) : 0;
+                    double anchoViaPM = !o.getvariable("anchoVia").equals("") ? Double.parseDouble(o.getvariable("anchoVia")) : 0;
+                    double velocidadPromedioPM = !o.getvariable("velocidadPromedio").equals("") ? Double.parseDouble(o.getvariable("velocidadPromedio")) : 0;
+                    boolean sentidoUnoPM = o.getvariable("sentidoUno").equals("on");
+                    boolean sentidoDosPM = o.getvariable("sentidoDos").equals("on");
+                    int vehiculosPesadosPM = !o.getvariable("vehiculosPesados").equals("") ? Integer.parseInt(o.getvariable("vehiculosPesados")) : 0;
                     String estadoViaPM = o.getvariable("estadoVia");
-                    int tiempoMuestreoPM = Integer.parseInt(o.getvariable("tiempoMuestreo"));
-                    int climaPM = Integer.parseInt(o.getvariable("clima"));
+                    int tiempoMuestreoPM = !o.getvariable("tiempoMuestreo").equals("") ? Integer.parseInt(o.getvariable("tiempoMuestreo")) : 0;
+                    int climaPM = !o.getvariable("clima").equals("") ? Integer.parseInt(o.getvariable("clima")) : 0;
                     String tipoPM = o.getvariable("tipo");
-                    double distanciaFuentePM = Double.parseDouble(o.getvariable("distanciaFuente"));
+                    double distanciaFuentePM = !o.getvariable("distanciaFuente").equals("") ? Double.parseDouble(o.getvariable("distanciaFuente")) : 0;
                     String direccionGradosPM = o.getvariable("direccionGrados");
                     String fuenteEvaluadaPM = o.getvariable("fuenteEvaluada");
-                    boolean calleLibrePM = Boolean.parseBoolean(o.getvariable("calleLibre"));
-                    boolean calleEncajonadaPM = Boolean.parseBoolean(o.getvariable("calleEncajonada"));
+                    boolean calleLibrePM = o.getvariable("calleLibre").equals("on");
+                    boolean calleEncajonadaPM = o.getvariable("calleEncajonada").equals("on");
+
                     String observacionPuntoCriticoPM = o.getvariable("observacionPuntoCritico");
                     String cercanaCiudadesPM = o.getvariable("cercanaCiudades");
                     String regionalesPM = o.getvariable("regionales");
@@ -236,8 +237,8 @@ public class Servlet_campanas extends HttpServlet {
                     for (int i = 1; i <= cantDatosAdicionales; i++) {
                         String descripcionDA = o.getvariable("descripcionDA" + i);
                         String nombresDA = o.getvariable("nombresDA" + i);
-                        Long celular = Long.parseLong(o.getvariable("celularDA" + i));
-                        int fijo = Integer.parseInt(o.getvariable("fijoDA" + i));
+                        Long celular = !o.getvariable("celularDA" + i).equals("") ? Long.parseLong(o.getvariable("celularDA" + i)) : 0;
+                        int fijo = !o.getvariable("fijoDA" + i).equals("") ? Integer.parseInt(o.getvariable("fijoDA" + i)) : 0;
                         String email = o.getvariable("emailDA" + i);
                         String otros = o.getvariable("otrosDA" + i);
                         datosAdicionales
@@ -267,7 +268,7 @@ public class Servlet_campanas extends HttpServlet {
                     List<CriterioPm> criterios = criterioDao.findCriterioPmEntities();
                     CriterioMicrolocalizacion criterioMicrolocalizacion;
                     for (CriterioPm i : criterios) {
-                        boolean cumpleCriterio = Boolean.parseBoolean(o.getvariable("cumpleCriterio" + i.getId()));
+                        boolean cumpleCriterio = o.getvariable("cumpleCriterio"+i.getId()).equals("on");
                         String observacionCriterio = o.getvariable("obsCriterio" + i.getId());
                         criterioMicrolocalizacion
                                 = new CriterioMicrolocalizacion(cumpleCriterio, observacionCriterio,
