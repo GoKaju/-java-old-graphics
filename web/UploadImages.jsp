@@ -3,6 +3,8 @@
     Created on : 8/03/2018, 10:36:37 AM
     Author     : julian.rojas
 --%>
+<%@page import="com.statics.vo.FotoPuntomuestral"%>
+<%@page import="com.statics.dao.FotoPuntomuestralJpaController"%>
 <%@page import="com.statics.vo.PuntoMuestral"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="com.statics.vo.Campanas"%>
@@ -31,6 +33,7 @@
         String separador = System.getProperty("file.separator");
         String rutaTempFolder = application.getRealPath("") + separador + "Temp" + separador;
         RutaJpaController rutaDao = new RutaJpaController(emf);
+        FotoPuntomuestralJpaController fotoPmDao = new FotoPuntomuestralJpaController(emf);
 
         try {
             FileItemFactory factory = new DiskFileItemFactory();
@@ -39,7 +42,7 @@
             List<FileItem> items = upload.parseRequest(request);
             Ruta ruta = rutaDao.findRuta(1);
             MinioClient minioClient = new MinioClient(ruta.getUrl(), ruta.getAccessKey(), ruta.getSecretKey());
-            String bucketName = campana.getCampId() + "-" + campana.getCampNombre().trim().toLowerCase().replaceAll(" ", "").replaceAll("ñ", "n");
+            String bucketName=campana.getCampBucket();
             boolean bucketExist = minioClient.bucketExists(bucketName);
             if (!bucketExist) {
                 minioClient.makeBucket(bucketName);
@@ -54,6 +57,8 @@
                     item.write(file);
                     //Imagenes
                     minioClient.putObject(bucketName, fileName, rutaFileTemporal);
+                    FotoPuntomuestral fotoPuntomuestral = new FotoPuntomuestral(fileName, punto);
+                    fotoPmDao.create(fotoPuntomuestral);
                     file.delete();
                 }
             }

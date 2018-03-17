@@ -48,7 +48,7 @@
 </ol>
 <!-- end breadcrumb -->
 <!-- begin page-header -->
-<h1 class="page-header">Campañas <small><%=index.isEmpty() ? "Agregar" : "Editar"%> puntos muestrales</small></h1>
+<h1 class="page-header">Campañas <small><%=index.isEmpty() ? "Agregar" : "Editar"%> puntos de monitoreo</small></h1>
 <!-- end page-header -->
 
 <div class="panel panel-inverse">
@@ -66,7 +66,7 @@
         <div id="pumuContent" class="row">
             <div class=" col-md-12 table-responsive">
                 <table class="table table-condensed table-hover table-striped">
-                    <caption>Lista de puntos muestrales campaña <%=o.notEmpty(elem.getCampNombre())%></caption>
+                    <caption>Lista de puntos de monitoreo campaña <%=o.notEmpty(elem.getCampNombre())%></caption>
                     <thead>
                         <tr>
                             <th>Id</th>
@@ -77,8 +77,6 @@
                             <th>Lat</th>
                             <!--<th>Fecha Inicial</th>-->
                             <th></th>
-
-
                         </tr>
                     </thead>
 

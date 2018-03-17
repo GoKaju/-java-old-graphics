@@ -14,6 +14,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import com.statics.vo.ItemPm;
 import com.statics.vo.LogisticaPm;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -31,6 +32,24 @@ public class ItemLogisticaJpaController implements Serializable {
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
+    }
+    
+    public List<ItemLogistica> findItemLogisticaByLogistica(int idLogistica) {
+        String sqlQuery="SELECT * FROM item_logistica WHERE id_logistica="+idLogistica;
+        List<ItemLogistica> lista=new ArrayList();
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            Query q=em.createNativeQuery(sqlQuery, ItemLogistica.class);
+            lista=q.getResultList();
+        }catch(Exception e){
+            e.printStackTrace();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+        return lista;
     }
 
     public void create(ItemLogistica itemLogistica) {

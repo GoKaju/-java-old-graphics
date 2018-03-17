@@ -107,11 +107,22 @@ public class Servlet_campanas extends HttpServlet {
                 String errores = "";
 
                 if (modulo.equals("1")) {
+                    RutaJpaController rutaDao = new RutaJpaController(emf);
+                    String bucketName = "";
+                    Ruta ruta = rutaDao.findRuta(1);
 
                     Campanas elem = new Campanas();
 
                     if (!o.getvariable("index").isEmpty()) {
                         elem = ejc.findCampanas(Integer.parseInt(o.getvariable("index")));
+                    } else {
+                        for (int i = 0; i < 10; i++) {
+                            int numero = (int) (Math.random() * 9) + 1;
+                            bucketName += numero;
+                        }
+                        MinioClient mc = new MinioClient(ruta.getUrl(), ruta.getAccessKey(), ruta.getSecretKey());
+                        mc.makeBucket(bucketName);
+                        elem.setCampBucket(bucketName);
                     }
                     elem.setCampNombre(o.getvariable("Nombre"));
                     elem.setCampDescripcion(o.getvariable("descripcion"));
@@ -126,7 +137,6 @@ public class Servlet_campanas extends HttpServlet {
                             ejc.create(elem);
                         }
                     }
-                    
 
                     if (exito) {
                         out.println(" RecargaPanel('panels/campanas/campanas_agregarpm.jsp?rfid=" + o.getvariable("rfid") + "&index=" + elem.getCampId() + "','content');");
@@ -173,13 +183,13 @@ public class Servlet_campanas extends HttpServlet {
                     String tipoPM = o.getvariable("tipo");
                     double distanciaFuentePM = !o.getvariable("distanciaFuente").equals("") ? Double.parseDouble(o.getvariable("distanciaFuente")) : 0;
                     String direccionGradosPM = o.getvariable("direccionGrados");
-                    String fuenteEvaluadaPM = o.getvariable("fuenteEvaluada");
+                    String fuenteEvaluadaPM = o.getvariable("fuenteEvaluada").equals("on") ? "1" : "";
                     boolean calleLibrePM = o.getvariable("calleLibre").equals("on");
                     boolean calleEncajonadaPM = o.getvariable("calleEncajonada").equals("on");
 
                     String observacionPuntoCriticoPM = o.getvariable("observacionPuntoCritico");
-                    String cercanaCiudadesPM = o.getvariable("cercanaCiudades");
-                    String regionalesPM = o.getvariable("regionales");
+                    String cercanaCiudadesPM = o.getvariable("cercanaCiudades").equals("on") ? "1" : "";
+                    String regionalesPM = o.getvariable("regionales").equals("on") ? "1" : "";
                     String observacionRuralesFondoPM = o.getvariable("observacionRuralesFondo");
                     String descripcionRutaPM = o.getvariable("descripcionRuta");
 
@@ -268,7 +278,7 @@ public class Servlet_campanas extends HttpServlet {
                     List<CriterioPm> criterios = criterioDao.findCriterioPmEntities();
                     CriterioMicrolocalizacion criterioMicrolocalizacion;
                     for (CriterioPm i : criterios) {
-                        boolean cumpleCriterio = o.getvariable("cumpleCriterio"+i.getId()).equals("on");
+                        boolean cumpleCriterio = o.getvariable("cumpleCriterio" + i.getId()).equals("on");
                         String observacionCriterio = o.getvariable("obsCriterio" + i.getId());
                         criterioMicrolocalizacion
                                 = new CriterioMicrolocalizacion(cumpleCriterio, observacionCriterio,
@@ -278,7 +288,7 @@ public class Servlet_campanas extends HttpServlet {
 
                     //Punto muestral
                     Campanas campana = campanaDao.findCampanas(idCampana);
-                    
+
                     Estaciones estacion = estacionDao.findEstaciones(estacionPM);
                     PuntoMuestral puntoMuestral = new PuntoMuestral();
                     if (!o.getvariable("index").isEmpty()) {
@@ -316,7 +326,6 @@ public class Servlet_campanas extends HttpServlet {
                     } else {
                         out.println("alerta('Error','" + errores + "');");
                     }
-
                 } else if (modulo.equals("4")) {
                     try {
                         PuntoMuestral elem = pmjc.findPuntoMuestral(Integer.parseInt(o.getvariable("index")));
@@ -328,7 +337,16 @@ public class Servlet_campanas extends HttpServlet {
                         out.println("alerta('ERROR','¡Este punto muestral ya posee datos por lo tanto no se puede remover!');");
 
                     }
-
+//RECRAGAR MUNICIOIO DEPENDIENTE
+                } else if (modulo.equals("5")) {
+                    String cadena="";
+                    for (Municipio m : new MunicipioJpaController(emf)
+                            .findMunicipiosByDepartamento(Integer.parseInt(o.getvariable("idDepartamento")))) {
+                        cadena+="<option value="+m.getId()+">"+m.getNombre()+"</option>";
+                        
+                    }
+                    System.out.println("cadena-->"+cadena);
+                    out.println(" $('#cmbMunicipio').html(\""+cadena+"\");");
                 } else {
                     out.println("alerta('ERROR','¡Modulo no encontrado!');");
                 }

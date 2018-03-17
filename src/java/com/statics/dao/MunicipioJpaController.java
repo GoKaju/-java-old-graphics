@@ -32,6 +32,24 @@ public class MunicipioJpaController implements Serializable {
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
+    
+    public List<Municipio> findMunicipiosByDepartamento(int idDepartamento){
+        String sqlQuery="SELECT * FROM municipio WHERE id_departamento="+idDepartamento;
+        List<Municipio> lista=new ArrayList();
+        EntityManager em=null;
+        try{
+            em=getEntityManager();
+            Query q=em.createNativeQuery(sqlQuery, Municipio.class);
+            lista=q.getResultList();
+        }catch(Exception e){
+            e.printStackTrace();
+        } finally{
+            if (em!=null) {
+                em.close();
+            }
+        }
+        return lista;
+    }
 
     public void create(Municipio municipio) {
         if (municipio.getUbicacionPmList() == null) {

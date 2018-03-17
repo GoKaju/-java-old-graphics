@@ -14,6 +14,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import com.statics.vo.MicrolocalizacionPm;
 import com.statics.vo.CriterioPm;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -31,6 +32,23 @@ public class CriterioMicrolocalizacionJpaController implements Serializable {
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
+    }
+    
+    public List<CriterioMicrolocalizacion> findCriterioByMicrolocalizacion(int idMicrolocalizacion) {
+        String sqlQuery="SELECT * FROM criterio_microlocalizacion WHERE id_microlocalizacion="+idMicrolocalizacion;
+        List<CriterioMicrolocalizacion> lista=new ArrayList();
+        EntityManager em = getEntityManager();
+        try{
+            Query q=em.createNativeQuery(sqlQuery,CriterioMicrolocalizacion.class);
+            lista=q.getResultList();
+        }catch(Exception e){
+            e.printStackTrace();
+        } finally{
+            if (em!=null) {
+                em.close();
+            }
+        }
+        return lista;
     }
 
     public void create(CriterioMicrolocalizacion criterioMicrolocalizacion) {

@@ -5,6 +5,21 @@
 --%>
 
 
+<%@page import="com.statics.vo.DatosAdicionalesPm"%>
+<%@page import="com.statics.dao.DatosAdicionalesPmJpaController"%>
+<%@page import="com.statics.dao.DatosadicionalesMicrolocalizacionJpaController"%>
+<%@page import="com.statics.vo.DatosadicionalesMicrolocalizacion"%>
+<%@page import="com.statics.dao.CriterioMicrolocalizacionJpaController"%>
+<%@page import="com.statics.vo.CriterioMicrolocalizacion"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.statics.vo.ItemLogistica"%>
+<%@page import="com.statics.dao.ItemLogisticaJpaController"%>
+<%@page import="com.statics.vo.FotoPuntomuestral"%>
+<%@page import="java.util.List"%>
+<%@page import="com.statics.dao.FotoPuntomuestralJpaController"%>
+<%@page import="com.statics.vo.Ruta"%>
+<%@page import="io.minio.MinioClient"%>
+<%@page import="com.statics.dao.RutaJpaController"%>
 <%@page import="com.statics.dao.CriterioPmJpaController"%>
 <%@page import="com.statics.vo.CriterioPm"%>
 <%@page import="com.statics.dao.ItemPmJpaController"%>
@@ -59,7 +74,18 @@
                 campana = new CampanasJpaController(emf).findCampanas(Integer.parseInt(campa));
 
             }
+
+            RutaJpaController rutaDao = new RutaJpaController(emf);
+            FotoPuntomuestralJpaController fotoPmDao = new FotoPuntomuestralJpaController(emf);
+            Ruta ruta = rutaDao.findRuta(1);
+            MinioClient mc = new MinioClient(ruta.getUrl(), ruta.getAccessKey(), ruta.getSecretKey());
+
+            ItemLogisticaJpaController itemLogisticaDao = new ItemLogisticaJpaController(emf);
+            DatosAdicionalesPmJpaController datosAdicionalesDao = new DatosAdicionalesPmJpaController(emf);
+            CriterioMicrolocalizacionJpaController criterioMicrolocalizacionDao = new CriterioMicrolocalizacionJpaController(emf);
+
 %>
+
 <form id="FormModalAplication" action="Login" method="POST" class="margin-bottom-0" data-parsley-validate="true" enctype="multipart/form-data">
     <div class="panel-body">
         <div class="panel-group" id="accordion">
@@ -77,7 +103,8 @@
                                 <label>Nombre del punto *</label>
                                 <input type="text" name="nombrePunto" placeholder="Nombre del punto" 
                                        class="form-control " value="<%=elem.getPumuId() != null ? elem.getPumuNombre() : ""%>"  
-                                       required="" data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
+                                       required>
+                                <ul class="parsley-errors-list"></ul>
                             </div>
                         </div>
                         <div class="col-md-5">
@@ -85,13 +112,14 @@
                                 <label>Cliente *</label>
                                 <input type="text" name="cliente" placeholder="Cliente" 
                                        class="form-control " value="<%=elem.getPumuId() != null ? elem.getIdCliente().getNombre() : ""%>"  
-                                       required="" data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
+                                       required>
+                                <ul class="parsley-errors-list"></ul>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group ">
                                 <label>Estacion *</label>
-                                <select name="estacion" class="form-control"  required="" data-parsley-id="7052">
+                                <select name="estacion" class="form-control"  required>
                                     <%
                                         for (Estaciones s : new EstacionesJpaController(emf).findEstacionesEntities()) {
                                             String sel = "";
@@ -103,7 +131,7 @@
                                     <%}
                                     %>
                                 </select>
-                                <ul class="parsley-errors-list" id="parsley-id-7052"></ul>
+                                <ul class="parsley-errors-list"></ul>
                             </div>
                         </div> 
                         <div class="col-md-12">
@@ -127,11 +155,13 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Departamento</label>
-                                <select class="form-control" name="departamento">
+                                <select class="form-control" name="departamento" id="cmbDepartamento" 
+                                        onchange="recargaMunicipio(this.value)">
+
                                     <%
                                         for (Departamento m : new DepartamentoJpaController(emf).findDepartamentoEntities()) {
                                             String sel = "";
-                                            if (elem.getPumuId() != null && elem.getIdUbicacion().getIdMunicipio().equals(m)) {
+                                            if (elem.getPumuId() != null && elem.getIdUbicacion().getIdDepartamento().equals(m)) {
                                                 sel = "selected";
                                             }
                                     %>
@@ -145,16 +175,20 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Municipio</label>
-                                <select class="form-control" name="municipio" >
+                                <select class="form-control" name="municipio" id="cmbMunicipio">
                                     <%
-                                        for (Municipio m : new MunicipioJpaController(emf).findMunicipioEntities()) {
-                                            String sel = "";
-                                            if (elem.getPumuId() != null && elem.getIdUbicacion().getIdMunicipio().equals(m)) {
-                                                sel = "selected";
-                                            }
+                                        if (elem.getPumuId() != null) {
+                                            for (Municipio m : new MunicipioJpaController(emf)
+                                                    .findMunicipiosByDepartamento(elem.getIdUbicacion().getIdDepartamento().getId())) {
+                                                String sel = "";
+                                                if (elem.getIdUbicacion().getIdMunicipio().equals(m)) {
+
+                                                    sel = "selected";
+                                                }
                                     %>
                                     <option <%=sel%> value="<%= m.getId()%>"><%=o.notEmpty(m.getNombre())%></option>
                                     <%
+                                            }
                                         }
                                     %>
                                 </select>
@@ -171,16 +205,16 @@
                             <div class="form-group ">
                                 <label>Coordenadas * <i class="glyphicon glyphicon-question-sign info" onclick="alertaCoordenadas()"></i></label>
                                 <input type="text" name="longitud" placeholder="Longitud" 
-                                       class="form-control " value="<%=elem.getPumuId() != null ? elem.getPumuLong() : ""%>"  
-                                       data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
+                                       class="form-control " value="<%=elem.getPumuId() != null ? elem.getPumuLong() : ""%>">
+                                <ul class="parsley-errors-list"></ul>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group ">
                                 <label><i class="glyphicon glyphicon-question-sign info" onclick="alertaCoordenadas()"></i></label>
                                 <input type="text" name="latitud" placeholder="Latitud" class="form-control " 
-                                       value="<%=elem.getPumuId() != null ? elem.getPumuLat() : ""%>"  
-                                       data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
+                                       value="<%=elem.getPumuId() != null ? elem.getPumuLat() : ""%>">
+                                <ul class="parsley-errors-list"></ul>
                             </div>
                         </div>
                     </div>
@@ -194,78 +228,57 @@
                 </div>
                 <div id="collapse3" class="panel-collapse collapse">
                     <div class="panel-body">
+                        <%
+                            List<FotoPuntomuestral> listaFotos = new ArrayList();
+                            String campanaBucket = "";
+                            String imgName = "img";
+                            String imgLabel = "Foto";
+                            String imgId = "fileImg";
+                            String urlFoto = "";
+                            String imgOrientacion = "";
+
+                            if (elem.getPumuId() != null) {
+                                listaFotos = fotoPmDao.findFotosByPuntoMuestral(elem.getPumuId());
+                                campanaBucket = elem.getCampId().getCampBucket();
+                            }
+                            for (int i = 1; i <= 4; i++) {
+                                if (listaFotos.size() != 0) {
+                                    urlFoto = mc.presignedGetObject(campanaBucket, listaFotos.get(0).getNombre());
+                                    listaFotos.remove(0);
+                                }
+                                imgName = imgName + i;
+                                imgId = imgId + i;
+                                imgLabel = imgLabel + " " + i;
+                                imgOrientacion = "assets/img/" + i + ".PNG";
+                        %>
                         <div class="row col-md-12">
+                            <div class="col-md-1">
+                                <img src="<%= imgOrientacion%>" alt="" width="40" style="padding-top:7px"/>
+                            </div>
                             <div class="col-md-4">
-                                <label>Foto1</label>
+                                <label><%= imgLabel%></label>
                                 <div class="input-group">
                                     <label class="input-group-btn">
                                         <span class="btn btn-default">
                                             Examinar&hellip; 
                                             <input type="file" style="display:none" 
-                                                   id="fileImg1" onchange="readURL(this)" name="img1"/>
+                                                   id="<%= imgId%>" onchange="readURL(this)" name="<%= imgName%>"/>
                                         </span>
                                     </label>
                                     <input type="text" class="form-control" readonly>
                                 </div>
                             </div>
-                            <div class="col-md-8">
-                                <img class="fileImg1" src="" alt="No image here" />
+                            <div class="col-md-7">
+                                <img class="<%= imgId%>" src="<%= urlFoto%>" alt="No image here" />
                             </div>
                         </div>
-                        <div class="row col-md-12">
-                            <div class="col-md-4">
-                                <label>Foto2</label>
-                                <div class="input-group">
-                                    <label class="input-group-btn">
-                                        <span class="btn btn-default">
-                                            Examinar&hellip; 
-                                            <input type="file" style="display:none" 
-                                                   id="fileImg2" onchange="readURL(this)" name="img2"/>
-                                        </span>
-                                    </label>
-                                    <input type="text" class="form-control" readonly>
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <img class="fileImg2" src="" alt="No image here" />
-                            </div>
-                        </div>
-                        <div class="row col-md-12">
-                            <div class="col-md-4">
-                                <label>Foto3</label>
-                                <div class="input-group">
-                                    <label class="input-group-btn">
-                                        <span class="btn btn-default">
-                                            Examinar&hellip; 
-                                            <input type="file" style="display:none" 
-                                                   id="fileImg3" onchange="readURL(this)" name="img3"/>
-                                        </span>
-                                    </label>
-                                    <input type="text" class="form-control" readonly>
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <img class="fileImg3" src="" alt="No image here" />
-                            </div>
-                        </div>
-                        <div class="row col-md-12">
-                            <div class="col-md-4">
-                                <label>Foto4</label>
-                                <div class="input-group">
-                                    <label class="input-group-btn">
-                                        <span class="btn btn-default">
-                                            Examinar&hellip; 
-                                            <input type="file" style="display:none" 
-                                                   id="fileImg4" onchange="readURL(this)" name="img4"/>
-                                        </span>
-                                    </label>
-                                    <input type="text" class="form-control" readonly>
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <img class="fileImg4" src="" alt="No image here" />
-                            </div>
-                        </div>
+                        <%
+                                imgName = "img";
+                                imgLabel = "Foto";
+                                imgId = "fileImg";
+                                urlFoto = "";
+                            }
+                        %>
                     </div>
                 </div>
             </div>
@@ -331,13 +344,13 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label>Observaciones lvl i-iv</label>
-                                <textarea class="form-control" name="observacionesLv1"
-                                          ><%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getObservacionEmisionDominante() : ""%></textarea>
-                            </div>
-                        </div>
+                        <!--                        <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label>Observaciones lvl i-iv</label>
+                                                        <textarea class="form-control" name="observacionesLv1"
+                                                                  ><%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getObservacionEmisionDominante() : ""%></textarea>
+                                                    </div>
+                                                </div>-->
                     </div>
                 </div>
             </div>
@@ -361,22 +374,22 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label>Distancia al borde</label>
-                                                <input type="number" class="form-control" name="distanciaBorde" placeholder="Kms" 
-                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getDistanciaAlBorde() : 0%>"/>
+                                                <input type="number" class="form-control" name="distanciaBorde" placeholder="Metros" 
+                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getDistanciaAlBorde() : ""%>"/>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label>Ancho vía</label>
                                                 <input type="number" class="form-control" name="anchoVia" placeholder="Mts"
-                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getAnchoVia() : 0%>"/>
+                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getAnchoVia() : ""%>"/>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label>Velocidad promedio</label>
                                                 <input type="number" class="form-control" name="velocidadPromedio" placeholder="Kms/h"
-                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getVelocidadPromedio() : 0%>"/>
+                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getVelocidadPromedio() : ""%>"/>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
@@ -384,26 +397,30 @@
                                             <div class="checkbox">
                                                 <label>
                                                     <input type="checkbox" name="sentidoUno" 
-                                                           <%= elem.getPumuId() != null && elem.getIdMacrolocalizacion().getTraficoDiario1() ? "checked" : ""%>> Trafico sentido 1
+                                                           <%= elem.getPumuId() != null && elem.getIdMacrolocalizacion().getTraficoDiario1() ? "checked" : ""%>> Trafico diario sentido 1
                                                 </label>   
                                                 <label>
                                                     <input type="checkbox" name="sentidoDos"
-                                                           <%= elem.getPumuId() != null && elem.getIdMacrolocalizacion().getTraficoDiario2() ? "checked" : ""%>> Trafico sentido 2
+                                                           <%= elem.getPumuId() != null && elem.getIdMacrolocalizacion().getTraficoDiario2() ? "checked" : ""%>> Trafico diario sentido 2
                                                 </label>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label>Vehiculos pesados</label>
+                                                <label>% Vehiculos pesados</label>
                                                 <input type="number" class="form-control" name="vehiculosPesados" placeholder="%"
-                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getPorcentajeVehiculosPesados() : 0%>"/>
+                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getPorcentajeVehiculosPesados() : ""%>"/>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label>Estado de la via</label>
-                                                <input type="text" class="form-control" name="estadoVia" placeholder="via"
-                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getAnchoVia() : ""%>"/>
+                                                <!--<input type="text" class="form-control" name="estadoVia" placeholder="via"
+                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getAnchoVia() : ""%>"/>-->
+                                                <select class="form-control" name="estadoVia">
+                                                    <option value="Pavimentada">Pavimentada</option>
+                                                    <option value="Destapada">Destapada</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -420,10 +437,9 @@
                                         <div class="col-md-6">
                                             <div class="form-group ">
                                                 <label>Tiempo de muestreo</label>
-                                                <input type="number" name="tiempoMuestreo" placeholder="Días" 
-                                                       class="form-control " data-parsley-id="7052"
-                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getTiempoMuestreo() : 0%>">
-                                                <ul class="parsley-errors-list" id="parsley-id-7052"></ul>
+                                                <input type="number" name="tiempoMuestreo" placeholder="Días" class="form-control "
+                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getTiempoMuestreo() : ""%>">
+                                                <ul class="parsley-errors-list"></ul>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -463,7 +479,7 @@
                                         <div class="form-group col-md-4">
                                             <label>Distancia de la fuente</label>
                                             <input class="form-control" type="number" name="distanciaFuente" placeholder="Distancia de la fuente"
-                                                   value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getDistanciaFuente() : 0%>"/>
+                                                   value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getDistanciaFuente() : ""%>"/>
                                         </div>
                                         <div class="form-group col-md-4">
                                             <label>Direccion grados</label>
@@ -481,25 +497,31 @@
                                 </div>
                                 <div id="collapseSub4" class="panel-collapse collapse">
                                     <div class="panel-body">
-                                        <div class="form-group col-md-9">
-                                            <label>Fuente evaluada</label>
-                                            <input class="form-control" type="text" name="fuenteEvaluada" placeholder="Fuente evaluada"
-                                                   value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getFuenteEvaluada() : ""%>"/>
-                                        </div>
-                                        <div class="col-md-3">
+                                        <!--                                        <div class="form-group col-md-9">
+                                                                                    <label>Fuente evaluada</label>
+                                                                                    <input class="form-control" type="text" name="fuenteEvaluada" placeholder="Fuente evaluada"
+                                                                                           value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getFuenteEvaluada() : ""%>"/>
+                                                                                </div>-->
+                                        <div class="form-group col-md-12">
                                             <div class="checkbox">
-                                                <p>
+                                                <div class="col-md-4">
+                                                    <label>
+                                                        <input type="checkbox" name="fuenteEvaluada" 
+                                                               <%= elem.getPumuId() != null && elem.getIdMacrolocalizacion().getFuenteEvaluada().equals("1") ? "checked" : ""%> > Fuente evaluada
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
                                                     <label>
                                                         <input type="checkbox" name="calleLibre" 
-                                                               <%= elem.getPumuId() != null && elem.getIdMacrolocalizacion().getLibre() ? "checked" : ""%> > Libre
+                                                               <%= elem.getPumuId() != null && elem.getIdMacrolocalizacion().getLibre() ? "checked" : ""%> > Calle Libre
                                                     </label>
-                                                </p>
-                                                <p>
+                                                </div>
+                                                <div class="col-md-4">
                                                     <label>
                                                         <input type="checkbox" name="calleEncajonada"
-                                                               <%= elem.getPumuId() != null && elem.getIdMacrolocalizacion().getEncajonada() ? "checked" : ""%>/> Encajonada
+                                                               <%= elem.getPumuId() != null && elem.getIdMacrolocalizacion().getEncajonada() ? "checked" : ""%>/> Calle Encajonada
                                                     </label>
-                                                </p>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="form-group col-md-12">
@@ -518,7 +540,19 @@
                                 </div>
                                 <div id="collapseSub5" class="panel-collapse collapse">
                                     <div class="panel-body">
-                                        <div class="form-group col-md-6">
+                                        <div class="col-md-6">
+                                            <label>
+                                                <input type="checkbox" name="cercanaCiudades" 
+                                                       <%= elem.getPumuId() != null && elem.getIdMacrolocalizacion().getCiudadesCercanas().equals("1") ? "checked" : ""%> > Cercana ciudades
+                                            </label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>
+                                                <input type="checkbox" name="regionales"
+                                                       <%= elem.getPumuId() != null && elem.getIdMacrolocalizacion().getRegionales().equals("1") ? "checked" : ""%>/> Regionales
+                                            </label>
+                                        </div>
+                                        <!--<div class="form-group col-md-6">
                                             <label>Ciudades cercanas</label>
                                             <input class="form-control" type="text" name="cercanaCiudades" placeholder="Ciudades cercanas"
                                                    value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getCiudadesCercanas() : ""%>"/>
@@ -529,10 +563,10 @@
                                                    value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getRegionales() : ""%>"/>
                                         </div>
                                         <div class="form-group col-md-12">
-                                            <label>Observacion</label>
+                                            <label>Observación</label>
                                             <textarea class="form-control" name="observacionRuralesFondo" placeholder="Observaciones"
                                                       ><%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getObservacionesRuralesFondo() : ""%></textarea>
-                                        </div>
+                                        </div>-->
                                     </div> 
                                 </div> 
                             </div> 
@@ -543,26 +577,38 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse6">Datos de logistica</a>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse6">Datos de logística</a>
                     </h4>
                 </div>
                 <div id="collapse6" class="panel-collapse collapse">
                     <div class="panel-body">
                         <%
-                            String rta = "";
-                            String obs = "";
+                            List<ItemLogistica> listaItemsLogistica = new ArrayList();
+                            String nameRta = "";
+                            String nameObs = "";
+                            String respuesta = "";
+                            String observacionItem = "";
+                            if (elem.getPumuId() != null) {
+                                listaItemsLogistica = itemLogisticaDao.findItemLogisticaByLogistica(elem.getIdLogistica().getId());
+                            }
                             for (ItemPm i : new ItemPmJpaController(emf).findItemPmEntities()) {
-                                rta = "rta" + i.getId();
-                                obs = "obs" + i.getId();
+                                nameRta = "rta" + i.getId();
+                                nameObs = "obs" + i.getId();
+                                if (listaItemsLogistica.size() != 0) {
+                                    respuesta = listaItemsLogistica.get(0).getRespuesta();
+                                    observacionItem = listaItemsLogistica.get(0).getObservacion();
+                                    listaItemsLogistica.remove(0);
+                                }
                         %>
                         <div class="row">
                             <div class="col-md-3"><%= i.getNombre()%></div>
                             <div class="col-md-3">
-                                <input class="form-control" type="text" value=""
-                                       name="<%= rta%>" placeholder="<%= i.getDescripcion()%>"/>
+                                <input class="form-control" type="text" value="<%= respuesta%>"
+                                       name="<%= nameRta%>" placeholder="<%= i.getDescripcion()%>"/>
                             </div>
                             <div class="col-md-6">
-                                <textarea class="form-control" name="<%= obs%>" rows="2" placeholder="Observacion"></textarea>
+                                <textarea class="form-control" name="<%= nameObs%>" rows="2" placeholder="Observacion"
+                                          ><%= observacionItem%></textarea>
                             </div>
                         </div>
                         <hr class="half-rule"/>
@@ -572,7 +618,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
@@ -582,11 +627,23 @@
                 <div id="collapse7" class="panel-collapse collapse">
                     <div class="panel-body">
                         <%
-                            String cumpleCriterio = "";
-                            String obsCriterio = "";
+                            List<CriterioMicrolocalizacion> listaCriteriosMicrolocalizacion = new ArrayList();
+                            boolean cumpleCriterio = false;
+                            String observacionCriterio = "";
+                            String nameCumpleCriterio = "";
+                            String nameObsCriterio = "";
+                            if (elem.getPumuId() != null) {
+                                listaCriteriosMicrolocalizacion
+                                        = criterioMicrolocalizacionDao.findCriterioByMicrolocalizacion(elem.getIdMicrolocalizacion().getId());
+                            }
                             for (CriterioPm i : new CriterioPmJpaController(emf).findCriterioPmEntities()) {
-                                cumpleCriterio = "cumpleCriterio" + i.getId();
-                                obsCriterio = "obsCriterio" + i.getId();
+                                nameCumpleCriterio = "cumpleCriterio" + i.getId();
+                                nameObsCriterio = "obsCriterio" + i.getId();
+                                if (listaCriteriosMicrolocalizacion.size() != 0) {
+                                    cumpleCriterio = listaCriteriosMicrolocalizacion.get(0).getCumpleCriterio();
+                                    observacionCriterio = listaCriteriosMicrolocalizacion.get(0).getObservacionCriterio();
+                                    listaCriteriosMicrolocalizacion.remove(0);
+                                }
                         %>
                         <div class="row">
                             <div class="col-md-4"><%= i.getNombre()%></div>
@@ -598,13 +655,14 @@
                                                data-size="mini"
                                                class="toggleCheck"
                                                data-onstyle="success" 
-                                               name="<%= cumpleCriterio%>">
+                                               name="<%= nameCumpleCriterio%>"
+                                               <%= cumpleCriterio ? "checked" : ""%>/>
                                     </label>
                                 </div>
                             </div>
                             <div class="col-md-7">
-                                <textarea class="form-control" name="<%= obsCriterio%>" 
-                                          rows="2" placeholder="Observacion"></textarea>
+                                <textarea class="form-control" name="<%= nameObsCriterio%>" 
+                                          rows="2" placeholder="Observacion"><%= observacionCriterio%></textarea>
                             </div>
                         </div>
                         <hr class="half-rule"/>
@@ -617,34 +675,86 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse8">Datos adicionales</a>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse8">Personal de contacto</a>
                     </h4>
                 </div>
                 <div id="collapse8" class="panel-collapse collapse">
                     <div class="panel-body">
-                        <div class="form-group col-md-2">
-                            <label>Descripcion</label>
-                            <input class="form-control" type="text" name="descripcionDA1">
+                        <div class="row" id="rowsDatosAdicionales">
+                            <%
+                                List<DatosAdicionalesPm> listaDatosAdicionales = new ArrayList();
+                                int cantDatosAdicionales = 1;
+
+                                String nameDescripcion = "descripcionDA";
+                                String nameNombres = "nombresDA";
+                                String nameCelular = "celularDA";
+                                String nameFijo = "fijoDA";
+                                String nameEmail = "emailDA";
+
+                                String descripcionDA = "";
+                                String nombresDA = "";
+                                String celularDA = "";
+                                String fijoDA = "";
+                                String emailDA = "";
+
+                                if (elem.getPumuId() != null) {
+                                    listaDatosAdicionales
+                                            = datosAdicionalesDao.findDatosadicionalesByMicrolocalizacion(elem.getIdMicrolocalizacion().getId());
+
+                                    for (int i = 1; i <= listaDatosAdicionales.size(); i++) {
+                                        descripcionDA = listaDatosAdicionales.get(i - 1).getDecripcion();
+                                        nombresDA = listaDatosAdicionales.get(i - 1).getNombreApellido();
+                                        celularDA = listaDatosAdicionales.get(i - 1).getCelular().toString();
+                                        fijoDA = listaDatosAdicionales.get(i - 1).getFijo().toString();
+                                        emailDA = listaDatosAdicionales.get(i - 1).getEmail();
+
+                                        nameDescripcion += i;
+                                        nameNombres += i;
+                                        nameCelular += i;
+                                        nameFijo += i;
+                                        nameEmail += i;
+                                        cantDatosAdicionales = i;
+                            %>
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <label>Descripción</label>
+                                    <input class="form-control" type="text" 
+                                           name="<%= nameDescripcion%>" value="<%= descripcionDA%>"/>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Nombres</label>
+                                    <input class="form-control" type="text" 
+                                           name="<%= nameNombres%>" value="<%= nombresDA%>"/>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label>Celular</label>
+                                    <input class="form-control" type="text" 
+                                           name="<%= nameCelular%>" value="<%= celularDA%>"/>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label>Fijo</label>
+                                    <input class="form-control" type="text" 
+                                           name="<%= nameFijo%>" value="<%= fijoDA%>"/>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label>Email</label>
+                                    <input class="form-control" type="text" 
+                                           name="<%= nameEmail%>" value="<%= emailDA%>"/>
+                                </div>
+                            </div>
+                            <%
+                                        nameDescripcion = "descripcionDA";
+                                        nameNombres = "nombresDA";
+                                        nameCelular = "celularDA";
+                                        nameFijo = "fijoDA";
+                                        nameEmail = "emailDA";
+                                    }
+                                }
+                            %>
                         </div>
-                        <div class="form-group col-md-2">
-                            <label>Nombres</label>
-                            <input class="form-control" type="text" name="nombresDA1">
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label>Celular</label>
-                            <input class="form-control" type="text" name="celularDA1">
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label>Fijo</label>
-                            <input class="form-control" type="text" name="fijoDA1">
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label>Email</label>
-                            <input class="form-control" type="text" name="emailDA1">
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label>Otros</label>
-                            <input class="form-control" type="text" name="otrosDA1">
+                        <div class="row">
+                            <input type="button" class="btn btn-block btn-primary" onclick="addDatoAdicional()" 
+                                   value="Ora contacto adicional" width="100%"/>
                         </div>
                     </div>
                 </div>
@@ -653,7 +763,7 @@
     </div>
     <div class="modal-footer">
         <div>
-            <input type="hidden" name="cantDatosAdicionales" value="1"/>
+            <input type="hidden" id="cantDAs" name="cantDatosAdicionales" value="<%= cantDatosAdicionales %>"/>
             <input type="hidden" name="modulo" value="3"/>
             <input type="hidden" name="rfid" value="<%=rfid%>"/>
             <input type="hidden" name="index" value="<%=index%>"/>
@@ -672,7 +782,42 @@
     </div>
 </form>
 <script>
-
+    function addDatoAdicional() {
+        var indexRow = 0;
+        var parent = document.querySelector('#rowsDatosAdicionales');
+        indexRow = parent.childElementCount + 1;
+        console.log(indexRow);
+        var htmlRow = "";
+        htmlRow += '<div class="row">';
+        htmlRow += '<div class="form-group col-md-3">';
+        htmlRow += '<label>Descripción</label>';
+        htmlRow += '<input class="form-control" type="text" name="descripcionDA' + indexRow + '">';
+        htmlRow += '</div>';
+        htmlRow += '<div class="form-group col-md-3">';
+        htmlRow += '<label>Nombres</label>';
+        htmlRow += '<input class="form-control" type="text" name="nombresDA' + indexRow + '">';
+        htmlRow += '</div>';
+        htmlRow += '<div class="form-group col-md-2">';
+        htmlRow += '<label>Celular</label>';
+        htmlRow += '<input class="form-control" type="text" name="celularDA' + indexRow + '">';
+        htmlRow += '</div>';
+        htmlRow += '<div class="form-group col-md-2">';
+        htmlRow += '<label>Fijo</label>';
+        htmlRow += '<input class="form-control" type="text" name="fijoDA' + indexRow + '">';
+        htmlRow += '</div>';
+        htmlRow += '<div class="form-group col-md-2">';
+        htmlRow += '<label>Email</label>';
+        htmlRow += '<input class="form-control" type="text" name="emailDA' + indexRow + '">';
+        htmlRow += '</div>';
+        htmlRow += '</div>';
+        $('#rowsDatosAdicionales').append(htmlRow);
+        $('#cantDAs').attr('value', indexRow);
+    }
+    function recargaMunicipio(val, selected) {
+        if (selected === undefined) {
+            peticionAjax('Campanas', 'modulo=5&idDepartamento=' + val);
+        }
+    }
     function peticionAjaxImagenes() {
         var img1 = $('#fileImg1')[0].files[0];
         var img2 = $('#fileImg2')[0].files[0];
@@ -685,8 +830,7 @@
             type: 'POST',
             success: function (e) {
                 alerta('OK', '¡Operacion exitosa!');
-                RecargaPanel('panels/campanas/campanas_agregarpm.jsp?rfid=<%=rfid%>&index=<%=index%>  #pumuContent', 'pumuContainer');
-
+                RecargaPanel('panels/campanas/campanas_agregarpm.jsp?rfid=<%=rfid%>&index=<%=campa%>  #pumuContent', 'pumuContainer', 'closeModal();');
                 eval(e.trim())
             },
             error: function (e) {
@@ -730,12 +874,31 @@
         input.trigger('fileselect', [numFiles, label]);
     });
 
+    $(document).on('change', '#cmbDepartamento', function () {
+        var val = $(this).val();
+        $.ajax({
+            url: 'UploadImages.jsp',
+            type: 'POST',
+            success: function (e) {
+                alerta('OK', '¡Operacion exitosa!');
+                RecargaPanel('panels/campanas/campanas_agregarpm.jsp?rfid=<%=rfid%>&index=<%=campa%>  #pumuContent', 'pumuContainer', 'closeModal();');
+                eval(e.trim())
+            },
+            error: function (e) {
+                alert(e);
+            },
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    });
+
     $(document).ready(function () {
         $(':file').on('fileselect', function (event, numFiles, label) {
 
             var input = $(this).parents('.input-group').find(':text'),
                     log = numFiles > 1 ? numFiles + ' files selected' : label;
-
             if (input.length) {
                 input.val(log);
             } else {

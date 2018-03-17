@@ -13,6 +13,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import com.statics.vo.PuntoMuestral;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -30,6 +31,24 @@ public class FotoPuntomuestralJpaController implements Serializable {
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
+    }
+    
+    public List<FotoPuntomuestral> findFotosByPuntoMuestral(int idPuntoMuestral){
+        String sqlQuery="SELECT * FROM foto_puntomuestral WHERE id_punto="+idPuntoMuestral;
+        List<FotoPuntomuestral> lista=new ArrayList();
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            Query q=em.createNativeQuery(sqlQuery, FotoPuntomuestral.class);
+            lista= q.getResultList();
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+        return lista;
     }
 
     public void create(FotoPuntomuestral fotoPuntomuestral) {
