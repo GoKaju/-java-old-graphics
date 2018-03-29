@@ -52,8 +52,6 @@ public class Cliente implements Serializable {
     @Column(name = "creado_fecha")
     @Temporal(TemporalType.TIMESTAMP)
     private Date creadoFecha;
-    @OneToMany(mappedBy = "idCliente", fetch = FetchType.LAZY)
-    private List<PuntoMuestral> puntoMuestralList;
 
     public Cliente() {
     }
@@ -98,15 +96,6 @@ public class Cliente implements Serializable {
 
     public void setCreadoFecha(Date creadoFecha) {
         this.creadoFecha = creadoFecha;
-    }
-
-    @XmlTransient
-    public List<PuntoMuestral> getPuntoMuestralList() {
-        return puntoMuestralList;
-    }
-
-    public void setPuntoMuestralList(List<PuntoMuestral> puntoMuestralList) {
-        this.puntoMuestralList = puntoMuestralList;
     }
 
     @Override

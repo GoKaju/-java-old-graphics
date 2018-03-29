@@ -48,6 +48,12 @@ public class FotoPuntomuestral implements Serializable {
     public FotoPuntomuestral() {
     }
 
+    public FotoPuntomuestral(Integer id, String nombre, PuntoMuestral idPunto) {
+        this.id = id;
+        this.nombre = nombre;
+        this.idPunto = idPunto;
+    }
+
     public FotoPuntomuestral(String nombre, PuntoMuestral idPunto) {
         this.nombre = nombre;
         this.idPunto = idPunto;

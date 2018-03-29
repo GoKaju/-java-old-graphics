@@ -62,10 +62,17 @@
     <form id="FormAplication" action="Login" method="POST" class="margin-bottom-0" data-parsley-validate="true">
         <div class="panel-body">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <div class="form-group ">
                         <label>Nombre  *</label>
                         <input type="text" name="Nombre" placeholder="Nombre" class="form-control " value="<%=elem.getCampId()!= null ? elem.getCampNombre(): ""%>"  required="" data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group ">
+                        <label>Cliente  *</label>
+                        <input type="text" name="cliente" placeholder="Cliente" class="form-control " 
+                               value="<%=elem.getCampId()!= null ? elem.getCliente(): ""%>"  required="" data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
                     </div>
                 </div>
                     <div class="col-md-12">

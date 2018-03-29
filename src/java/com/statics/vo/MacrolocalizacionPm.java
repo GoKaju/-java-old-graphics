@@ -33,7 +33,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "MacrolocalizacionPm.findAll", query = "SELECT m FROM MacrolocalizacionPm m")
     , @NamedQuery(name = "MacrolocalizacionPm.findById", query = "SELECT m FROM MacrolocalizacionPm m WHERE m.id = :id")
-    , @NamedQuery(name = "MacrolocalizacionPm.findByObservacionEmisionDominante", query = "SELECT m FROM MacrolocalizacionPm m WHERE m.observacionEmisionDominante = :observacionEmisionDominante")
     , @NamedQuery(name = "MacrolocalizacionPm.findByDistanciaAlBorde", query = "SELECT m FROM MacrolocalizacionPm m WHERE m.distanciaAlBorde = :distanciaAlBorde")
     , @NamedQuery(name = "MacrolocalizacionPm.findByAnchoVia", query = "SELECT m FROM MacrolocalizacionPm m WHERE m.anchoVia = :anchoVia")
     , @NamedQuery(name = "MacrolocalizacionPm.findByTraficoDiario1", query = "SELECT m FROM MacrolocalizacionPm m WHERE m.traficoDiario1 = :traficoDiario1")
@@ -45,14 +44,13 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "MacrolocalizacionPm.findByTipo", query = "SELECT m FROM MacrolocalizacionPm m WHERE m.tipo = :tipo")
     , @NamedQuery(name = "MacrolocalizacionPm.findByDistanciaFuente", query = "SELECT m FROM MacrolocalizacionPm m WHERE m.distanciaFuente = :distanciaFuente")
     , @NamedQuery(name = "MacrolocalizacionPm.findByDireccionGrados", query = "SELECT m FROM MacrolocalizacionPm m WHERE m.direccionGrados = :direccionGrados")
-    , @NamedQuery(name = "MacrolocalizacionPm.findByFuenteEvaluada", query = "SELECT m FROM MacrolocalizacionPm m WHERE m.fuenteEvaluada = :fuenteEvaluada")
-    , @NamedQuery(name = "MacrolocalizacionPm.findByEncajonada", query = "SELECT m FROM MacrolocalizacionPm m WHERE m.encajonada = :encajonada")
-    , @NamedQuery(name = "MacrolocalizacionPm.findByLibre", query = "SELECT m FROM MacrolocalizacionPm m WHERE m.libre = :libre")
-    , @NamedQuery(name = "MacrolocalizacionPm.findByObservacionPuntoCritico", query = "SELECT m FROM MacrolocalizacionPm m WHERE m.observacionPuntoCritico = :observacionPuntoCritico")
-    , @NamedQuery(name = "MacrolocalizacionPm.findByCiudadesCercanas", query = "SELECT m FROM MacrolocalizacionPm m WHERE m.ciudadesCercanas = :ciudadesCercanas")
-    , @NamedQuery(name = "MacrolocalizacionPm.findByRegionales", query = "SELECT m FROM MacrolocalizacionPm m WHERE m.regionales = :regionales")
-    , @NamedQuery(name = "MacrolocalizacionPm.findByObservacionesRuralesFondo", query = "SELECT m FROM MacrolocalizacionPm m WHERE m.observacionesRuralesFondo = :observacionesRuralesFondo")})
+    , @NamedQuery(name = "MacrolocalizacionPm.findByObservacionPuntoCritico", query = "SELECT m FROM MacrolocalizacionPm m WHERE m.observacionPuntoCritico = :observacionPuntoCritico")})
 public class MacrolocalizacionPm implements Serializable {
+
+    @Column(name = "punto_critico")
+    private String puntoCritico;
+    @Column(name = "rurales_fondo")
+    private String ruralesFondo;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -60,8 +58,6 @@ public class MacrolocalizacionPm implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Column(name = "observacion_emision_dominante")
-    private String observacionEmisionDominante;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "distancia_al_borde")
     private Double distanciaAlBorde;
@@ -85,20 +81,8 @@ public class MacrolocalizacionPm implements Serializable {
     private Double distanciaFuente;
     @Column(name = "direccion_grados")
     private String direccionGrados;
-    @Column(name = "fuente_evaluada")
-    private String fuenteEvaluada;
-    @Column(name = "encajonada")
-    private Boolean encajonada;
-    @Column(name = "libre")
-    private Boolean libre;
     @Column(name = "observacion_punto_critico")
     private String observacionPuntoCritico;
-    @Column(name = "ciudades_cercanas")
-    private String ciudadesCercanas;
-    @Column(name = "regionales")
-    private String regionales;
-    @Column(name = "observaciones_rurales_fondo")
-    private String observacionesRuralesFondo;
     @OneToMany(mappedBy = "idMacrolocalizacion", fetch = FetchType.LAZY)
     private List<PuntoMuestral> puntoMuestralList;
     @JoinColumn(name = "id_tipo_area", referencedColumnName = "id")
@@ -121,8 +105,9 @@ public class MacrolocalizacionPm implements Serializable {
         this.id = id;
     }
 
-    public MacrolocalizacionPm(String observacionEmisionDominante, Double distanciaAlBorde, Double anchoVia, Boolean traficoDiario1, Boolean traficoDiario2, Double velocidadPromedio, Integer porcentajeVehiculosPesados, String estadoVia, Integer tiempoMuestreo, String tipo, Double distanciaFuente, String direccionGrados, String fuenteEvaluada, Boolean encajonada, Boolean libre, String observacionPuntoCritico, String ciudadesCercanas, String regionales, String observacionesRuralesFondo, TipoAreaPm idTipoArea, TiempoPm idTiempo, EmisionDominantePm idEmisionDominante, ClimaPm idClima) {
-        this.observacionEmisionDominante = observacionEmisionDominante;
+    public MacrolocalizacionPm(String puntoCritico, String ruralesFondo, Double distanciaAlBorde, Double anchoVia, Boolean traficoDiario1, Boolean traficoDiario2, Double velocidadPromedio, Integer porcentajeVehiculosPesados, String estadoVia, Integer tiempoMuestreo, String tipo, Double distanciaFuente, String direccionGrados, String observacionPuntoCritico, TipoAreaPm idTipoArea, TiempoPm idTiempo, EmisionDominantePm idEmisionDominante, ClimaPm idClima) {
+        this.puntoCritico = puntoCritico;
+        this.ruralesFondo = ruralesFondo;
         this.distanciaAlBorde = distanciaAlBorde;
         this.anchoVia = anchoVia;
         this.traficoDiario1 = traficoDiario1;
@@ -134,18 +119,13 @@ public class MacrolocalizacionPm implements Serializable {
         this.tipo = tipo;
         this.distanciaFuente = distanciaFuente;
         this.direccionGrados = direccionGrados;
-        this.fuenteEvaluada = fuenteEvaluada;
-        this.encajonada = encajonada;
-        this.libre = libre;
         this.observacionPuntoCritico = observacionPuntoCritico;
-        this.ciudadesCercanas = ciudadesCercanas;
-        this.regionales = regionales;
-        this.observacionesRuralesFondo = observacionesRuralesFondo;
         this.idTipoArea = idTipoArea;
         this.idTiempo = idTiempo;
         this.idEmisionDominante = idEmisionDominante;
         this.idClima = idClima;
     }
+    
 
     public Integer getId() {
         return id;
@@ -153,14 +133,6 @@ public class MacrolocalizacionPm implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getObservacionEmisionDominante() {
-        return observacionEmisionDominante;
-    }
-
-    public void setObservacionEmisionDominante(String observacionEmisionDominante) {
-        this.observacionEmisionDominante = observacionEmisionDominante;
     }
 
     public Double getDistanciaAlBorde() {
@@ -251,60 +223,12 @@ public class MacrolocalizacionPm implements Serializable {
         this.direccionGrados = direccionGrados;
     }
 
-    public String getFuenteEvaluada() {
-        return fuenteEvaluada;
-    }
-
-    public void setFuenteEvaluada(String fuenteEvaluada) {
-        this.fuenteEvaluada = fuenteEvaluada;
-    }
-
-    public Boolean getEncajonada() {
-        return encajonada;
-    }
-
-    public void setEncajonada(Boolean encajonada) {
-        this.encajonada = encajonada;
-    }
-
-    public Boolean getLibre() {
-        return libre;
-    }
-
-    public void setLibre(Boolean libre) {
-        this.libre = libre;
-    }
-
     public String getObservacionPuntoCritico() {
         return observacionPuntoCritico;
     }
 
     public void setObservacionPuntoCritico(String observacionPuntoCritico) {
         this.observacionPuntoCritico = observacionPuntoCritico;
-    }
-
-    public String getCiudadesCercanas() {
-        return ciudadesCercanas;
-    }
-
-    public void setCiudadesCercanas(String ciudadesCercanas) {
-        this.ciudadesCercanas = ciudadesCercanas;
-    }
-
-    public String getRegionales() {
-        return regionales;
-    }
-
-    public void setRegionales(String regionales) {
-        this.regionales = regionales;
-    }
-
-    public String getObservacionesRuralesFondo() {
-        return observacionesRuralesFondo;
-    }
-
-    public void setObservacionesRuralesFondo(String observacionesRuralesFondo) {
-        this.observacionesRuralesFondo = observacionesRuralesFondo;
     }
 
     @XmlTransient
@@ -372,5 +296,21 @@ public class MacrolocalizacionPm implements Serializable {
     public String toString() {
         return "com.statics.vo.MacrolocalizacionPm[ id=" + id + " ]";
     }
-    
+
+    public String getPuntoCritico() {
+        return puntoCritico;
+    }
+
+    public void setPuntoCritico(String puntoCritico) {
+        this.puntoCritico = puntoCritico;
+    }
+
+    public String getRuralesFondo() {
+        return ruralesFondo;
+    }
+
+    public void setRuralesFondo(String ruralesFondo) {
+        this.ruralesFondo = ruralesFondo;
+    }
+
 }

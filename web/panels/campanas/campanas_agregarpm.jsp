@@ -48,7 +48,7 @@
 </ol>
 <!-- end breadcrumb -->
 <!-- begin page-header -->
-<h1 class="page-header">Campañas <small><%=index.isEmpty() ? "Agregar" : "Editar"%> puntos de monitoreo</small></h1>
+<h1 class="page-header">Campañas <small><%=index.isEmpty() ? "Agregar" : "Editar"%> Puntos de Monitoreo</small></h1>
 <!-- end page-header -->
 
 <div class="panel panel-inverse">
@@ -66,7 +66,7 @@
         <div id="pumuContent" class="row">
             <div class=" col-md-12 table-responsive">
                 <table class="table table-condensed table-hover table-striped">
-                    <caption>Lista de puntos de monitoreo campaña <%=o.notEmpty(elem.getCampNombre())%></caption>
+                    <caption>Lista de Puntos de Monitoreo <%=o.notEmpty(elem.getCampNombre())%></caption>
                     <thead>
                         <tr>
                             <th>Id</th>
@@ -92,7 +92,7 @@
                             <td>           
 
 
-                                <a onclick="   modalDialog('Editar Punto Muestral(<%=o.notEmpty(elem.getCampNombre())%>)', 'panels/campanas/campanas_agregarpm_dial.jsp', 'campa=<%=index%>&rfid=<%=rfid%>&index=<%=p.getPumuId()%>', 'large')" class="btn btn-warning btn-icon btn-circle" title="Editar"><i class="fa fa-pencil"></i></a>
+                                <a onclick="   modalDialog('Editar  Punto de Monitoreo (<%=o.notEmpty(elem.getCampNombre())%>)', 'panels/campanas/campanas_agregarpm_dial.jsp', 'campa=<%=index%>&rfid=<%=rfid%>&index=<%=p.getPumuId()%>', 'large')" class="btn btn-warning btn-icon btn-circle" title="Editar"><i class="fa fa-pencil"></i></a>
                                     <% if (p.getCargasList().isEmpty()) {%>
                                 <a onclick=" peticionAjaxConfirm('Campanas', 'index=<%=p.getPumuId()%>&rfid=<%=rfid%>&modulo=4', '¿Esta seguro de remover este punto muestral?');" class="btn btn-danger btn-icon btn-circle" title="Remover"><i class="fa fa-remove"></i></a>
                                     <%}%>
@@ -115,7 +115,7 @@
             <input type="hidden" name="rfid" value="<%=rfid%>"/>
             <input type="hidden" name="index" value="<%=index%>"/>
             <button type="button"  onclick="
-                    modalDialog('Agregar Punto Muestral(<%=o.notEmpty(elem.getCampNombre())%>)', 'panels/campanas/campanas_agregarpm_dial.jsp', 'campa=<%=index%>&rfid=<%=rfid%>', 'large')
+                    modalDialog('Agregar Punto de Monitoreo (<%=o.notEmpty(elem.getCampNombre())%>)', 'panels/campanas/campanas_agregarpm_dial.jsp', 'campa=<%=index%>&rfid=<%=rfid%>', 'large')
                     " class="pull-right btn btn-success m-r-5 m-b-5">Agregar</button>
             <button type="button"  onclick="RecargaPanel('panels/campanas/campanas_nuevo.jsp?rfid=<%=rfid%>&index=<%=index%>', 'content')" class="pull-right btn btn-default m-r-5 m-b-5">Atras</button>
 

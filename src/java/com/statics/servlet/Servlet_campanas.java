@@ -6,7 +6,6 @@
 package com.statics.servlet;
 
 import com.statics.dao.CampanasJpaController;
-import com.statics.dao.ClienteJpaController;
 import com.statics.dao.ClimaPmJpaController;
 import com.statics.dao.CriterioMicrolocalizacionJpaController;
 import com.statics.dao.CriterioPmJpaController;
@@ -126,10 +125,11 @@ public class Servlet_campanas extends HttpServlet {
                     }
                     elem.setCampNombre(o.getvariable("Nombre"));
                     elem.setCampDescripcion(o.getvariable("descripcion"));
+                    elem.setCliente(o.getvariable("cliente"));
                     elem.setEstaId(1);
                     elem.setCampRegistradapor(user.getUsuaId());
                     elem.setCampFechacambio(Fechas.getFechaHoraTimeStamp());
-                    elem.setGrupId(user.getGrupoUsuariosList().get(0).getGrupo());
+                    elem.setGrupId(user.getGrupoUsuariosList().get(0).getGrupId());
                     if (exito) {
                         if (elem.getCampId() != null) {
                             ejc.edit(elem);
@@ -154,50 +154,44 @@ public class Servlet_campanas extends HttpServlet {
 
                 } else if (modulo.equals("3")) {
 //                    agregar punto muestral
+//Se quita Cliente y se deja en campaña
                     System.out.println("INGRESO POR ACÁ");
                     int cantDatosAdicionales = !o.getvariable("cantDatosAdicionales").equals("") ? Integer.parseInt(o.getvariable("cantDatosAdicionales")) : 0;
                     int idCampana = !o.getvariable("campa").equals("") ? Integer.parseInt(o.getvariable("campa")) : 0;
 
                     String nombrePM = o.getvariable("nombrePunto");
-                    String clientePM = o.getvariable("cliente");
                     int estacionPM = !o.getvariable("estacion").equals("") ? Integer.parseInt(o.getvariable("estacion")) : 0;
                     String descripcionPM = o.getvariable("descripcionPunto");
                     int departamentoPM = !o.getvariable("departamento").equals("") ? Integer.parseInt(o.getvariable("departamento")) : 0;
-                    int municipioPM = Integer.parseInt(o.getvariable("municipio"));
+                    int municipioPM = !o.getvariable("municipio").equals("") ? Integer.parseInt(o.getvariable("municipio")) : 0;
                     String direccionPM = o.getvariable("direccion");
                     String longitudPM = o.getvariable("longitud");
                     String latitudPM = o.getvariable("latitud");
                     int tipoAreaPM = !o.getvariable("tipoArea").equals("") ? Integer.parseInt(o.getvariable("tipoArea")) : 0;
                     int tiempoPM = !o.getvariable("tiempo").equals("") ? Integer.parseInt(o.getvariable("tiempo")) : 0;
-                    int emisionDominantePM = Integer.parseInt(o.getvariable("emisionDominante"));
-                    String observacionesLv1PM = o.getvariable("observacionesLv1");
+                    int emisionDominantePM = !o.getvariable("emisionDominante").equals("") ? Integer.parseInt(o.getvariable("emisionDominante")) : 0;
                     double distanciaBordePM = !o.getvariable("distanciaBorde").equals("") ? Double.parseDouble(o.getvariable("distanciaBorde")) : 0;
                     double anchoViaPM = !o.getvariable("anchoVia").equals("") ? Double.parseDouble(o.getvariable("anchoVia")) : 0;
                     double velocidadPromedioPM = !o.getvariable("velocidadPromedio").equals("") ? Double.parseDouble(o.getvariable("velocidadPromedio")) : 0;
-                    boolean sentidoUnoPM = o.getvariable("sentidoUno").equals("on");
-                    boolean sentidoDosPM = o.getvariable("sentidoDos").equals("on");
                     int vehiculosPesadosPM = !o.getvariable("vehiculosPesados").equals("") ? Integer.parseInt(o.getvariable("vehiculosPesados")) : 0;
                     String estadoViaPM = o.getvariable("estadoVia");
+                    boolean sentidoUnoPM = o.getvariable("sentidoUno").equals("on");
+                    boolean sentidoDosPM = o.getvariable("sentidoDos").equals("on");
                     int tiempoMuestreoPM = !o.getvariable("tiempoMuestreo").equals("") ? Integer.parseInt(o.getvariable("tiempoMuestreo")) : 0;
                     int climaPM = !o.getvariable("clima").equals("") ? Integer.parseInt(o.getvariable("clima")) : 0;
                     String tipoPM = o.getvariable("tipo");
                     double distanciaFuentePM = !o.getvariable("distanciaFuente").equals("") ? Double.parseDouble(o.getvariable("distanciaFuente")) : 0;
                     String direccionGradosPM = o.getvariable("direccionGrados");
-                    String fuenteEvaluadaPM = o.getvariable("fuenteEvaluada").equals("on") ? "1" : "";
-                    boolean calleLibrePM = o.getvariable("calleLibre").equals("on");
-                    boolean calleEncajonadaPM = o.getvariable("calleEncajonada").equals("on");
-
+                    String puntoCriticoPM = o.getvariable("puntoCritico");
                     String observacionPuntoCriticoPM = o.getvariable("observacionPuntoCritico");
-                    String cercanaCiudadesPM = o.getvariable("cercanaCiudades").equals("on") ? "1" : "";
-                    String regionalesPM = o.getvariable("regionales").equals("on") ? "1" : "";
-                    String observacionRuralesFondoPM = o.getvariable("observacionRuralesFondo");
+                    
+                    String ruralesFondoPM = o.getvariable("ruralesFondo");
                     String descripcionRutaPM = o.getvariable("descripcionRuta");
 
                     LogisticaPmJpaController logisticaDao = new LogisticaPmJpaController(emf);
                     ItemLogisticaJpaController itemLogisticaDao = new ItemLogisticaJpaController(emf);
                     ItemPmJpaController itemDao = new ItemPmJpaController(emf);
                     CriterioPmJpaController criterioDao = new CriterioPmJpaController(emf);
-                    ClienteJpaController clienteDao = new ClienteJpaController(emf);
                     UbicacionPmJpaController ubicacionDao = new UbicacionPmJpaController(emf);
                     DepartamentoJpaController departamentoDao = new DepartamentoJpaController(emf);
                     MunicipioJpaController municipioDao = new MunicipioJpaController(emf);
@@ -214,9 +208,7 @@ public class Servlet_campanas extends HttpServlet {
                     PuntoMuestralJpaController puntoMuestralDao = new PuntoMuestralJpaController(emf);
                     EstacionesJpaController estacionDao = new EstacionesJpaController(emf);
                     RutaJpaController rutaDao = new RutaJpaController(emf);
-                    //Cliente
-                    Cliente cliente = new Cliente(clientePM, user.getUsuaId(), new Date());
-                    clienteDao.create(cliente);
+                    
                     //Ubicacion
                     Departamento departamento = departamentoDao.findDepartamento(departamentoPM);
                     Municipio municipio = municipioDao.findMunicipio(municipioPM);
@@ -230,11 +222,10 @@ public class Servlet_campanas extends HttpServlet {
                     ClimaPm clima = climaDao.findClimaPm(climaPM);
                     MacrolocalizacionPm macrolocalizacion
                             = new MacrolocalizacionPm(
-                                    observacionesLv1PM, distanciaBordePM, anchoViaPM, sentidoUnoPM,
+                                    puntoCriticoPM,ruralesFondoPM,distanciaBordePM, anchoViaPM, sentidoUnoPM,
                                     sentidoDosPM, velocidadPromedioPM, vehiculosPesadosPM, estadoViaPM,
                                     tiempoMuestreoPM, tipoPM, distanciaFuentePM, direccionGradosPM,
-                                    fuenteEvaluadaPM, calleEncajonadaPM, calleLibrePM, observacionPuntoCriticoPM,
-                                    cercanaCiudadesPM, regionalesPM, observacionRuralesFondoPM, tipoArea, tiempo,
+                                    observacionPuntoCriticoPM,tipoArea, tiempo,
                                     emisionDominante, clima);
                     macrolocalizacionDao.create(macrolocalizacion);
 
@@ -301,7 +292,6 @@ public class Servlet_campanas extends HttpServlet {
                     puntoMuestral.setIdMacrolocalizacion(macrolocalizacion);
                     puntoMuestral.setIdMicrolocalizacion(microlocalizacion);
                     puntoMuestral.setIdUbicacion(ubicacion);
-                    puntoMuestral.setIdCliente(cliente);
                     puntoMuestral.setIdLogistica(logistica);
                     puntoMuestral.setPumuNombre(nombrePM);
                     puntoMuestral.setPumuDescripcion(descripcionPM);
@@ -339,14 +329,14 @@ public class Servlet_campanas extends HttpServlet {
                     }
 //RECRAGAR MUNICIOIO DEPENDIENTE
                 } else if (modulo.equals("5")) {
-                    String cadena="";
+                    String cadena = "";
                     for (Municipio m : new MunicipioJpaController(emf)
                             .findMunicipiosByDepartamento(Integer.parseInt(o.getvariable("idDepartamento")))) {
-                        cadena+="<option value="+m.getId()+">"+m.getNombre()+"</option>";
-                        
+                        cadena += "<option value=" + m.getId() + ">" + m.getNombre().toUpperCase() + "</option>";
+
                     }
-                    System.out.println("cadena-->"+cadena);
-                    out.println(" $('#cmbMunicipio').html(\""+cadena+"\");");
+                    System.out.println("cadena-->" + cadena);
+                    out.println(" $('#cmbMunicipio').html(\"" + cadena + "\");");
                 } else {
                     out.println("alerta('ERROR','¡Modulo no encontrado!');");
                 }

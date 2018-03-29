@@ -58,9 +58,6 @@ public class PuntoMuestral implements Serializable {
     @JoinColumn(name = "id_ubicacion", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
     private UbicacionPm idUbicacion;
-    @JoinColumn(name = "id_cliente", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Cliente idCliente;
     @JoinColumn(name = "id_logistica", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
     private LogisticaPm idLogistica;
@@ -250,14 +247,6 @@ public class PuntoMuestral implements Serializable {
 
     public void setIdUbicacion(UbicacionPm idUbicacion) {
         this.idUbicacion = idUbicacion;
-    }
-
-    public Cliente getIdCliente() {
-        return idCliente;
-    }
-
-    public void setIdCliente(Cliente idCliente) {
-        this.idCliente = idCliente;
     }
 
     public LogisticaPm getIdLogistica() {

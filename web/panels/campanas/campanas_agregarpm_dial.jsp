@@ -92,34 +92,30 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Datos basicos</a>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Datos básicos</a>
                     </h4>
                 </div>
                 <div id="collapse1" class="panel-collapse collapse in">
                     <div class="panel-body">
                         <div class="divider"></div>
-                        <div class="col-md-4">
+                        <div class="col-md-8">
                             <div class="form-group ">
                                 <label>Nombre del punto *</label>
                                 <input type="text" name="nombrePunto" placeholder="Nombre del punto" 
                                        class="form-control " value="<%=elem.getPumuId() != null ? elem.getPumuNombre() : ""%>"  
-                                       required>
+                                       data-parsley-required="true"
+                                       data-parsley-error-message="Datos básicos: El nombre del punto es necesario."
+                                       data-parsley-errors-container="#errorsParsley">
                                 <ul class="parsley-errors-list"></ul>
                             </div>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <div class="form-group ">
-                                <label>Cliente *</label>
-                                <input type="text" name="cliente" placeholder="Cliente" 
-                                       class="form-control " value="<%=elem.getPumuId() != null ? elem.getIdCliente().getNombre() : ""%>"  
-                                       required>
-                                <ul class="parsley-errors-list"></ul>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group ">
-                                <label>Estacion *</label>
-                                <select name="estacion" class="form-control"  required>
+                                <label>Estación *</label>
+                                <select name="estacion" class="form-control"  
+                                        data-parsley-required="true"
+                                        data-parsley-error-message="Datos básicos: La estación es necesaria."
+                                        data-parsley-errors-container="#errorsParsley">
                                     <%
                                         for (Estaciones s : new EstacionesJpaController(emf).findEstacionesEntities()) {
                                             String sel = "";
@@ -147,7 +143,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Ubicacion del punto</a>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Ubicación del punto</a>
                     </h4>
                 </div>
                 <div id="collapse2" class="panel-collapse collapse">
@@ -156,8 +152,11 @@
                             <div class="form-group">
                                 <label>Departamento</label>
                                 <select class="form-control" name="departamento" id="cmbDepartamento" 
-                                        onchange="recargaMunicipio(this.value)">
-
+                                        onchange="recargaMunicipio(this.value)"
+                                        data-parsley-required="true"
+                                        data-parsley-error-message="Ubicación: El departamento es necesario."
+                                        data-parsley-errors-container="#errorsParsley">
+                                    <option value="">Seleccione...</option>
                                     <%
                                         for (Departamento m : new DepartamentoJpaController(emf).findDepartamentoEntities()) {
                                             String sel = "";
@@ -186,7 +185,7 @@
                                                     sel = "selected";
                                                 }
                                     %>
-                                    <option <%=sel%> value="<%= m.getId()%>"><%=o.notEmpty(m.getNombre())%></option>
+                                    <option <%=sel%> value="<%= m.getId()%>"><%=o.notEmpty(m.getNombre().toUpperCase())%></option>
                                     <%
                                             }
                                         }
@@ -205,7 +204,10 @@
                             <div class="form-group ">
                                 <label>Coordenadas * <i class="glyphicon glyphicon-question-sign info" onclick="alertaCoordenadas()"></i></label>
                                 <input type="text" name="longitud" placeholder="Longitud" 
-                                       class="form-control " value="<%=elem.getPumuId() != null ? elem.getPumuLong() : ""%>">
+                                       class="form-control " value="<%=elem.getPumuId() != null ? elem.getPumuLong() : ""%>"
+                                       data-parsley-required="true"
+                                       data-parsley-error-message="Ubicación: La longitud del punto es necesaria."
+                                       data-parsley-errors-container="#errorsParsley">
                                 <ul class="parsley-errors-list"></ul>
                             </div>
                         </div>
@@ -213,7 +215,10 @@
                             <div class="form-group ">
                                 <label><i class="glyphicon glyphicon-question-sign info" onclick="alertaCoordenadas()"></i></label>
                                 <input type="text" name="latitud" placeholder="Latitud" class="form-control " 
-                                       value="<%=elem.getPumuId() != null ? elem.getPumuLat() : ""%>">
+                                       value="<%=elem.getPumuId() != null ? elem.getPumuLat() : ""%>"
+                                       data-parsley-required="true"
+                                       data-parsley-error-message="Ubicación: La latitud del punto es necesaria."
+                                       data-parsley-errors-container="#errorsParsley">
                                 <ul class="parsley-errors-list"></ul>
                             </div>
                         </div>
@@ -261,7 +266,7 @@
                                     <label class="input-group-btn">
                                         <span class="btn btn-default">
                                             Examinar&hellip; 
-                                            <input type="file" style="display:none" 
+                                            <input type="file" style="display:none" accept="image/*"
                                                    id="<%= imgId%>" onchange="readURL(this)" name="<%= imgName%>"/>
                                         </span>
                                     </label>
@@ -292,7 +297,7 @@
                     <div class="panel-body">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>Tipo de area</label>
+                                <label>Tipo de área</label>
                                 <select class="form-control" name="tipoArea">
                                     <%
                                         for (TipoAreaPm m : new TipoAreaPmJpaController(emf).findTipoAreaPmEntities()) {
@@ -328,7 +333,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>Emision dominante</label>
+                                <label>Emisión dominante</label>
                                 <select class="form-control" name="emisionDominante">
                                     <%
                                         for (EmisionDominantePm m : new EmisionDominantePmJpaController(emf).findEmisionDominantePmEntities()) {
@@ -344,13 +349,6 @@
                                 </select>
                             </div>
                         </div>
-                        <!--                        <div class="col-md-12">
-                                                    <div class="form-group">
-                                                        <label>Observaciones lvl i-iv</label>
-                                                        <textarea class="form-control" name="observacionesLv1"
-                                                                  ><%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getObservacionEmisionDominante() : ""%></textarea>
-                                                    </div>
-                                                </div>-->
                     </div>
                 </div>
             </div>
@@ -366,7 +364,7 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading accordionSub">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSub1">Trafico</a>
+                                        <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSub1">Tráfico</a>
                                     </h4>
                                 </div>
                                 <div id="collapseSub1" class="panel-collapse collapse">
@@ -374,53 +372,66 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label>Distancia al borde</label>
-                                                <input type="number" class="form-control" name="distanciaBorde" placeholder="Metros" 
-                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getDistanciaAlBorde() : ""%>"/>
+                                                <input type="text" class="form-control" name="distanciaBorde" placeholder="metros" 
+                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getDistanciaAlBorde() : ""%>"
+                                                       data-parsley-pattern="^[0-9]\d*(\.\d+)?$"
+                                                       data-parsley-error-message="Nivel IV-Tráfico: Distancia al borde debe ser numérico. (1.2)"
+                                                       data-parsley-errors-container="#errorsParsley"/>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label>Ancho vía</label>
-                                                <input type="number" class="form-control" name="anchoVia" placeholder="Mts"
-                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getAnchoVia() : ""%>"/>
+                                                <input type="text" class="form-control" name="anchoVia" placeholder="metros"
+                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getAnchoVia() : ""%>"
+                                                       data-parsley-pattern="^[0-9]\d*(\.\d+)?$"
+                                                       data-parsley-error-message="Nivel IV-Tráfico: Ancho vía debe ser numérico. (10.4)"
+                                                       data-parsley-errors-container="#errorsParsley"/>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label>Velocidad promedio</label>
-                                                <input type="number" class="form-control" name="velocidadPromedio" placeholder="Kms/h"
-                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getVelocidadPromedio() : ""%>"/>
+                                                <input type="text" class="form-control" name="velocidadPromedio" placeholder="Kms/h"
+                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getVelocidadPromedio() : ""%>"
+                                                       data-parsley-pattern="^[0-9]\d*(\.\d+)?$"
+                                                       data-parsley-error-message="Nivel IV-Tráfico: Velocidad promedio debe ser numérico. (20.0)"
+                                                       data-parsley-errors-container="#errorsParsley"/>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
-                                            <label> </label>
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" name="sentidoUno" 
-                                                           <%= elem.getPumuId() != null && elem.getIdMacrolocalizacion().getTraficoDiario1() ? "checked" : ""%>> Trafico diario sentido 1
-                                                </label>   
-                                                <label>
-                                                    <input type="checkbox" name="sentidoDos"
-                                                           <%= elem.getPumuId() != null && elem.getIdMacrolocalizacion().getTraficoDiario2() ? "checked" : ""%>> Trafico diario sentido 2
-                                                </label>
-                                            </div>
-                                        </div>
+
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label>% Vehiculos pesados</label>
-                                                <input type="number" class="form-control" name="vehiculosPesados" placeholder="%"
-                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getPorcentajeVehiculosPesados() : ""%>"/>
+                                                <input type="text" class="form-control" name="vehiculosPesados" placeholder="%"
+                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getPorcentajeVehiculosPesados() : ""%>"
+                                                       data-parsley-pattern="^[0-9]\d*(\.\d+)?$"
+                                                       data-parsley-error-message="Nivel IV-Tráfico: Vehiculos pesados debe ser numérico. (10)"
+                                                       data-parsley-errors-container="#errorsParsley"/>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label>Estado de la via</label>
+                                                <label>Estado de la vía</label>
                                                 <!--<input type="text" class="form-control" name="estadoVia" placeholder="via"
                                                        value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getAnchoVia() : ""%>"/>-->
                                                 <select class="form-control" name="estadoVia">
                                                     <option value="Pavimentada">Pavimentada</option>
                                                     <option value="Destapada">Destapada</option>
                                                 </select>
+                                            </div>
+                                        </div>
+                                                <div class="col-md-3" style="margin-left:20px; margin-top:7px">
+                                            <!--                                            <label> </label>-->
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" name="sentidoUno" 
+                                                           <%= elem.getPumuId() != null && elem.getIdMacrolocalizacion().getTraficoDiario1() ? "checked" : ""%>> Tráfico Diario Sentido 1
+                                                </label>   
+                                                <label>
+                                                    <input type="checkbox" name="sentidoDos"
+                                                           <%= elem.getPumuId() != null && elem.getIdMacrolocalizacion().getTraficoDiario2() ? "checked" : ""%>> Tráfico Diario Sentido 2
+                                                </label>
                                             </div>
                                         </div>
                                     </div>
@@ -437,8 +448,11 @@
                                         <div class="col-md-6">
                                             <div class="form-group ">
                                                 <label>Tiempo de muestreo</label>
-                                                <input type="number" name="tiempoMuestreo" placeholder="Días" class="form-control "
-                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getTiempoMuestreo() : ""%>">
+                                                <input type="text" name="tiempoMuestreo" placeholder="Días" class="form-control "
+                                                       value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getTiempoMuestreo() : ""%>"
+                                                       data-parsley-pattern="^[0-9]\d*(\.\d+)?$"
+                                                       data-parsley-error-message="Nivel IV-Indicativas: Tiempo de muestreo debe ser numérico. (1.2)"
+                                                       data-parsley-errors-container="#errorsParsley">
                                                 <ul class="parsley-errors-list"></ul>
                                             </div>
                                         </div>
@@ -478,12 +492,15 @@
                                         </div>
                                         <div class="form-group col-md-4">
                                             <label>Distancia de la fuente</label>
-                                            <input class="form-control" type="number" name="distanciaFuente" placeholder="Distancia de la fuente"
-                                                   value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getDistanciaFuente() : ""%>"/>
+                                            <input class="form-control" type="text" name="distanciaFuente" placeholder="Metros"
+                                                   value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getDistanciaFuente() : ""%>"
+                                                   data-parsley-pattern="^[0-9]\d*(\.\d+)?$"
+                                                   data-parsley-error-message="Nivel IV-Industrial: Distancia de fuente debe ser numérico. (1.2)"
+                                                   data-parsley-errors-container="#errorsParsley"/>
                                         </div>
                                         <div class="form-group col-md-4">
-                                            <label>Direccion grados</label>
-                                            <input class="form-control" type="text" name="direccionGrados" placeholder="Direccion en grados"
+                                            <label>Dirección grados</label>
+                                            <input class="form-control" type="text" name="direccionGrados" placeholder="Dirección en grados"
                                                    value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getDireccionGrados() : ""%>"/>
                                         </div>
                                     </div>
@@ -492,81 +509,29 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading accordionSub">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSub4">Punto critico</a>
+                                        <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSub4">Punto crítico/Rurales fondo</a>
                                     </h4>
                                 </div>
                                 <div id="collapseSub4" class="panel-collapse collapse">
                                     <div class="panel-body">
-                                        <!--                                        <div class="form-group col-md-9">
-                                                                                    <label>Fuente evaluada</label>
-                                                                                    <input class="form-control" type="text" name="fuenteEvaluada" placeholder="Fuente evaluada"
-                                                                                           value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getFuenteEvaluada() : ""%>"/>
-                                                                                </div>-->
-                                        <div class="form-group col-md-12">
-                                            <div class="checkbox">
-                                                <div class="col-md-4">
-                                                    <label>
-                                                        <input type="checkbox" name="fuenteEvaluada" 
-                                                               <%= elem.getPumuId() != null && elem.getIdMacrolocalizacion().getFuenteEvaluada().equals("1") ? "checked" : ""%> > Fuente evaluada
-                                                    </label>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label>
-                                                        <input type="checkbox" name="calleLibre" 
-                                                               <%= elem.getPumuId() != null && elem.getIdMacrolocalizacion().getLibre() ? "checked" : ""%> > Calle Libre
-                                                    </label>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label>
-                                                        <input type="checkbox" name="calleEncajonada"
-                                                               <%= elem.getPumuId() != null && elem.getIdMacrolocalizacion().getEncajonada() ? "checked" : ""%>/> Calle Encajonada
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <label>Observacion</label>
-                                            <textarea class="form-control" name="observacionPuntoCritico" placeholder="Observacion"
-                                                      ><%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getObservacionPuntoCritico() : ""%></textarea>
-                                        </div>
-                                    </div> 
-                                </div> 
-                            </div> 
-                            <div class="panel panel-default">
-                                <div class="panel-heading accordionSub">
-                                    <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSub5">Rurales de fondo</a>
-                                    </h4>
-                                </div>
-                                <div id="collapseSub5" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        <div class="col-md-6">
-                                            <label>
-                                                <input type="checkbox" name="cercanaCiudades" 
-                                                       <%= elem.getPumuId() != null && elem.getIdMacrolocalizacion().getCiudadesCercanas().equals("1") ? "checked" : ""%> > Cercana ciudades
-                                            </label>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label>
-                                                <input type="checkbox" name="regionales"
-                                                       <%= elem.getPumuId() != null && elem.getIdMacrolocalizacion().getRegionales().equals("1") ? "checked" : ""%>/> Regionales
-                                            </label>
-                                        </div>
-                                        <!--<div class="form-group col-md-6">
-                                            <label>Ciudades cercanas</label>
-                                            <input class="form-control" type="text" name="cercanaCiudades" placeholder="Ciudades cercanas"
-                                                   value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getCiudadesCercanas() : ""%>"/>
-                                        </div>
                                         <div class="form-group col-md-6">
-                                            <label>Regionales</label>
-                                            <input class="form-control" type="text" name="regionales" placeholder="Regionales"
-                                                   value="<%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getRegionales() : ""%>"/>
+                                            <select name="puntoCritico" class="form-control">
+                                                <option value="Fuente Evaluada">Fuente evaluada</option>
+                                                <option value="Calle libre">Calle libre</option>
+                                                <option value="Calle encajonada">Calle encajonada</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <select name="ruralesFondo" class="form-control">
+                                                <option value="Cercana ciudades">Cercana ciudades</option>
+                                                <option value="Regionales">Regionales</option>
+                                            </select>
                                         </div>
                                         <div class="form-group col-md-12">
                                             <label>Observación</label>
-                                            <textarea class="form-control" name="observacionRuralesFondo" placeholder="Observaciones"
-                                                      ><%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getObservacionesRuralesFondo() : ""%></textarea>
-                                        </div>-->
+                                            <textarea class="form-control" name="observacionPuntoCritico" placeholder="Observación"
+                                                      ><%= elem.getPumuId() != null ? elem.getIdMacrolocalizacion().getObservacionPuntoCritico() : ""%></textarea>
+                                        </div>
                                     </div> 
                                 </div> 
                             </div> 
@@ -607,7 +572,7 @@
                                        name="<%= nameRta%>" placeholder="<%= i.getDescripcion()%>"/>
                             </div>
                             <div class="col-md-6">
-                                <textarea class="form-control" name="<%= nameObs%>" rows="2" placeholder="Observacion"
+                                <textarea class="form-control" name="<%= nameObs%>" rows="2" placeholder="Observación"
                                           ><%= observacionItem%></textarea>
                             </div>
                         </div>
@@ -621,7 +586,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse7">Criterios de microlocalizacion</a>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse7">Criterios de microlocalización</a>
                     </h4>
                 </div>
                 <div id="collapse7" class="panel-collapse collapse">
@@ -662,7 +627,7 @@
                             </div>
                             <div class="col-md-7">
                                 <textarea class="form-control" name="<%= nameObsCriterio%>" 
-                                          rows="2" placeholder="Observacion"><%= observacionCriterio%></textarea>
+                                          rows="2" placeholder="Observación"><%= observacionCriterio%></textarea>
                             </div>
                         </div>
                         <hr class="half-rule"/>
@@ -754,16 +719,19 @@
                         </div>
                         <div class="row">
                             <input type="button" class="btn btn-block btn-primary" onclick="addDatoAdicional()" 
-                                   value="Ora contacto adicional" width="100%"/>
+                                   value="Agregar Contacto" width="100%"/>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="row col-md-12">
+            <div id="errorsParsley"></div>
+        </div>
     </div>
     <div class="modal-footer">
         <div>
-            <input type="hidden" id="cantDAs" name="cantDatosAdicionales" value="<%= cantDatosAdicionales %>"/>
+            <input type="hidden" id="cantDAs" name="cantDatosAdicionales" value="<%= cantDatosAdicionales%>"/>
             <input type="hidden" name="modulo" value="3"/>
             <input type="hidden" name="rfid" value="<%=rfid%>"/>
             <input type="hidden" name="index" value="<%=index%>"/>

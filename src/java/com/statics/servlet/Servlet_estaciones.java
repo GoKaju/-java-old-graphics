@@ -76,24 +76,14 @@ public class Servlet_estaciones extends HttpServlet {
                     elem.setEstaCarpetacarga(o.getvariable("carpetaserver"));
                     elem.setEstaRegistradopor(user.getUsuaId());
                     elem.setEstaFechacambio(Fechas.getFechaHoraTimeStamp());
-                    elem.setGrupId(user.getGrupoUsuariosList().get(0).getGrupo());
-                
-              
-
+                    elem.setGrupId(user.getGrupoUsuariosList().get(0).getGrupId());
                     if (exito) {
-
                         if (elem.getEstaId()!= null) {
                             ejc.edit(elem);
-
-
                         } else {
                             ejc.create(elem);
-
-
                         }
-
                     }
-
                     if (exito) {
                         out.println("alerta('OK','¡Creado con exito!'); RecargaPanel('panels/estaciones/estaciones.jsp?rfid=" + o.getvariable("rfid") + "','content');");
                     } else {

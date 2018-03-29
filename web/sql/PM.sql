@@ -69,7 +69,6 @@ CREATE TABLE macrolocalizacion_pm(
 	id_tiempo INT, 
 	id_emision_dominante INT, 
 	id_clima INT,
-	observacion_emision_dominante VARCHAR(100),
 	distancia_al_borde DOUBLE,
 	ancho_via DOUBLE,
 	trafico_diario_1 BOOLEAN,
@@ -81,13 +80,9 @@ CREATE TABLE macrolocalizacion_pm(
 	tipo VARCHAR (30),
 	distancia_fuente DOUBLE,
 	direccion_grados VARCHAR(40),
-	fuente_evaluada VARCHAR(30),
-	encajonada BOOLEAN,
-	libre BOOLEAN,
+	punto_critico VARCHAR(50),
 	observacion_punto_critico VARCHAR (100),
-	ciudades_cercanas VARCHAR(50),
-	regionales VARCHAR(30),
-	observaciones_rurales_fondo VARCHAR(100),
+	rurales_fondo VARCHAR(50),
 	PRIMARY KEY(id),
 	FOREIGN KEY (id_tipo_area) REFERENCES tipo_area_pm(id),
 	FOREIGN KEY (id_tiempo) REFERENCES tiempo_pm(id),
@@ -171,19 +166,21 @@ CREATE TABLE ruta (
 	PRIMARY KEY(id)
 );
 
-INSERT INTO ruta (codRuta,tipoRuta,url,accessKey,secretKey) VALUES 
+/*INSERT INTO ruta (codRuta,tipoRuta,url,accessKey,secretKey) VALUES 
 ("Minio", "Server url", "http://181.55.240.104:9000","AFC46NMHY3NS95T64UVJdd","Fh9En/kkmezyJUMsUEDOb0x8/GIO/kgyOhP448m6");
+*/
+INSERT INTO ruta (codRuta,tipoRuta,url,accessKey,secretKey) VALUES 
+("Minio", "Server url", "http://127.0.0.1:9000","T1X28M38SIP3MZ8JIY32","G9tROGc1w/+8ry271DvP+Z/WRncowH1fuReUIaPh");
 
+ALTER TABLE campanas ADD cliente VARCHAR(100);
 ALTER TABLE campanas ADD camp_bucket VARCHAR(100);
 ALTER TABLE punto_muestral ADD id_macrolocalizacion INT;
 ALTER TABLE punto_muestral ADD id_microlocalizacion INT;
 ALTER TABLE punto_muestral ADD id_ubicacion INT;
-ALTER TABLE punto_muestral ADD id_cliente INT;
 ALTER TABLE punto_muestral ADD id_logistica INT;
 ALTER TABLE punto_muestral ADD FOREIGN KEY (id_macrolocalizacion) REFERENCES macrolocalizacion_pm(id);
 ALTER TABLE punto_muestral ADD FOREIGN KEY (id_microlocalizacion) REFERENCES microlocalizacion_pm(id);
 ALTER TABLE punto_muestral ADD FOREIGN KEY (id_ubicacion) REFERENCES ubicacion_pm(id);
-ALTER TABLE punto_muestral ADD FOREIGN KEY (id_cliente) REFERENCES cliente(id);
 ALTER TABLE punto_muestral ADD FOREIGN KEY (id_logistica) REFERENCES logistica_pm(id);
 
 INSERT INTO tipo_area_pm (nombre) VALUES 

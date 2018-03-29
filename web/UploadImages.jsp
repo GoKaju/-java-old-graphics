@@ -3,6 +3,7 @@
     Created on : 8/03/2018, 10:36:37 AM
     Author     : julian.rojas
 --%>
+<%@page import="java.util.ArrayList"%>
 <%@page import="com.statics.vo.FotoPuntomuestral"%>
 <%@page import="com.statics.dao.FotoPuntomuestralJpaController"%>
 <%@page import="com.statics.vo.PuntoMuestral"%>
@@ -29,6 +30,7 @@
     PuntoMuestral punto = (PuntoMuestral) session.getAttribute("punto");
     if (user != null && user.getUsuaId() != null) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("RPU");
+        List<FotoPuntomuestral> listaFotos = new ArrayList();
         File file = new File("");
         String separador = System.getProperty("file.separator");
         String rutaTempFolder = application.getRealPath("") + separador + "Temp" + separador;
@@ -42,24 +44,43 @@
             List<FileItem> items = upload.parseRequest(request);
             Ruta ruta = rutaDao.findRuta(1);
             MinioClient minioClient = new MinioClient(ruta.getUrl(), ruta.getAccessKey(), ruta.getSecretKey());
-            String bucketName=campana.getCampBucket();
+            String bucketName = campana.getCampBucket();
             boolean bucketExist = minioClient.bucketExists(bucketName);
             if (!bucketExist) {
                 minioClient.makeBucket(bucketName);
+            } else {
+                listaFotos = fotoPmDao.findFotosByPuntoMuestral(punto.getPumuId());
             }
             for (FileItem item : items) {
                 if (!item.isFormField()) {
-                    String[] imageNameSplit = item.getName().split("\\.");
-                    String extencionFile = imageNameSplit[imageNameSplit.length - 1];
-                    String fileName = punto.getPumuId() + item.getFieldName() + "." + extencionFile;
-                    String rutaFileTemporal = rutaTempFolder + fileName;
-                    file = new File(rutaFileTemporal);
-                    item.write(file);
-                    //Imagenes
-                    minioClient.putObject(bucketName, fileName, rutaFileTemporal);
-                    FotoPuntomuestral fotoPuntomuestral = new FotoPuntomuestral(fileName, punto);
-                    fotoPmDao.create(fotoPuntomuestral);
-                    file.delete();
+                    if (item.getSize() != 0) {
+                        String fileName="";
+                        String rutaFileTemporal="";
+                        if (listaFotos.size() != 0) {
+                            fileName = listaFotos.get(0).getNombre();
+                            rutaFileTemporal = rutaTempFolder + fileName;
+                            file = new File(rutaFileTemporal);
+                            item.write(file);
+                            minioClient.removeObject(bucketName, fileName);
+                            minioClient.putObject(bucketName, fileName, rutaFileTemporal);
+                            FotoPuntomuestral fotoPuntomuestral = new FotoPuntomuestral(listaFotos.get(0).getId(),fileName, punto);
+                            fotoPmDao.edit(fotoPuntomuestral);
+                            listaFotos.remove(0);
+                            file.delete();
+                        } else {
+                            String[] imageNameSplit = item.getName().split("\\.");
+                            String extencionFile = imageNameSplit[imageNameSplit.length - 1];
+                            fileName = punto.getPumuId() + "-" + item.getFieldName() + Fechas.getCadena() + "." + extencionFile;
+                            rutaFileTemporal = rutaTempFolder + fileName;
+                            file = new File(rutaFileTemporal);
+                            item.write(file);
+                            //Imagenes
+                            minioClient.putObject(bucketName, fileName, rutaFileTemporal);
+                            FotoPuntomuestral fotoPuntomuestral = new FotoPuntomuestral(fileName, punto);
+                            fotoPmDao.create(fotoPuntomuestral);
+                            file.delete();
+                        }
+                    }
                 }
             }
         } catch (Exception e) {
