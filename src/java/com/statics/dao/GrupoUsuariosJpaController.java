@@ -5,7 +5,6 @@
  */
 package com.statics.dao;
 
-import com.statics.dao.exceptions.IllegalOrphanException;
 import com.statics.dao.exceptions.NonexistentEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
@@ -15,14 +14,13 @@ import javax.persistence.criteria.Root;
 import com.statics.vo.Grupo;
 import com.statics.vo.GrupoUsuarios;
 import com.statics.vo.Usuarios;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author Usuario
+ * @author FoxHG
  */
 public class GrupoUsuariosJpaController implements Serializable {
 
@@ -35,62 +33,29 @@ public class GrupoUsuariosJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(GrupoUsuarios grupoUsuarios) throws IllegalOrphanException {
-        List<String> illegalOrphanMessages = null;
-        Grupo grupoOrphanCheck = grupoUsuarios.getGrupo();
-        if (grupoOrphanCheck != null) {
-            GrupoUsuarios oldGrupoUsuariosOfGrupo = grupoOrphanCheck.getGrupoUsuarios();
-            if (oldGrupoUsuariosOfGrupo != null) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("The Grupo " + grupoOrphanCheck + " already has an item of type GrupoUsuarios whose grupo column cannot be null. Please make another selection for the grupo field.");
-            }
-        }
-        Grupo grupIdOrphanCheck = grupoUsuarios.getGrupId();
-        if (grupIdOrphanCheck != null) {
-            GrupoUsuarios oldGrupoUsuariosOfGrupId = grupIdOrphanCheck.getGrupoUsuarios();
-            if (oldGrupoUsuariosOfGrupId != null) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("The Grupo " + grupIdOrphanCheck + " already has an item of type GrupoUsuarios whose grupId column cannot be null. Please make another selection for the grupId field.");
-            }
-        }
-        if (illegalOrphanMessages != null) {
-            throw new IllegalOrphanException(illegalOrphanMessages);
-        }
+    public void create(GrupoUsuarios grupoUsuarios) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Grupo grupo = grupoUsuarios.getGrupo();
-            if (grupo != null) {
-                grupo = em.getReference(grupo.getClass(), grupo.getGrupId());
-                grupoUsuarios.setGrupo(grupo);
+            Grupo grupId = grupoUsuarios.getGrupId();
+            if (grupId != null) {
+                grupId = em.getReference(grupId.getClass(), grupId.getGrupId());
+                grupoUsuarios.setGrupId(grupId);
             }
             Usuarios usuaId = grupoUsuarios.getUsuaId();
             if (usuaId != null) {
                 usuaId = em.getReference(usuaId.getClass(), usuaId.getUsuaId());
                 grupoUsuarios.setUsuaId(usuaId);
             }
-            Grupo grupId = grupoUsuarios.getGrupId();
-            if (grupId != null) {
-                grupId = em.getReference(grupId.getClass(), grupId.getGrupId());
-                grupoUsuarios.setGrupId(grupId);
-            }
             em.persist(grupoUsuarios);
-            if (grupo != null) {
-                grupo.setGrupoUsuarios(grupoUsuarios);
-                grupo = em.merge(grupo);
+            if (grupId != null) {
+                grupId.getGrupoUsuariosList().add(grupoUsuarios);
+                grupId = em.merge(grupId);
             }
             if (usuaId != null) {
                 usuaId.getGrupoUsuariosList().add(grupoUsuarios);
                 usuaId = em.merge(usuaId);
-            }
-            if (grupId != null) {
-                grupId.setGrupoUsuarios(grupoUsuarios);
-                grupId = em.merge(grupId);
             }
             em.getTransaction().commit();
         } finally {
@@ -100,60 +65,32 @@ public class GrupoUsuariosJpaController implements Serializable {
         }
     }
 
-    public void edit(GrupoUsuarios grupoUsuarios) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public void edit(GrupoUsuarios grupoUsuarios) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             GrupoUsuarios persistentGrupoUsuarios = em.find(GrupoUsuarios.class, grupoUsuarios.getGrusId());
-            Grupo grupoOld = persistentGrupoUsuarios.getGrupo();
-            Grupo grupoNew = grupoUsuarios.getGrupo();
-            Usuarios usuaIdOld = persistentGrupoUsuarios.getUsuaId();
-            Usuarios usuaIdNew = grupoUsuarios.getUsuaId();
             Grupo grupIdOld = persistentGrupoUsuarios.getGrupId();
             Grupo grupIdNew = grupoUsuarios.getGrupId();
-            List<String> illegalOrphanMessages = null;
-            if (grupoNew != null && !grupoNew.equals(grupoOld)) {
-                GrupoUsuarios oldGrupoUsuariosOfGrupo = grupoNew.getGrupoUsuarios();
-                if (oldGrupoUsuariosOfGrupo != null) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("The Grupo " + grupoNew + " already has an item of type GrupoUsuarios whose grupo column cannot be null. Please make another selection for the grupo field.");
-                }
-            }
-            if (grupIdNew != null && !grupIdNew.equals(grupIdOld)) {
-                GrupoUsuarios oldGrupoUsuariosOfGrupId = grupIdNew.getGrupoUsuarios();
-                if (oldGrupoUsuariosOfGrupId != null) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("The Grupo " + grupIdNew + " already has an item of type GrupoUsuarios whose grupId column cannot be null. Please make another selection for the grupId field.");
-                }
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
-            }
-            if (grupoNew != null) {
-                grupoNew = em.getReference(grupoNew.getClass(), grupoNew.getGrupId());
-                grupoUsuarios.setGrupo(grupoNew);
+            Usuarios usuaIdOld = persistentGrupoUsuarios.getUsuaId();
+            Usuarios usuaIdNew = grupoUsuarios.getUsuaId();
+            if (grupIdNew != null) {
+                grupIdNew = em.getReference(grupIdNew.getClass(), grupIdNew.getGrupId());
+                grupoUsuarios.setGrupId(grupIdNew);
             }
             if (usuaIdNew != null) {
                 usuaIdNew = em.getReference(usuaIdNew.getClass(), usuaIdNew.getUsuaId());
                 grupoUsuarios.setUsuaId(usuaIdNew);
             }
-            if (grupIdNew != null) {
-                grupIdNew = em.getReference(grupIdNew.getClass(), grupIdNew.getGrupId());
-                grupoUsuarios.setGrupId(grupIdNew);
-            }
             grupoUsuarios = em.merge(grupoUsuarios);
-            if (grupoOld != null && !grupoOld.equals(grupoNew)) {
-                grupoOld.setGrupoUsuarios(null);
-                grupoOld = em.merge(grupoOld);
+            if (grupIdOld != null && !grupIdOld.equals(grupIdNew)) {
+                grupIdOld.getGrupoUsuariosList().remove(grupoUsuarios);
+                grupIdOld = em.merge(grupIdOld);
             }
-            if (grupoNew != null && !grupoNew.equals(grupoOld)) {
-                grupoNew.setGrupoUsuarios(grupoUsuarios);
-                grupoNew = em.merge(grupoNew);
+            if (grupIdNew != null && !grupIdNew.equals(grupIdOld)) {
+                grupIdNew.getGrupoUsuariosList().add(grupoUsuarios);
+                grupIdNew = em.merge(grupIdNew);
             }
             if (usuaIdOld != null && !usuaIdOld.equals(usuaIdNew)) {
                 usuaIdOld.getGrupoUsuariosList().remove(grupoUsuarios);
@@ -162,14 +99,6 @@ public class GrupoUsuariosJpaController implements Serializable {
             if (usuaIdNew != null && !usuaIdNew.equals(usuaIdOld)) {
                 usuaIdNew.getGrupoUsuariosList().add(grupoUsuarios);
                 usuaIdNew = em.merge(usuaIdNew);
-            }
-            if (grupIdOld != null && !grupIdOld.equals(grupIdNew)) {
-                grupIdOld.setGrupoUsuarios(null);
-                grupIdOld = em.merge(grupIdOld);
-            }
-            if (grupIdNew != null && !grupIdNew.equals(grupIdOld)) {
-                grupIdNew.setGrupoUsuarios(grupoUsuarios);
-                grupIdNew = em.merge(grupIdNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -200,20 +129,15 @@ public class GrupoUsuariosJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The grupoUsuarios with id " + id + " no longer exists.", enfe);
             }
-            Grupo grupo = grupoUsuarios.getGrupo();
-            if (grupo != null) {
-                grupo.setGrupoUsuarios(null);
-                grupo = em.merge(grupo);
+            Grupo grupId = grupoUsuarios.getGrupId();
+            if (grupId != null) {
+                grupId.getGrupoUsuariosList().remove(grupoUsuarios);
+                grupId = em.merge(grupId);
             }
             Usuarios usuaId = grupoUsuarios.getUsuaId();
             if (usuaId != null) {
                 usuaId.getGrupoUsuariosList().remove(grupoUsuarios);
                 usuaId = em.merge(usuaId);
-            }
-            Grupo grupId = grupoUsuarios.getGrupId();
-            if (grupId != null) {
-                grupId.setGrupoUsuarios(null);
-                grupId = em.merge(grupId);
             }
             em.remove(grupoUsuarios);
             em.getTransaction().commit();

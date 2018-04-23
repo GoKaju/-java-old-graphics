@@ -11,7 +11,6 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -58,7 +57,7 @@ public class DatosAdicionalesPm implements Serializable {
     private String email;
     @Column(name = "otros")
     private String otros;
-    @OneToMany(mappedBy = "idDatosAdicionales", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "idDatosAdicionales")
     private List<DatosadicionalesMicrolocalizacion> datosadicionalesMicrolocalizacionList;
 
     public DatosAdicionalesPm() {
@@ -76,6 +75,7 @@ public class DatosAdicionalesPm implements Serializable {
         this.email = email;
         this.otros = otros;
     }
+    
 
     public Integer getId() {
         return id;

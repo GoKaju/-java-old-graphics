@@ -10,7 +10,6 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -45,7 +44,7 @@ public class Departamento implements Serializable {
     private String nombre;
     @Column(name = "estado")
     private Boolean estado;
-    @OneToMany(mappedBy = "idDepartamento", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "idDepartamento")
     private List<UbicacionPm> ubicacionPmList;
 
     public Departamento() {

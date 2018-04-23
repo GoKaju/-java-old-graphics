@@ -16,15 +16,13 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.eclipse.persistence.annotations.Cache;
 
 /**
  *
- * @author Usuario
+ * @author FoxHG
  */
 @Entity
 @Table(name = "graficas")
-@Cache(expiry = -1)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Graficas.findAll", query = "SELECT g FROM Graficas g")

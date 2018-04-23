@@ -32,18 +32,18 @@ public class FotoPuntomuestralJpaController implements Serializable {
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-    
-    public List<FotoPuntomuestral> findFotosByPuntoMuestral(int idPuntoMuestral){
-        String sqlQuery="SELECT * FROM foto_puntomuestral WHERE id_punto="+idPuntoMuestral;
-        List<FotoPuntomuestral> lista=new ArrayList();
+
+    public List<FotoPuntomuestral> findFotosByPuntoMuestral(int idPuntoMuestral) {
+        String sqlQuery = "SELECT * FROM foto_puntomuestral WHERE id_punto=" + idPuntoMuestral;
+        List<FotoPuntomuestral> lista = new ArrayList();
         EntityManager em = null;
         try {
             em = getEntityManager();
-            Query q=em.createNativeQuery(sqlQuery, FotoPuntomuestral.class);
-            lista= q.getResultList();
-        }catch(Exception e){
+            Query q = em.createNativeQuery(sqlQuery, FotoPuntomuestral.class);
+            lista = q.getResultList();
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             if (em != null) {
                 em.close();
             }
@@ -183,5 +183,5 @@ public class FotoPuntomuestralJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }

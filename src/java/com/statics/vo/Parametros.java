@@ -18,21 +18,18 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import org.eclipse.persistence.annotations.Cache;
 
 /**
  *
- * @author Usuario
+ * @author FoxHG
  */
 @Entity
 @Table(name = "parametros")
-@Cache(expiry = -1)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Parametros.findAll", query = "SELECT p FROM Parametros p")
@@ -46,17 +43,6 @@ import org.eclipse.persistence.annotations.Cache;
     , @NamedQuery(name = "Parametros.findByTipoGraf", query = "SELECT p FROM Parametros p WHERE p.paraTipografica = :tipo")
 })
 public class Parametros implements Serializable {
-
-    @Basic(optional = false)
-    @Column(name = "para_tipografica")
-    private String paraTipografica;
-
-    @Basic(optional = false)
-    @Column(name = "para_codigo")
-    private int paraCodigo;
-
-    @Column(name = "para_estado")
-    private Integer paraEstado;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -73,25 +59,30 @@ public class Parametros implements Serializable {
     @Column(name = "pare_fechacambio")
     @Temporal(TemporalType.TIMESTAMP)
     private Date pareFechacambio;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "paraId")
-    private List<CargaParametro> cargaParametrolist;
+    @Column(name = "para_estado")
+    private Integer paraEstado;
+    @Basic(optional = false)
+    @Column(name = "para_codigo")
+    private int paraCodigo;
+    @Column(name = "para_tipografica")
+    private String paraTipografica;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "paraId")
     private List<ParametroLabels> parametroLabelsList;
+    @OneToMany(mappedBy = "idParametro")
+    private List<ParametroFactorconversion> parametroFactorconversionList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "paraId")
+    private List<CargaParametro> cargaParametroList;
 
-    public List<CargaParametro> getCargaParametrolist() {
-        return cargaParametrolist;
-    }
-
-    public void setCargaParametrolist(List<CargaParametro> cargaParametrolist) {
-        this.cargaParametrolist = cargaParametrolist;
-    }
-
-    
     public Parametros() {
     }
 
     public Parametros(Integer paraId) {
         this.paraId = paraId;
+    }
+
+    public Parametros(Integer paraId, int paraCodigo) {
+        this.paraId = paraId;
+        this.paraCodigo = paraCodigo;
     }
 
     public Integer getParaId() {
@@ -134,7 +125,29 @@ public class Parametros implements Serializable {
         this.pareFechacambio = pareFechacambio;
     }
 
+    public Integer getParaEstado() {
+        return paraEstado;
+    }
 
+    public void setParaEstado(Integer paraEstado) {
+        this.paraEstado = paraEstado;
+    }
+
+    public int getParaCodigo() {
+        return paraCodigo;
+    }
+
+    public void setParaCodigo(int paraCodigo) {
+        this.paraCodigo = paraCodigo;
+    }
+
+    public String getParaTipografica() {
+        return paraTipografica;
+    }
+
+    public void setParaTipografica(String paraTipografica) {
+        this.paraTipografica = paraTipografica;
+    }
 
     @XmlTransient
     public List<ParametroLabels> getParametroLabelsList() {
@@ -143,6 +156,24 @@ public class Parametros implements Serializable {
 
     public void setParametroLabelsList(List<ParametroLabels> parametroLabelsList) {
         this.parametroLabelsList = parametroLabelsList;
+    }
+
+    @XmlTransient
+    public List<ParametroFactorconversion> getParametroFactorconversionList() {
+        return parametroFactorconversionList;
+    }
+
+    public void setParametroFactorconversionList(List<ParametroFactorconversion> parametroFactorconversionList) {
+        this.parametroFactorconversionList = parametroFactorconversionList;
+    }
+
+    @XmlTransient
+    public List<CargaParametro> getCargaParametroList() {
+        return cargaParametroList;
+    }
+
+    public void setCargaParametroList(List<CargaParametro> cargaParametroList) {
+        this.cargaParametroList = cargaParametroList;
     }
 
     @Override
@@ -168,30 +199,6 @@ public class Parametros implements Serializable {
     @Override
     public String toString() {
         return "com.statics.vo.Parametros[ paraId=" + paraId + " ]";
-    }
-
-    public Integer getParaEstado() {
-        return paraEstado;
-    }
-
-    public void setParaEstado(Integer paraEstado) {
-        this.paraEstado = paraEstado;
-    }
-
-    public int getParaCodigo() {
-        return paraCodigo;
-    }
-
-    public void setParaCodigo(int paraCodigo) {
-        this.paraCodigo = paraCodigo;
-    }
-
-    public String getParaTipografica() {
-        return paraTipografica;
-    }
-
-    public void setParaTipografica(String paraTipografica) {
-        this.paraTipografica = paraTipografica;
     }
     
 }

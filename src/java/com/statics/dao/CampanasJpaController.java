@@ -13,6 +13,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import com.statics.vo.Grupo;
+import com.statics.vo.Cliente;
 import com.statics.vo.PuntoMuestral;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author Usuario
+ * @author FoxHG
  */
 public class CampanasJpaController implements Serializable {
 
@@ -47,6 +48,11 @@ public class CampanasJpaController implements Serializable {
                 grupId = em.getReference(grupId.getClass(), grupId.getGrupId());
                 campanas.setGrupId(grupId);
             }
+            Cliente idCliente = campanas.getIdCliente();
+            if (idCliente != null) {
+                idCliente = em.getReference(idCliente.getClass(), idCliente.getId());
+                campanas.setIdCliente(idCliente);
+            }
             List<PuntoMuestral> attachedPuntoMuestralList = new ArrayList<PuntoMuestral>();
             for (PuntoMuestral puntoMuestralListPuntoMuestralToAttach : campanas.getPuntoMuestralList()) {
                 puntoMuestralListPuntoMuestralToAttach = em.getReference(puntoMuestralListPuntoMuestralToAttach.getClass(), puntoMuestralListPuntoMuestralToAttach.getPumuId());
@@ -57,6 +63,10 @@ public class CampanasJpaController implements Serializable {
             if (grupId != null) {
                 grupId.getCampanasList().add(campanas);
                 grupId = em.merge(grupId);
+            }
+            if (idCliente != null) {
+                idCliente.getCampanasList().add(campanas);
+                idCliente = em.merge(idCliente);
             }
             for (PuntoMuestral puntoMuestralListPuntoMuestral : campanas.getPuntoMuestralList()) {
                 Campanas oldCampIdOfPuntoMuestralListPuntoMuestral = puntoMuestralListPuntoMuestral.getCampId();
@@ -83,11 +93,17 @@ public class CampanasJpaController implements Serializable {
             Campanas persistentCampanas = em.find(Campanas.class, campanas.getCampId());
             Grupo grupIdOld = persistentCampanas.getGrupId();
             Grupo grupIdNew = campanas.getGrupId();
+            Cliente idClienteOld = persistentCampanas.getIdCliente();
+            Cliente idClienteNew = campanas.getIdCliente();
             List<PuntoMuestral> puntoMuestralListOld = persistentCampanas.getPuntoMuestralList();
             List<PuntoMuestral> puntoMuestralListNew = campanas.getPuntoMuestralList();
             if (grupIdNew != null) {
                 grupIdNew = em.getReference(grupIdNew.getClass(), grupIdNew.getGrupId());
                 campanas.setGrupId(grupIdNew);
+            }
+            if (idClienteNew != null) {
+                idClienteNew = em.getReference(idClienteNew.getClass(), idClienteNew.getId());
+                campanas.setIdCliente(idClienteNew);
             }
             List<PuntoMuestral> attachedPuntoMuestralListNew = new ArrayList<PuntoMuestral>();
             for (PuntoMuestral puntoMuestralListNewPuntoMuestralToAttach : puntoMuestralListNew) {
@@ -104,6 +120,14 @@ public class CampanasJpaController implements Serializable {
             if (grupIdNew != null && !grupIdNew.equals(grupIdOld)) {
                 grupIdNew.getCampanasList().add(campanas);
                 grupIdNew = em.merge(grupIdNew);
+            }
+            if (idClienteOld != null && !idClienteOld.equals(idClienteNew)) {
+                idClienteOld.getCampanasList().remove(campanas);
+                idClienteOld = em.merge(idClienteOld);
+            }
+            if (idClienteNew != null && !idClienteNew.equals(idClienteOld)) {
+                idClienteNew.getCampanasList().add(campanas);
+                idClienteNew = em.merge(idClienteNew);
             }
             for (PuntoMuestral puntoMuestralListOldPuntoMuestral : puntoMuestralListOld) {
                 if (!puntoMuestralListNew.contains(puntoMuestralListOldPuntoMuestral)) {
@@ -155,6 +179,11 @@ public class CampanasJpaController implements Serializable {
             if (grupId != null) {
                 grupId.getCampanasList().remove(campanas);
                 grupId = em.merge(grupId);
+            }
+            Cliente idCliente = campanas.getIdCliente();
+            if (idCliente != null) {
+                idCliente.getCampanasList().remove(campanas);
+                idCliente = em.merge(idCliente);
             }
             List<PuntoMuestral> puntoMuestralList = campanas.getPuntoMuestralList();
             for (PuntoMuestral puntoMuestralListPuntoMuestral : puntoMuestralList) {

@@ -5,6 +5,10 @@
 --%>
 
 
+<%@page import="com.statics.vo.Cliente"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.List"%>
+<%@page import="com.statics.dao.ClienteJpaController"%>
 <%@page import="com.statics.dao.CampanasJpaController"%>
 <%@page import="com.statics.vo.Campanas"%>
 <%@page import="com.statics.dao.FormatofechasJpaController"%>
@@ -46,7 +50,7 @@
 </ol>
 <!-- end breadcrumb -->
 <!-- begin page-header -->
-<h1 class="page-header">Campañas <small> <%=index.isEmpty()?"Nueva":"Editar" %> campaña</small></h1>
+<h1 class="page-header">Campañas <small> <%=index.isEmpty() ? "Nueva" : "Editar"%> campaña</small></h1>
 <!-- end page-header -->
 
 <div class="panel panel-inverse">
@@ -65,33 +69,49 @@
                 <div class="col-md-6">
                     <div class="form-group ">
                         <label>Nombre  *</label>
-                        <input type="text" name="Nombre" placeholder="Nombre" class="form-control " value="<%=elem.getCampId()!= null ? elem.getCampNombre(): ""%>"  required="" data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
+                        <input type="text" name="Nombre" placeholder="Nombre" class="form-control " 
+                               value="<%=elem.getCampId() != null ? elem.getCampNombre() : ""%>"  required="" data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group ">
                         <label>Cliente  *</label>
-                        <input type="text" name="cliente" placeholder="Cliente" class="form-control " 
-                               value="<%=elem.getCampId()!= null ? elem.getCliente(): ""%>"  required="" data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
+                        <select name="idCliente" class="form-control">
+                            <%
+                                List<Cliente> listaClientes = new ClienteJpaController(emf).findClienteEntities();
+                                String selected="";
+                                for (Cliente c : listaClientes) {
+                                    if(c.getId()==elem.getIdCliente().getId()){
+                                        selected="selected";
+                                    }
+                            %>
+                            <option <%= selected %> value="<%= c.getId() %>"><%= c.getNombre() %></option>
+                            <%
+                                }
+                            %>
+                        </select>
                     </div>
                 </div>
-                    <div class="col-md-12">
+                <div class="col-md-12">
                     <div class="form-group ">
                         <label>Descripcion *</label>
-                        <textarea name="descripcion" class="form-control" placeholder="Descripcion" rows="5" required data-parsley-id="7052"><%=elem.getCampId()!= null ? elem.getCampDescripcion(): ""%></textarea>
+                        <textarea name="descripcion" class="form-control" placeholder="Descripcion" rows="5" required data-parsley-id="7052"><%=elem.getCampId() != null ? elem.getCampDescripcion() : ""%></textarea>
                         <ul class="parsley-errors-list" id="parsley-id-7052"></ul>
                     </div>
                 </div>    
-                    
-              
+
+
             </div> 
-            </div> 
+        </div> 
 
         <div class="modal-footer">
             <div>
                 <input type="hidden" name="modulo" value="1"/>
                 <input type="hidden" name="rfid" value="<%=rfid%>"/>
                 <input type="hidden" name="index" value="<%=index%>"/>
+                <button type="button"  onclick="
+                    modalDialog('Agregar Cliente Nuevo', 'panels/clientes/clientes_nuevo_dial.jsp', 'campa=<%=index%>&rfid=<%=rfid%>', 'large')
+                    " class="pull-right btn btn-success m-r-5 m-b-5">Nuevo cliente</button>
                 <button type="button"  onclick="
 
                         if ($('#FormAplication').parsley().isValid()) {
@@ -107,8 +127,8 @@
         </div>
     </form>
 </div>
-                <link rel="stylesheet" href="assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css" />              
-  <script src="assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
+<link rel="stylesheet" href="assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css" />              
+<script src="assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
 <script>
                     $(document).ready(function () {
 //        App.init();

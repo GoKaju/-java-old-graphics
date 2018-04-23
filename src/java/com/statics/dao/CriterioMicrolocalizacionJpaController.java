@@ -34,7 +34,7 @@ public class CriterioMicrolocalizacionJpaController implements Serializable {
         return emf.createEntityManager();
     }
     
-    public List<CriterioMicrolocalizacion> findCriterioByMicrolocalizacion(int idMicrolocalizacion) {
+        public List<CriterioMicrolocalizacion> findCriterioByMicrolocalizacion(int idMicrolocalizacion) {
         String sqlQuery="SELECT * FROM criterio_microlocalizacion WHERE id_microlocalizacion="+idMicrolocalizacion;
         List<CriterioMicrolocalizacion> lista=new ArrayList();
         EntityManager em = getEntityManager();

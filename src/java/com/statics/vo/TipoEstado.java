@@ -20,15 +20,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import org.eclipse.persistence.annotations.Cache;
 
 /**
  *
- * @author Usuario
+ * @author FoxHG
  */
 @Entity
 @Table(name = "tipo_estado")
-@Cache(expiry = -1)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "TipoEstado.findAll", query = "SELECT t FROM TipoEstado t")

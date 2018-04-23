@@ -24,15 +24,13 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import org.eclipse.persistence.annotations.Cache;
 
 /**
  *
- * @author Usuario
+ * @author FoxHG
  */
 @Entity
 @Table(name = "campanas")
-@Cache(expiry = -1)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Campanas.findAll", query = "SELECT c FROM Campanas c")
@@ -45,16 +43,6 @@ import org.eclipse.persistence.annotations.Cache;
     , @NamedQuery(name = "Campanas.findByCampRegistradapor", query = "SELECT c FROM Campanas c WHERE c.campRegistradapor = :campRegistradapor")
     , @NamedQuery(name = "Campanas.findByCampFechacambio", query = "SELECT c FROM Campanas c WHERE c.campFechacambio = :campFechacambio")})
 public class Campanas implements Serializable {
-
-    @Column(name = "cliente")
-    private String cliente;
-
-    @Column(name = "camp_bucket")
-    private String campBucket;
-
-    @Basic(optional = false)
-    @Column(name = "esta_id")
-    private int estaId;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -74,11 +62,19 @@ public class Campanas implements Serializable {
     @Column(name = "camp_fechacambio")
     @Temporal(TemporalType.TIMESTAMP)
     private Date campFechacambio;
+    @Basic(optional = false)
+    @Column(name = "esta_id")
+    private int estaId;
+    @Column(name = "camp_bucket")
+    private String campBucket;
     @OneToMany(mappedBy = "campId")
     private List<PuntoMuestral> puntoMuestralList;
     @JoinColumn(name = "grup_id", referencedColumnName = "grup_id")
     @ManyToOne(optional = false)
     private Grupo grupId;
+    @JoinColumn(name = "id_cliente", referencedColumnName = "id")
+    @ManyToOne
+    private Cliente idCliente;
 
     public Campanas() {
     }
@@ -87,11 +83,12 @@ public class Campanas implements Serializable {
         this.campId = campId;
     }
 
-    public Campanas(Integer campId, String campNombre, int campRegistradapor, Date campFechacambio) {
+    public Campanas(Integer campId, String campNombre, int campRegistradapor, Date campFechacambio, int estaId) {
         this.campId = campId;
         this.campNombre = campNombre;
         this.campRegistradapor = campRegistradapor;
         this.campFechacambio = campFechacambio;
+        this.estaId = estaId;
     }
 
     public Integer getCampId() {
@@ -134,6 +131,22 @@ public class Campanas implements Serializable {
         this.campFechacambio = campFechacambio;
     }
 
+    public int getEstaId() {
+        return estaId;
+    }
+
+    public void setEstaId(int estaId) {
+        this.estaId = estaId;
+    }
+
+    public String getCampBucket() {
+        return campBucket;
+    }
+
+    public void setCampBucket(String campBucket) {
+        this.campBucket = campBucket;
+    }
+
     @XmlTransient
     public List<PuntoMuestral> getPuntoMuestralList() {
         return puntoMuestralList;
@@ -149,6 +162,14 @@ public class Campanas implements Serializable {
 
     public void setGrupId(Grupo grupId) {
         this.grupId = grupId;
+    }
+
+    public Cliente getIdCliente() {
+        return idCliente;
+    }
+
+    public void setIdCliente(Cliente idCliente) {
+        this.idCliente = idCliente;
     }
 
     @Override
@@ -174,30 +195,6 @@ public class Campanas implements Serializable {
     @Override
     public String toString() {
         return "com.statics.vo.Campanas[ campId=" + campId + " ]";
-    }
-
-    public int getEstaId() {
-        return estaId;
-    }
-
-    public void setEstaId(int estaId) {
-        this.estaId = estaId;
-    }
-
-    public String getCampBucket() {
-        return campBucket;
-    }
-
-    public void setCampBucket(String campBucket) {
-        this.campBucket = campBucket;
-    }
-
-    public String getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(String cliente) {
-        this.cliente = cliente;
     }
     
 }

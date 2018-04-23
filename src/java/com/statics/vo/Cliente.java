@@ -11,7 +11,6 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,6 +34,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Cliente.findAll", query = "SELECT c FROM Cliente c")
     , @NamedQuery(name = "Cliente.findById", query = "SELECT c FROM Cliente c WHERE c.id = :id")
     , @NamedQuery(name = "Cliente.findByNombre", query = "SELECT c FROM Cliente c WHERE c.nombre = :nombre")
+    , @NamedQuery(name = "Cliente.findByDireccion", query = "SELECT c FROM Cliente c WHERE c.direccion = :direccion")
+    , @NamedQuery(name = "Cliente.findByEmail", query = "SELECT c FROM Cliente c WHERE c.email = :email")
+    , @NamedQuery(name = "Cliente.findByNit", query = "SELECT c FROM Cliente c WHERE c.nit = :nit")
+    , @NamedQuery(name = "Cliente.findByTelefono", query = "SELECT c FROM Cliente c WHERE c.telefono = :telefono")
     , @NamedQuery(name = "Cliente.findByCreadoPor", query = "SELECT c FROM Cliente c WHERE c.creadoPor = :creadoPor")
     , @NamedQuery(name = "Cliente.findByCreadoFecha", query = "SELECT c FROM Cliente c WHERE c.creadoFecha = :creadoFecha")})
 public class Cliente implements Serializable {
@@ -47,11 +50,21 @@ public class Cliente implements Serializable {
     private Integer id;
     @Column(name = "nombre")
     private String nombre;
+    @Column(name = "direccion")
+    private String direccion;
+    @Column(name = "email")
+    private String email;
+    @Column(name = "nit")
+    private String nit;
+    @Column(name = "telefono")
+    private String telefono;
     @Column(name = "creado_por")
     private Integer creadoPor;
     @Column(name = "creado_fecha")
     @Temporal(TemporalType.TIMESTAMP)
     private Date creadoFecha;
+    @OneToMany(mappedBy = "idCliente")
+    private List<Campanas> campanasList;
 
     public Cliente() {
     }
@@ -60,8 +73,12 @@ public class Cliente implements Serializable {
         this.id = id;
     }
 
-    public Cliente(String nombre, Integer creadoPor, Date creadoFecha) {
+    public Cliente(String nombre, String direccion, String email, String nit, String telefono, Integer creadoPor, Date creadoFecha) {
         this.nombre = nombre;
+        this.direccion = direccion;
+        this.email = email;
+        this.nit = nit;
+        this.telefono = telefono;
         this.creadoPor = creadoPor;
         this.creadoFecha = creadoFecha;
     }
@@ -82,6 +99,38 @@ public class Cliente implements Serializable {
         this.nombre = nombre;
     }
 
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getNit() {
+        return nit;
+    }
+
+    public void setNit(String nit) {
+        this.nit = nit;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
     public Integer getCreadoPor() {
         return creadoPor;
     }
@@ -96,6 +145,15 @@ public class Cliente implements Serializable {
 
     public void setCreadoFecha(Date creadoFecha) {
         this.creadoFecha = creadoFecha;
+    }
+
+    @XmlTransient
+    public List<Campanas> getCampanasList() {
+        return campanasList;
+    }
+
+    public void setCampanasList(List<Campanas> campanasList) {
+        this.campanasList = campanasList;
     }
 
     @Override

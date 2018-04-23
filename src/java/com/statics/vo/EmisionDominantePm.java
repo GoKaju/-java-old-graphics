@@ -10,7 +10,6 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -42,7 +41,7 @@ public class EmisionDominantePm implements Serializable {
     private Integer id;
     @Column(name = "nombre")
     private String nombre;
-    @OneToMany(mappedBy = "idEmisionDominante", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "idEmisionDominante")
     private List<MacrolocalizacionPm> macrolocalizacionPmList;
 
     public EmisionDominantePm() {

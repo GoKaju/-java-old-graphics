@@ -34,7 +34,7 @@ public class ItemLogisticaJpaController implements Serializable {
         return emf.createEntityManager();
     }
     
-    public List<ItemLogistica> findItemLogisticaByLogistica(int idLogistica) {
+        public List<ItemLogistica> findItemLogisticaByLogistica(int idLogistica) {
         String sqlQuery="SELECT * FROM item_logistica WHERE id_logistica="+idLogistica;
         List<ItemLogistica> lista=new ArrayList();
         EntityManager em = null;
@@ -51,6 +51,7 @@ public class ItemLogisticaJpaController implements Serializable {
         }
         return lista;
     }
+
 
     public void create(ItemLogistica itemLogistica) {
         EntityManager em = null;

@@ -10,7 +10,6 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -42,9 +41,9 @@ public class LogisticaPm implements Serializable {
     private Integer id;
     @Column(name = "descripcion_ruta")
     private String descripcionRuta;
-    @OneToMany(mappedBy = "idLogistica", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "idLogistica")
     private List<PuntoMuestral> puntoMuestralList;
-    @OneToMany(mappedBy = "idLogistica", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "idLogistica")
     private List<ItemLogistica> itemLogisticaList;
 
     public LogisticaPm() {
@@ -54,12 +53,12 @@ public class LogisticaPm implements Serializable {
         this.id = id;
     }
 
-    public LogisticaPm(String descripcionRuta) {
-        this.descripcionRuta = descripcionRuta;
-    }
-
     public Integer getId() {
         return id;
+    }
+
+    public LogisticaPm(String descripcionRuta) {
+        this.descripcionRuta = descripcionRuta;
     }
 
     public void setId(Integer id) {

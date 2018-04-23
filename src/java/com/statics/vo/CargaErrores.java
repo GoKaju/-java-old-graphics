@@ -22,15 +22,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import org.eclipse.persistence.annotations.Cache;
 
 /**
  *
- * @author Usuario
+ * @author FoxHG
  */
 @Entity
 @Table(name = "carga_errores")
-@Cache(expiry = -1)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "CargaErrores.findAll", query = "SELECT c FROM CargaErrores c")
@@ -49,11 +47,11 @@ public class CargaErrores implements Serializable {
     private Integer caerNumfila;
     @Column(name = "caer_error")
     private String caerError;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "caerId")
-    private List<CaerCampos> caerCamposList;
     @JoinColumn(name = "carg_id", referencedColumnName = "carg_id")
     @ManyToOne(optional = false)
     private Cargas cargId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "caerId")
+    private List<CaerCampos> caerCamposList;
 
     public CargaErrores() {
     }
@@ -86,6 +84,14 @@ public class CargaErrores implements Serializable {
         this.caerError = caerError;
     }
 
+    public Cargas getCargId() {
+        return cargId;
+    }
+
+    public void setCargId(Cargas cargId) {
+        this.cargId = cargId;
+    }
+
     @XmlTransient
     public List<CaerCampos> getCaerCamposList() {
         return caerCamposList;
@@ -93,14 +99,6 @@ public class CargaErrores implements Serializable {
 
     public void setCaerCamposList(List<CaerCampos> caerCamposList) {
         this.caerCamposList = caerCamposList;
-    }
-
-    public Cargas getCargId() {
-        return cargId;
-    }
-
-    public void setCargId(Cargas cargId) {
-        this.cargId = cargId;
     }
 
     @Override

@@ -14,8 +14,8 @@ import javax.persistence.criteria.Root;
 import com.statics.vo.PuntoMuestral;
 import java.util.ArrayList;
 import java.util.List;
-import com.statics.vo.DatosadicionalesMicrolocalizacion;
 import com.statics.vo.CriterioMicrolocalizacion;
+import com.statics.vo.DatosadicionalesMicrolocalizacion;
 import com.statics.vo.MicrolocalizacionPm;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -39,11 +39,11 @@ public class MicrolocalizacionPmJpaController implements Serializable {
         if (microlocalizacionPm.getPuntoMuestralList() == null) {
             microlocalizacionPm.setPuntoMuestralList(new ArrayList<PuntoMuestral>());
         }
-        if (microlocalizacionPm.getDatosadicionalesMicrolocalizacionList() == null) {
-            microlocalizacionPm.setDatosadicionalesMicrolocalizacionList(new ArrayList<DatosadicionalesMicrolocalizacion>());
-        }
         if (microlocalizacionPm.getCriterioMicrolocalizacionList() == null) {
             microlocalizacionPm.setCriterioMicrolocalizacionList(new ArrayList<CriterioMicrolocalizacion>());
+        }
+        if (microlocalizacionPm.getDatosadicionalesMicrolocalizacionList() == null) {
+            microlocalizacionPm.setDatosadicionalesMicrolocalizacionList(new ArrayList<DatosadicionalesMicrolocalizacion>());
         }
         EntityManager em = null;
         try {
@@ -55,18 +55,18 @@ public class MicrolocalizacionPmJpaController implements Serializable {
                 attachedPuntoMuestralList.add(puntoMuestralListPuntoMuestralToAttach);
             }
             microlocalizacionPm.setPuntoMuestralList(attachedPuntoMuestralList);
-            List<DatosadicionalesMicrolocalizacion> attachedDatosadicionalesMicrolocalizacionList = new ArrayList<DatosadicionalesMicrolocalizacion>();
-            for (DatosadicionalesMicrolocalizacion datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacionToAttach : microlocalizacionPm.getDatosadicionalesMicrolocalizacionList()) {
-                datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacionToAttach = em.getReference(datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacionToAttach.getClass(), datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacionToAttach.getId());
-                attachedDatosadicionalesMicrolocalizacionList.add(datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacionToAttach);
-            }
-            microlocalizacionPm.setDatosadicionalesMicrolocalizacionList(attachedDatosadicionalesMicrolocalizacionList);
             List<CriterioMicrolocalizacion> attachedCriterioMicrolocalizacionList = new ArrayList<CriterioMicrolocalizacion>();
             for (CriterioMicrolocalizacion criterioMicrolocalizacionListCriterioMicrolocalizacionToAttach : microlocalizacionPm.getCriterioMicrolocalizacionList()) {
                 criterioMicrolocalizacionListCriterioMicrolocalizacionToAttach = em.getReference(criterioMicrolocalizacionListCriterioMicrolocalizacionToAttach.getClass(), criterioMicrolocalizacionListCriterioMicrolocalizacionToAttach.getId());
                 attachedCriterioMicrolocalizacionList.add(criterioMicrolocalizacionListCriterioMicrolocalizacionToAttach);
             }
             microlocalizacionPm.setCriterioMicrolocalizacionList(attachedCriterioMicrolocalizacionList);
+            List<DatosadicionalesMicrolocalizacion> attachedDatosadicionalesMicrolocalizacionList = new ArrayList<DatosadicionalesMicrolocalizacion>();
+            for (DatosadicionalesMicrolocalizacion datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacionToAttach : microlocalizacionPm.getDatosadicionalesMicrolocalizacionList()) {
+                datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacionToAttach = em.getReference(datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacionToAttach.getClass(), datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacionToAttach.getId());
+                attachedDatosadicionalesMicrolocalizacionList.add(datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacionToAttach);
+            }
+            microlocalizacionPm.setDatosadicionalesMicrolocalizacionList(attachedDatosadicionalesMicrolocalizacionList);
             em.persist(microlocalizacionPm);
             for (PuntoMuestral puntoMuestralListPuntoMuestral : microlocalizacionPm.getPuntoMuestralList()) {
                 MicrolocalizacionPm oldIdMicrolocalizacionOfPuntoMuestralListPuntoMuestral = puntoMuestralListPuntoMuestral.getIdMicrolocalizacion();
@@ -77,15 +77,6 @@ public class MicrolocalizacionPmJpaController implements Serializable {
                     oldIdMicrolocalizacionOfPuntoMuestralListPuntoMuestral = em.merge(oldIdMicrolocalizacionOfPuntoMuestralListPuntoMuestral);
                 }
             }
-            for (DatosadicionalesMicrolocalizacion datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion : microlocalizacionPm.getDatosadicionalesMicrolocalizacionList()) {
-                MicrolocalizacionPm oldIdMicrolocalizacionOfDatosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion = datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion.getIdMicrolocalizacion();
-                datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion.setIdMicrolocalizacion(microlocalizacionPm);
-                datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion = em.merge(datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion);
-                if (oldIdMicrolocalizacionOfDatosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion != null) {
-                    oldIdMicrolocalizacionOfDatosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion.getDatosadicionalesMicrolocalizacionList().remove(datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion);
-                    oldIdMicrolocalizacionOfDatosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion = em.merge(oldIdMicrolocalizacionOfDatosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion);
-                }
-            }
             for (CriterioMicrolocalizacion criterioMicrolocalizacionListCriterioMicrolocalizacion : microlocalizacionPm.getCriterioMicrolocalizacionList()) {
                 MicrolocalizacionPm oldIdMicrolocalizacionOfCriterioMicrolocalizacionListCriterioMicrolocalizacion = criterioMicrolocalizacionListCriterioMicrolocalizacion.getIdMicrolocalizacion();
                 criterioMicrolocalizacionListCriterioMicrolocalizacion.setIdMicrolocalizacion(microlocalizacionPm);
@@ -93,6 +84,15 @@ public class MicrolocalizacionPmJpaController implements Serializable {
                 if (oldIdMicrolocalizacionOfCriterioMicrolocalizacionListCriterioMicrolocalizacion != null) {
                     oldIdMicrolocalizacionOfCriterioMicrolocalizacionListCriterioMicrolocalizacion.getCriterioMicrolocalizacionList().remove(criterioMicrolocalizacionListCriterioMicrolocalizacion);
                     oldIdMicrolocalizacionOfCriterioMicrolocalizacionListCriterioMicrolocalizacion = em.merge(oldIdMicrolocalizacionOfCriterioMicrolocalizacionListCriterioMicrolocalizacion);
+                }
+            }
+            for (DatosadicionalesMicrolocalizacion datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion : microlocalizacionPm.getDatosadicionalesMicrolocalizacionList()) {
+                MicrolocalizacionPm oldIdMicrolocalizacionOfDatosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion = datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion.getIdMicrolocalizacion();
+                datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion.setIdMicrolocalizacion(microlocalizacionPm);
+                datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion = em.merge(datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion);
+                if (oldIdMicrolocalizacionOfDatosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion != null) {
+                    oldIdMicrolocalizacionOfDatosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion.getDatosadicionalesMicrolocalizacionList().remove(datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion);
+                    oldIdMicrolocalizacionOfDatosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion = em.merge(oldIdMicrolocalizacionOfDatosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion);
                 }
             }
             em.getTransaction().commit();
@@ -111,10 +111,10 @@ public class MicrolocalizacionPmJpaController implements Serializable {
             MicrolocalizacionPm persistentMicrolocalizacionPm = em.find(MicrolocalizacionPm.class, microlocalizacionPm.getId());
             List<PuntoMuestral> puntoMuestralListOld = persistentMicrolocalizacionPm.getPuntoMuestralList();
             List<PuntoMuestral> puntoMuestralListNew = microlocalizacionPm.getPuntoMuestralList();
-            List<DatosadicionalesMicrolocalizacion> datosadicionalesMicrolocalizacionListOld = persistentMicrolocalizacionPm.getDatosadicionalesMicrolocalizacionList();
-            List<DatosadicionalesMicrolocalizacion> datosadicionalesMicrolocalizacionListNew = microlocalizacionPm.getDatosadicionalesMicrolocalizacionList();
             List<CriterioMicrolocalizacion> criterioMicrolocalizacionListOld = persistentMicrolocalizacionPm.getCriterioMicrolocalizacionList();
             List<CriterioMicrolocalizacion> criterioMicrolocalizacionListNew = microlocalizacionPm.getCriterioMicrolocalizacionList();
+            List<DatosadicionalesMicrolocalizacion> datosadicionalesMicrolocalizacionListOld = persistentMicrolocalizacionPm.getDatosadicionalesMicrolocalizacionList();
+            List<DatosadicionalesMicrolocalizacion> datosadicionalesMicrolocalizacionListNew = microlocalizacionPm.getDatosadicionalesMicrolocalizacionList();
             List<PuntoMuestral> attachedPuntoMuestralListNew = new ArrayList<PuntoMuestral>();
             for (PuntoMuestral puntoMuestralListNewPuntoMuestralToAttach : puntoMuestralListNew) {
                 puntoMuestralListNewPuntoMuestralToAttach = em.getReference(puntoMuestralListNewPuntoMuestralToAttach.getClass(), puntoMuestralListNewPuntoMuestralToAttach.getPumuId());
@@ -122,13 +122,6 @@ public class MicrolocalizacionPmJpaController implements Serializable {
             }
             puntoMuestralListNew = attachedPuntoMuestralListNew;
             microlocalizacionPm.setPuntoMuestralList(puntoMuestralListNew);
-            List<DatosadicionalesMicrolocalizacion> attachedDatosadicionalesMicrolocalizacionListNew = new ArrayList<DatosadicionalesMicrolocalizacion>();
-            for (DatosadicionalesMicrolocalizacion datosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacionToAttach : datosadicionalesMicrolocalizacionListNew) {
-                datosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacionToAttach = em.getReference(datosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacionToAttach.getClass(), datosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacionToAttach.getId());
-                attachedDatosadicionalesMicrolocalizacionListNew.add(datosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacionToAttach);
-            }
-            datosadicionalesMicrolocalizacionListNew = attachedDatosadicionalesMicrolocalizacionListNew;
-            microlocalizacionPm.setDatosadicionalesMicrolocalizacionList(datosadicionalesMicrolocalizacionListNew);
             List<CriterioMicrolocalizacion> attachedCriterioMicrolocalizacionListNew = new ArrayList<CriterioMicrolocalizacion>();
             for (CriterioMicrolocalizacion criterioMicrolocalizacionListNewCriterioMicrolocalizacionToAttach : criterioMicrolocalizacionListNew) {
                 criterioMicrolocalizacionListNewCriterioMicrolocalizacionToAttach = em.getReference(criterioMicrolocalizacionListNewCriterioMicrolocalizacionToAttach.getClass(), criterioMicrolocalizacionListNewCriterioMicrolocalizacionToAttach.getId());
@@ -136,6 +129,13 @@ public class MicrolocalizacionPmJpaController implements Serializable {
             }
             criterioMicrolocalizacionListNew = attachedCriterioMicrolocalizacionListNew;
             microlocalizacionPm.setCriterioMicrolocalizacionList(criterioMicrolocalizacionListNew);
+            List<DatosadicionalesMicrolocalizacion> attachedDatosadicionalesMicrolocalizacionListNew = new ArrayList<DatosadicionalesMicrolocalizacion>();
+            for (DatosadicionalesMicrolocalizacion datosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacionToAttach : datosadicionalesMicrolocalizacionListNew) {
+                datosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacionToAttach = em.getReference(datosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacionToAttach.getClass(), datosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacionToAttach.getId());
+                attachedDatosadicionalesMicrolocalizacionListNew.add(datosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacionToAttach);
+            }
+            datosadicionalesMicrolocalizacionListNew = attachedDatosadicionalesMicrolocalizacionListNew;
+            microlocalizacionPm.setDatosadicionalesMicrolocalizacionList(datosadicionalesMicrolocalizacionListNew);
             microlocalizacionPm = em.merge(microlocalizacionPm);
             for (PuntoMuestral puntoMuestralListOldPuntoMuestral : puntoMuestralListOld) {
                 if (!puntoMuestralListNew.contains(puntoMuestralListOldPuntoMuestral)) {
@@ -154,23 +154,6 @@ public class MicrolocalizacionPmJpaController implements Serializable {
                     }
                 }
             }
-            for (DatosadicionalesMicrolocalizacion datosadicionalesMicrolocalizacionListOldDatosadicionalesMicrolocalizacion : datosadicionalesMicrolocalizacionListOld) {
-                if (!datosadicionalesMicrolocalizacionListNew.contains(datosadicionalesMicrolocalizacionListOldDatosadicionalesMicrolocalizacion)) {
-                    datosadicionalesMicrolocalizacionListOldDatosadicionalesMicrolocalizacion.setIdMicrolocalizacion(null);
-                    datosadicionalesMicrolocalizacionListOldDatosadicionalesMicrolocalizacion = em.merge(datosadicionalesMicrolocalizacionListOldDatosadicionalesMicrolocalizacion);
-                }
-            }
-            for (DatosadicionalesMicrolocalizacion datosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion : datosadicionalesMicrolocalizacionListNew) {
-                if (!datosadicionalesMicrolocalizacionListOld.contains(datosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion)) {
-                    MicrolocalizacionPm oldIdMicrolocalizacionOfDatosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion = datosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion.getIdMicrolocalizacion();
-                    datosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion.setIdMicrolocalizacion(microlocalizacionPm);
-                    datosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion = em.merge(datosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion);
-                    if (oldIdMicrolocalizacionOfDatosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion != null && !oldIdMicrolocalizacionOfDatosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion.equals(microlocalizacionPm)) {
-                        oldIdMicrolocalizacionOfDatosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion.getDatosadicionalesMicrolocalizacionList().remove(datosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion);
-                        oldIdMicrolocalizacionOfDatosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion = em.merge(oldIdMicrolocalizacionOfDatosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion);
-                    }
-                }
-            }
             for (CriterioMicrolocalizacion criterioMicrolocalizacionListOldCriterioMicrolocalizacion : criterioMicrolocalizacionListOld) {
                 if (!criterioMicrolocalizacionListNew.contains(criterioMicrolocalizacionListOldCriterioMicrolocalizacion)) {
                     criterioMicrolocalizacionListOldCriterioMicrolocalizacion.setIdMicrolocalizacion(null);
@@ -185,6 +168,23 @@ public class MicrolocalizacionPmJpaController implements Serializable {
                     if (oldIdMicrolocalizacionOfCriterioMicrolocalizacionListNewCriterioMicrolocalizacion != null && !oldIdMicrolocalizacionOfCriterioMicrolocalizacionListNewCriterioMicrolocalizacion.equals(microlocalizacionPm)) {
                         oldIdMicrolocalizacionOfCriterioMicrolocalizacionListNewCriterioMicrolocalizacion.getCriterioMicrolocalizacionList().remove(criterioMicrolocalizacionListNewCriterioMicrolocalizacion);
                         oldIdMicrolocalizacionOfCriterioMicrolocalizacionListNewCriterioMicrolocalizacion = em.merge(oldIdMicrolocalizacionOfCriterioMicrolocalizacionListNewCriterioMicrolocalizacion);
+                    }
+                }
+            }
+            for (DatosadicionalesMicrolocalizacion datosadicionalesMicrolocalizacionListOldDatosadicionalesMicrolocalizacion : datosadicionalesMicrolocalizacionListOld) {
+                if (!datosadicionalesMicrolocalizacionListNew.contains(datosadicionalesMicrolocalizacionListOldDatosadicionalesMicrolocalizacion)) {
+                    datosadicionalesMicrolocalizacionListOldDatosadicionalesMicrolocalizacion.setIdMicrolocalizacion(null);
+                    datosadicionalesMicrolocalizacionListOldDatosadicionalesMicrolocalizacion = em.merge(datosadicionalesMicrolocalizacionListOldDatosadicionalesMicrolocalizacion);
+                }
+            }
+            for (DatosadicionalesMicrolocalizacion datosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion : datosadicionalesMicrolocalizacionListNew) {
+                if (!datosadicionalesMicrolocalizacionListOld.contains(datosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion)) {
+                    MicrolocalizacionPm oldIdMicrolocalizacionOfDatosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion = datosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion.getIdMicrolocalizacion();
+                    datosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion.setIdMicrolocalizacion(microlocalizacionPm);
+                    datosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion = em.merge(datosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion);
+                    if (oldIdMicrolocalizacionOfDatosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion != null && !oldIdMicrolocalizacionOfDatosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion.equals(microlocalizacionPm)) {
+                        oldIdMicrolocalizacionOfDatosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion.getDatosadicionalesMicrolocalizacionList().remove(datosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion);
+                        oldIdMicrolocalizacionOfDatosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion = em.merge(oldIdMicrolocalizacionOfDatosadicionalesMicrolocalizacionListNewDatosadicionalesMicrolocalizacion);
                     }
                 }
             }
@@ -222,15 +222,15 @@ public class MicrolocalizacionPmJpaController implements Serializable {
                 puntoMuestralListPuntoMuestral.setIdMicrolocalizacion(null);
                 puntoMuestralListPuntoMuestral = em.merge(puntoMuestralListPuntoMuestral);
             }
-            List<DatosadicionalesMicrolocalizacion> datosadicionalesMicrolocalizacionList = microlocalizacionPm.getDatosadicionalesMicrolocalizacionList();
-            for (DatosadicionalesMicrolocalizacion datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion : datosadicionalesMicrolocalizacionList) {
-                datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion.setIdMicrolocalizacion(null);
-                datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion = em.merge(datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion);
-            }
             List<CriterioMicrolocalizacion> criterioMicrolocalizacionList = microlocalizacionPm.getCriterioMicrolocalizacionList();
             for (CriterioMicrolocalizacion criterioMicrolocalizacionListCriterioMicrolocalizacion : criterioMicrolocalizacionList) {
                 criterioMicrolocalizacionListCriterioMicrolocalizacion.setIdMicrolocalizacion(null);
                 criterioMicrolocalizacionListCriterioMicrolocalizacion = em.merge(criterioMicrolocalizacionListCriterioMicrolocalizacion);
+            }
+            List<DatosadicionalesMicrolocalizacion> datosadicionalesMicrolocalizacionList = microlocalizacionPm.getDatosadicionalesMicrolocalizacionList();
+            for (DatosadicionalesMicrolocalizacion datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion : datosadicionalesMicrolocalizacionList) {
+                datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion.setIdMicrolocalizacion(null);
+                datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion = em.merge(datosadicionalesMicrolocalizacionListDatosadicionalesMicrolocalizacion);
             }
             em.remove(microlocalizacionPm);
             em.getTransaction().commit();

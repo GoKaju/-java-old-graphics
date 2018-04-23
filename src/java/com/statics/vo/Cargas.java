@@ -25,15 +25,13 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import org.eclipse.persistence.annotations.Cache;
 
 /**
  *
- * @author Usuario
+ * @author FoxHG
  */
 @Entity
 @Table(name = "cargas")
-@Cache(expiry = -1)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Cargas.findAll", query = "SELECT c FROM Cargas c")
@@ -42,23 +40,16 @@ import org.eclipse.persistence.annotations.Cache;
     , @NamedQuery(name = "Cargas.findByCargObservaciones", query = "SELECT c FROM Cargas c WHERE c.cargObservaciones = :cargObservaciones")
     , @NamedQuery(name = "Cargas.findByCargCantidadtotal", query = "SELECT c FROM Cargas c WHERE c.cargCantidadtotal = :cargCantidadtotal")
     , @NamedQuery(name = "Cargas.findByCargExitosos", query = "SELECT c FROM Cargas c WHERE c.cargExitosos = :cargExitosos")
+    , @NamedQuery(name = "Cargas.findByCargUltimaposicion", query = "SELECT c FROM Cargas c WHERE c.cargUltimaposicion = :cargUltimaposicion")
+    , @NamedQuery(name = "Cargas.findByUltimaFechacargada", query = "SELECT c FROM Cargas c WHERE c.ultimaFechacargada = :ultimaFechacargada")
     , @NamedQuery(name = "Cargas.findByCargErrores", query = "SELECT c FROM Cargas c WHERE c.cargErrores = :cargErrores")
     , @NamedQuery(name = "Cargas.findByCargRuta", query = "SELECT c FROM Cargas c WHERE c.cargRuta = :cargRuta")
     , @NamedQuery(name = "Cargas.findByCargArchivo", query = "SELECT c FROM Cargas c WHERE c.cargArchivo = :cargArchivo")
-    , @NamedQuery(name = "Cargas.findByCargArchivoPuntoMuestral", query = "SELECT c FROM Cargas c INNER JOIN PuntoMuestral p ON c.pumuId = p WHERE p = :pumu and c.cargArchivo = :cargArchivo ")
     , @NamedQuery(name = "Cargas.findByCargMetadata", query = "SELECT c FROM Cargas c WHERE c.cargMetadata = :cargMetadata")
     , @NamedQuery(name = "Cargas.findByCargFechainicial", query = "SELECT c FROM Cargas c WHERE c.cargFechainicial = :cargFechainicial")
     , @NamedQuery(name = "Cargas.findByCargFechacambio", query = "SELECT c FROM Cargas c WHERE c.cargFechacambio = :cargFechacambio")
     , @NamedQuery(name = "Cargas.findByCargRegistradopor", query = "SELECT c FROM Cargas c WHERE c.cargRegistradopor = :cargRegistradopor")})
 public class Cargas implements Serializable {
-
-    @Basic(optional = false)
-    @Column(name = "carg_ultimaposicion")
-    private int cargUltimaposicion;
-    @Basic(optional = false)
-    @Column(name = "ultima_fechacargada")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date ultimaFechacargada;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -74,6 +65,12 @@ public class Cargas implements Serializable {
     private Integer cargCantidadtotal;
     @Column(name = "carg_exitosos")
     private Integer cargExitosos;
+    @Basic(optional = false)
+    @Column(name = "carg_ultimaposicion")
+    private int cargUltimaposicion;
+    @Column(name = "ultima_fechacargada")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date ultimaFechacargada;
     @Column(name = "carg_errores")
     private Integer cargErrores;
     @Column(name = "carg_ruta")
@@ -107,8 +104,9 @@ public class Cargas implements Serializable {
         this.cargId = cargId;
     }
 
-    public Cargas(Integer cargId, Date cargFechacambio, int cargRegistradopor) {
+    public Cargas(Integer cargId, int cargUltimaposicion, Date cargFechacambio, int cargRegistradopor) {
         this.cargId = cargId;
+        this.cargUltimaposicion = cargUltimaposicion;
         this.cargFechacambio = cargFechacambio;
         this.cargRegistradopor = cargRegistradopor;
     }
@@ -151,6 +149,22 @@ public class Cargas implements Serializable {
 
     public void setCargExitosos(Integer cargExitosos) {
         this.cargExitosos = cargExitosos;
+    }
+
+    public int getCargUltimaposicion() {
+        return cargUltimaposicion;
+    }
+
+    public void setCargUltimaposicion(int cargUltimaposicion) {
+        this.cargUltimaposicion = cargUltimaposicion;
+    }
+
+    public Date getUltimaFechacargada() {
+        return ultimaFechacargada;
+    }
+
+    public void setUltimaFechacargada(Date ultimaFechacargada) {
+        this.ultimaFechacargada = ultimaFechacargada;
     }
 
     public Integer getCargErrores() {
@@ -258,22 +272,6 @@ public class Cargas implements Serializable {
     @Override
     public String toString() {
         return "com.statics.vo.Cargas[ cargId=" + cargId + " ]";
-    }
-
-    public int getCargUltimaposicion() {
-        return cargUltimaposicion;
-    }
-
-    public void setCargUltimaposicion(int cargUltimaposicion) {
-        this.cargUltimaposicion = cargUltimaposicion;
-    }
-
-    public Date getUltimaFechacargada() {
-        return ultimaFechacargada;
-    }
-
-    public void setUltimaFechacargada(Date ultimaFechacargada) {
-        this.ultimaFechacargada = ultimaFechacargada;
     }
     
 }

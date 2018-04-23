@@ -18,7 +18,7 @@ import javax.persistence.criteria.Root;
 
 /**
  *
- * @author Usuario
+ * @author FoxHG
  */
 public class GraficasJpaController implements Serializable {
 

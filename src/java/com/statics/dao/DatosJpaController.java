@@ -19,7 +19,7 @@ import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author Usuario
+ * @author FoxHG
  */
 public class DatosJpaController implements Serializable {
 
@@ -33,7 +33,6 @@ public class DatosJpaController implements Serializable {
     }
 
     public void create(Datos datos) {
-        final long start = System.currentTimeMillis();
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -47,32 +46,6 @@ public class DatosJpaController implements Serializable {
             if (papuId != null) {
                 papuId.getDatosList().add(datos);
                 papuId = em.merge(papuId);
-            }
-            em.getTransaction().commit();
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-            System.out.println("-->## Elapsed Datos create " + (System.currentTimeMillis() - start) + " ms");
-        }
-    }
-    public void create(List<Datos> ldatos) {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            for (Datos datos : ldatos) {
-            CargaParametro papuId = datos.getPapuId();
-            if (papuId != null) {
-                papuId = em.getReference(papuId.getClass(), papuId.getCapaId());
-                datos.setPapuId(papuId);
-            }
-            em.persist(datos);
-            
-            if (papuId != null) {
-                papuId.getDatosList().add(datos);
-                papuId = em.merge(papuId);
-            }   
             }
             em.getTransaction().commit();
         } finally {

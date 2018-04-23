@@ -12,11 +12,11 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import com.statics.vo.GrupoUsuarios;
 import com.statics.vo.Estados;
-import com.statics.vo.Campanas;
+import com.statics.vo.GrupoUsuarios;
 import java.util.ArrayList;
 import java.util.List;
+import com.statics.vo.Campanas;
 import com.statics.vo.Estaciones;
 import com.statics.vo.Grupo;
 import javax.persistence.EntityManager;
@@ -24,7 +24,7 @@ import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author Usuario
+ * @author FoxHG
  */
 public class GrupoJpaController implements Serializable {
 
@@ -38,29 +38,30 @@ public class GrupoJpaController implements Serializable {
     }
 
     public void create(Grupo grupo) {
+        if (grupo.getGrupoUsuariosList() == null) {
+            grupo.setGrupoUsuariosList(new ArrayList<GrupoUsuarios>());
+        }
         if (grupo.getCampanasList() == null) {
             grupo.setCampanasList(new ArrayList<Campanas>());
         }
         if (grupo.getEstacionesList() == null) {
             grupo.setEstacionesList(new ArrayList<Estaciones>());
         }
-        if (grupo.getGrupoUsuariosList() == null) {
-            grupo.setGrupoUsuariosList(new ArrayList<GrupoUsuarios>());
-        }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            GrupoUsuarios grupoUsuarios = grupo.getGrupoUsuarios();
-            if (grupoUsuarios != null) {
-                grupoUsuarios = em.getReference(grupoUsuarios.getClass(), grupoUsuarios.getGrusId());
-                grupo.setGrupoUsuarios(grupoUsuarios);
-            }
             Estados estaId = grupo.getEstaId();
             if (estaId != null) {
                 estaId = em.getReference(estaId.getClass(), estaId.getEstaId());
                 grupo.setEstaId(estaId);
             }
+            List<GrupoUsuarios> attachedGrupoUsuariosList = new ArrayList<GrupoUsuarios>();
+            for (GrupoUsuarios grupoUsuariosListGrupoUsuariosToAttach : grupo.getGrupoUsuariosList()) {
+                grupoUsuariosListGrupoUsuariosToAttach = em.getReference(grupoUsuariosListGrupoUsuariosToAttach.getClass(), grupoUsuariosListGrupoUsuariosToAttach.getGrusId());
+                attachedGrupoUsuariosList.add(grupoUsuariosListGrupoUsuariosToAttach);
+            }
+            grupo.setGrupoUsuariosList(attachedGrupoUsuariosList);
             List<Campanas> attachedCampanasList = new ArrayList<Campanas>();
             for (Campanas campanasListCampanasToAttach : grupo.getCampanasList()) {
                 campanasListCampanasToAttach = em.getReference(campanasListCampanasToAttach.getClass(), campanasListCampanasToAttach.getCampId());
@@ -73,25 +74,19 @@ public class GrupoJpaController implements Serializable {
                 attachedEstacionesList.add(estacionesListEstacionesToAttach);
             }
             grupo.setEstacionesList(attachedEstacionesList);
-            List<GrupoUsuarios> attachedGrupoUsuariosList = new ArrayList<GrupoUsuarios>();
-            for (GrupoUsuarios grupoUsuariosListGrupoUsuariosToAttach : grupo.getGrupoUsuariosList()) {
-                grupoUsuariosListGrupoUsuariosToAttach = em.getReference(grupoUsuariosListGrupoUsuariosToAttach.getClass(), grupoUsuariosListGrupoUsuariosToAttach.getGrusId());
-                attachedGrupoUsuariosList.add(grupoUsuariosListGrupoUsuariosToAttach);
-            }
-            grupo.setGrupoUsuariosList(attachedGrupoUsuariosList);
             em.persist(grupo);
-            if (grupoUsuarios != null) {
-                Grupo oldGrupoOfGrupoUsuarios = grupoUsuarios.getGrupo();
-                if (oldGrupoOfGrupoUsuarios != null) {
-                    oldGrupoOfGrupoUsuarios.setGrupoUsuarios(null);
-                    oldGrupoOfGrupoUsuarios = em.merge(oldGrupoOfGrupoUsuarios);
-                }
-                grupoUsuarios.setGrupo(grupo);
-                grupoUsuarios = em.merge(grupoUsuarios);
-            }
             if (estaId != null) {
                 estaId.getGrupoList().add(grupo);
                 estaId = em.merge(estaId);
+            }
+            for (GrupoUsuarios grupoUsuariosListGrupoUsuarios : grupo.getGrupoUsuariosList()) {
+                Grupo oldGrupIdOfGrupoUsuariosListGrupoUsuarios = grupoUsuariosListGrupoUsuarios.getGrupId();
+                grupoUsuariosListGrupoUsuarios.setGrupId(grupo);
+                grupoUsuariosListGrupoUsuarios = em.merge(grupoUsuariosListGrupoUsuarios);
+                if (oldGrupIdOfGrupoUsuariosListGrupoUsuarios != null) {
+                    oldGrupIdOfGrupoUsuariosListGrupoUsuarios.getGrupoUsuariosList().remove(grupoUsuariosListGrupoUsuarios);
+                    oldGrupIdOfGrupoUsuariosListGrupoUsuarios = em.merge(oldGrupIdOfGrupoUsuariosListGrupoUsuarios);
+                }
             }
             for (Campanas campanasListCampanas : grupo.getCampanasList()) {
                 Grupo oldGrupIdOfCampanasListCampanas = campanasListCampanas.getGrupId();
@@ -111,15 +106,6 @@ public class GrupoJpaController implements Serializable {
                     oldGrupIdOfEstacionesListEstaciones = em.merge(oldGrupIdOfEstacionesListEstaciones);
                 }
             }
-            for (GrupoUsuarios grupoUsuariosListGrupoUsuarios : grupo.getGrupoUsuariosList()) {
-                Grupo oldGrupIdOfGrupoUsuariosListGrupoUsuarios = grupoUsuariosListGrupoUsuarios.getGrupId();
-                grupoUsuariosListGrupoUsuarios.setGrupId(grupo);
-                grupoUsuariosListGrupoUsuarios = em.merge(grupoUsuariosListGrupoUsuarios);
-                if (oldGrupIdOfGrupoUsuariosListGrupoUsuarios != null) {
-                    oldGrupIdOfGrupoUsuariosListGrupoUsuarios.getGrupoUsuariosList().remove(grupoUsuariosListGrupoUsuarios);
-                    oldGrupIdOfGrupoUsuariosListGrupoUsuarios = em.merge(oldGrupIdOfGrupoUsuariosListGrupoUsuarios);
-                }
-            }
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -134,22 +120,22 @@ public class GrupoJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Grupo persistentGrupo = em.find(Grupo.class, grupo.getGrupId());
-            GrupoUsuarios grupoUsuariosOld = persistentGrupo.getGrupoUsuarios();
-            GrupoUsuarios grupoUsuariosNew = grupo.getGrupoUsuarios();
             Estados estaIdOld = persistentGrupo.getEstaId();
             Estados estaIdNew = grupo.getEstaId();
+            List<GrupoUsuarios> grupoUsuariosListOld = persistentGrupo.getGrupoUsuariosList();
+            List<GrupoUsuarios> grupoUsuariosListNew = grupo.getGrupoUsuariosList();
             List<Campanas> campanasListOld = persistentGrupo.getCampanasList();
             List<Campanas> campanasListNew = grupo.getCampanasList();
             List<Estaciones> estacionesListOld = persistentGrupo.getEstacionesList();
             List<Estaciones> estacionesListNew = grupo.getEstacionesList();
-            List<GrupoUsuarios> grupoUsuariosListOld = persistentGrupo.getGrupoUsuariosList();
-            List<GrupoUsuarios> grupoUsuariosListNew = grupo.getGrupoUsuariosList();
             List<String> illegalOrphanMessages = null;
-            if (grupoUsuariosOld != null && !grupoUsuariosOld.equals(grupoUsuariosNew)) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
+            for (GrupoUsuarios grupoUsuariosListOldGrupoUsuarios : grupoUsuariosListOld) {
+                if (!grupoUsuariosListNew.contains(grupoUsuariosListOldGrupoUsuarios)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain GrupoUsuarios " + grupoUsuariosListOldGrupoUsuarios + " since its grupId field is not nullable.");
                 }
-                illegalOrphanMessages.add("You must retain GrupoUsuarios " + grupoUsuariosOld + " since its grupo field is not nullable.");
             }
             for (Campanas campanasListOldCampanas : campanasListOld) {
                 if (!campanasListNew.contains(campanasListOldCampanas)) {
@@ -159,25 +145,20 @@ public class GrupoJpaController implements Serializable {
                     illegalOrphanMessages.add("You must retain Campanas " + campanasListOldCampanas + " since its grupId field is not nullable.");
                 }
             }
-            for (GrupoUsuarios grupoUsuariosListOldGrupoUsuarios : grupoUsuariosListOld) {
-                if (!grupoUsuariosListNew.contains(grupoUsuariosListOldGrupoUsuarios)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain GrupoUsuarios " + grupoUsuariosListOldGrupoUsuarios + " since its grupId field is not nullable.");
-                }
-            }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
-            }
-            if (grupoUsuariosNew != null) {
-                grupoUsuariosNew = em.getReference(grupoUsuariosNew.getClass(), grupoUsuariosNew.getGrusId());
-                grupo.setGrupoUsuarios(grupoUsuariosNew);
             }
             if (estaIdNew != null) {
                 estaIdNew = em.getReference(estaIdNew.getClass(), estaIdNew.getEstaId());
                 grupo.setEstaId(estaIdNew);
             }
+            List<GrupoUsuarios> attachedGrupoUsuariosListNew = new ArrayList<GrupoUsuarios>();
+            for (GrupoUsuarios grupoUsuariosListNewGrupoUsuariosToAttach : grupoUsuariosListNew) {
+                grupoUsuariosListNewGrupoUsuariosToAttach = em.getReference(grupoUsuariosListNewGrupoUsuariosToAttach.getClass(), grupoUsuariosListNewGrupoUsuariosToAttach.getGrusId());
+                attachedGrupoUsuariosListNew.add(grupoUsuariosListNewGrupoUsuariosToAttach);
+            }
+            grupoUsuariosListNew = attachedGrupoUsuariosListNew;
+            grupo.setGrupoUsuariosList(grupoUsuariosListNew);
             List<Campanas> attachedCampanasListNew = new ArrayList<Campanas>();
             for (Campanas campanasListNewCampanasToAttach : campanasListNew) {
                 campanasListNewCampanasToAttach = em.getReference(campanasListNewCampanasToAttach.getClass(), campanasListNewCampanasToAttach.getCampId());
@@ -192,23 +173,7 @@ public class GrupoJpaController implements Serializable {
             }
             estacionesListNew = attachedEstacionesListNew;
             grupo.setEstacionesList(estacionesListNew);
-            List<GrupoUsuarios> attachedGrupoUsuariosListNew = new ArrayList<GrupoUsuarios>();
-            for (GrupoUsuarios grupoUsuariosListNewGrupoUsuariosToAttach : grupoUsuariosListNew) {
-                grupoUsuariosListNewGrupoUsuariosToAttach = em.getReference(grupoUsuariosListNewGrupoUsuariosToAttach.getClass(), grupoUsuariosListNewGrupoUsuariosToAttach.getGrusId());
-                attachedGrupoUsuariosListNew.add(grupoUsuariosListNewGrupoUsuariosToAttach);
-            }
-            grupoUsuariosListNew = attachedGrupoUsuariosListNew;
-            grupo.setGrupoUsuariosList(grupoUsuariosListNew);
             grupo = em.merge(grupo);
-            if (grupoUsuariosNew != null && !grupoUsuariosNew.equals(grupoUsuariosOld)) {
-                Grupo oldGrupoOfGrupoUsuarios = grupoUsuariosNew.getGrupo();
-                if (oldGrupoOfGrupoUsuarios != null) {
-                    oldGrupoOfGrupoUsuarios.setGrupoUsuarios(null);
-                    oldGrupoOfGrupoUsuarios = em.merge(oldGrupoOfGrupoUsuarios);
-                }
-                grupoUsuariosNew.setGrupo(grupo);
-                grupoUsuariosNew = em.merge(grupoUsuariosNew);
-            }
             if (estaIdOld != null && !estaIdOld.equals(estaIdNew)) {
                 estaIdOld.getGrupoList().remove(grupo);
                 estaIdOld = em.merge(estaIdOld);
@@ -216,6 +181,17 @@ public class GrupoJpaController implements Serializable {
             if (estaIdNew != null && !estaIdNew.equals(estaIdOld)) {
                 estaIdNew.getGrupoList().add(grupo);
                 estaIdNew = em.merge(estaIdNew);
+            }
+            for (GrupoUsuarios grupoUsuariosListNewGrupoUsuarios : grupoUsuariosListNew) {
+                if (!grupoUsuariosListOld.contains(grupoUsuariosListNewGrupoUsuarios)) {
+                    Grupo oldGrupIdOfGrupoUsuariosListNewGrupoUsuarios = grupoUsuariosListNewGrupoUsuarios.getGrupId();
+                    grupoUsuariosListNewGrupoUsuarios.setGrupId(grupo);
+                    grupoUsuariosListNewGrupoUsuarios = em.merge(grupoUsuariosListNewGrupoUsuarios);
+                    if (oldGrupIdOfGrupoUsuariosListNewGrupoUsuarios != null && !oldGrupIdOfGrupoUsuariosListNewGrupoUsuarios.equals(grupo)) {
+                        oldGrupIdOfGrupoUsuariosListNewGrupoUsuarios.getGrupoUsuariosList().remove(grupoUsuariosListNewGrupoUsuarios);
+                        oldGrupIdOfGrupoUsuariosListNewGrupoUsuarios = em.merge(oldGrupIdOfGrupoUsuariosListNewGrupoUsuarios);
+                    }
+                }
             }
             for (Campanas campanasListNewCampanas : campanasListNew) {
                 if (!campanasListOld.contains(campanasListNewCampanas)) {
@@ -242,17 +218,6 @@ public class GrupoJpaController implements Serializable {
                     if (oldGrupIdOfEstacionesListNewEstaciones != null && !oldGrupIdOfEstacionesListNewEstaciones.equals(grupo)) {
                         oldGrupIdOfEstacionesListNewEstaciones.getEstacionesList().remove(estacionesListNewEstaciones);
                         oldGrupIdOfEstacionesListNewEstaciones = em.merge(oldGrupIdOfEstacionesListNewEstaciones);
-                    }
-                }
-            }
-            for (GrupoUsuarios grupoUsuariosListNewGrupoUsuarios : grupoUsuariosListNew) {
-                if (!grupoUsuariosListOld.contains(grupoUsuariosListNewGrupoUsuarios)) {
-                    Grupo oldGrupIdOfGrupoUsuariosListNewGrupoUsuarios = grupoUsuariosListNewGrupoUsuarios.getGrupId();
-                    grupoUsuariosListNewGrupoUsuarios.setGrupId(grupo);
-                    grupoUsuariosListNewGrupoUsuarios = em.merge(grupoUsuariosListNewGrupoUsuarios);
-                    if (oldGrupIdOfGrupoUsuariosListNewGrupoUsuarios != null && !oldGrupIdOfGrupoUsuariosListNewGrupoUsuarios.equals(grupo)) {
-                        oldGrupIdOfGrupoUsuariosListNewGrupoUsuarios.getGrupoUsuariosList().remove(grupoUsuariosListNewGrupoUsuarios);
-                        oldGrupIdOfGrupoUsuariosListNewGrupoUsuarios = em.merge(oldGrupIdOfGrupoUsuariosListNewGrupoUsuarios);
                     }
                 }
             }
@@ -286,12 +251,12 @@ public class GrupoJpaController implements Serializable {
                 throw new NonexistentEntityException("The grupo with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            GrupoUsuarios grupoUsuariosOrphanCheck = grupo.getGrupoUsuarios();
-            if (grupoUsuariosOrphanCheck != null) {
+            List<GrupoUsuarios> grupoUsuariosListOrphanCheck = grupo.getGrupoUsuariosList();
+            for (GrupoUsuarios grupoUsuariosListOrphanCheckGrupoUsuarios : grupoUsuariosListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Grupo (" + grupo + ") cannot be destroyed since the GrupoUsuarios " + grupoUsuariosOrphanCheck + " in its grupoUsuarios field has a non-nullable grupo field.");
+                illegalOrphanMessages.add("This Grupo (" + grupo + ") cannot be destroyed since the GrupoUsuarios " + grupoUsuariosListOrphanCheckGrupoUsuarios + " in its grupoUsuariosList field has a non-nullable grupId field.");
             }
             List<Campanas> campanasListOrphanCheck = grupo.getCampanasList();
             for (Campanas campanasListOrphanCheckCampanas : campanasListOrphanCheck) {
@@ -299,13 +264,6 @@ public class GrupoJpaController implements Serializable {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
                 illegalOrphanMessages.add("This Grupo (" + grupo + ") cannot be destroyed since the Campanas " + campanasListOrphanCheckCampanas + " in its campanasList field has a non-nullable grupId field.");
-            }
-            List<GrupoUsuarios> grupoUsuariosListOrphanCheck = grupo.getGrupoUsuariosList();
-            for (GrupoUsuarios grupoUsuariosListOrphanCheckGrupoUsuarios : grupoUsuariosListOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Grupo (" + grupo + ") cannot be destroyed since the GrupoUsuarios " + grupoUsuariosListOrphanCheckGrupoUsuarios + " in its grupoUsuariosList field has a non-nullable grupId field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

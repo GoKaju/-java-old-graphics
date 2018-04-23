@@ -57,6 +57,14 @@
     <class>com.statics.vo.DatosadicionalesMicrolocalizacion</class>
     <class>com.statics.vo.ClimaPm</class>
     <class>com.statics.vo.Products</class>
+    <class>com.statics.vo.ParametroFactorconversion</class>
+    <class>com.statics.vo.Pais</class>
+    <class>com.statics.vo.NivelMaximo</class>
+    <class>com.statics.vo.UnidadTiempo</class>
+    <class>com.statics.vo.DatoProcesado</class>
+    <class>com.statics.vo.CaerCampos</class>
+    <class>com.statics.vo.FactorConversion</class>
+    <class>com.statics.vo.UnidadMedida</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/rstatics?zeroDateTimeBehavior=convertToNull"/>

@@ -12,17 +12,18 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import com.statics.vo.CargaParametro;
+import com.statics.vo.ParametroLabels;
 import java.util.ArrayList;
 import java.util.List;
-import com.statics.vo.ParametroLabels;
+import com.statics.vo.ParametroFactorconversion;
+import com.statics.vo.CargaParametro;
 import com.statics.vo.Parametros;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author Usuario
+ * @author FoxHG
  */
 public class ParametrosJpaController implements Serializable {
 
@@ -36,38 +37,38 @@ public class ParametrosJpaController implements Serializable {
     }
 
     public void create(Parametros parametros) {
-        if (parametros.getCargaParametrolist() == null) {
-            parametros.setCargaParametrolist(new ArrayList<CargaParametro>());
-        }
         if (parametros.getParametroLabelsList() == null) {
             parametros.setParametroLabelsList(new ArrayList<ParametroLabels>());
+        }
+        if (parametros.getParametroFactorconversionList() == null) {
+            parametros.setParametroFactorconversionList(new ArrayList<ParametroFactorconversion>());
+        }
+        if (parametros.getCargaParametroList() == null) {
+            parametros.setCargaParametroList(new ArrayList<CargaParametro>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<CargaParametro> attachedCargaParametrolist = new ArrayList<CargaParametro>();
-            for (CargaParametro cargaParametrolistCargaParametroToAttach : parametros.getCargaParametrolist()) {
-                cargaParametrolistCargaParametroToAttach = em.getReference(cargaParametrolistCargaParametroToAttach.getClass(), cargaParametrolistCargaParametroToAttach.getCapaId());
-                attachedCargaParametrolist.add(cargaParametrolistCargaParametroToAttach);
-            }
-            parametros.setCargaParametrolist(attachedCargaParametrolist);
             List<ParametroLabels> attachedParametroLabelsList = new ArrayList<ParametroLabels>();
             for (ParametroLabels parametroLabelsListParametroLabelsToAttach : parametros.getParametroLabelsList()) {
                 parametroLabelsListParametroLabelsToAttach = em.getReference(parametroLabelsListParametroLabelsToAttach.getClass(), parametroLabelsListParametroLabelsToAttach.getPalaId());
                 attachedParametroLabelsList.add(parametroLabelsListParametroLabelsToAttach);
             }
             parametros.setParametroLabelsList(attachedParametroLabelsList);
-            em.persist(parametros);
-            for (CargaParametro cargaParametrolistCargaParametro : parametros.getCargaParametrolist()) {
-                Parametros oldParaIdOfCargaParametrolistCargaParametro = cargaParametrolistCargaParametro.getParaId();
-                cargaParametrolistCargaParametro.setParaId(parametros);
-                cargaParametrolistCargaParametro = em.merge(cargaParametrolistCargaParametro);
-                if (oldParaIdOfCargaParametrolistCargaParametro != null) {
-                    oldParaIdOfCargaParametrolistCargaParametro.getCargaParametrolist().remove(cargaParametrolistCargaParametro);
-                    oldParaIdOfCargaParametrolistCargaParametro = em.merge(oldParaIdOfCargaParametrolistCargaParametro);
-                }
+            List<ParametroFactorconversion> attachedParametroFactorconversionList = new ArrayList<ParametroFactorconversion>();
+            for (ParametroFactorconversion parametroFactorconversionListParametroFactorconversionToAttach : parametros.getParametroFactorconversionList()) {
+                parametroFactorconversionListParametroFactorconversionToAttach = em.getReference(parametroFactorconversionListParametroFactorconversionToAttach.getClass(), parametroFactorconversionListParametroFactorconversionToAttach.getId());
+                attachedParametroFactorconversionList.add(parametroFactorconversionListParametroFactorconversionToAttach);
             }
+            parametros.setParametroFactorconversionList(attachedParametroFactorconversionList);
+            List<CargaParametro> attachedCargaParametroList = new ArrayList<CargaParametro>();
+            for (CargaParametro cargaParametroListCargaParametroToAttach : parametros.getCargaParametroList()) {
+                cargaParametroListCargaParametroToAttach = em.getReference(cargaParametroListCargaParametroToAttach.getClass(), cargaParametroListCargaParametroToAttach.getCapaId());
+                attachedCargaParametroList.add(cargaParametroListCargaParametroToAttach);
+            }
+            parametros.setCargaParametroList(attachedCargaParametroList);
+            em.persist(parametros);
             for (ParametroLabels parametroLabelsListParametroLabels : parametros.getParametroLabelsList()) {
                 Parametros oldParaIdOfParametroLabelsListParametroLabels = parametroLabelsListParametroLabels.getParaId();
                 parametroLabelsListParametroLabels.setParaId(parametros);
@@ -75,6 +76,24 @@ public class ParametrosJpaController implements Serializable {
                 if (oldParaIdOfParametroLabelsListParametroLabels != null) {
                     oldParaIdOfParametroLabelsListParametroLabels.getParametroLabelsList().remove(parametroLabelsListParametroLabels);
                     oldParaIdOfParametroLabelsListParametroLabels = em.merge(oldParaIdOfParametroLabelsListParametroLabels);
+                }
+            }
+            for (ParametroFactorconversion parametroFactorconversionListParametroFactorconversion : parametros.getParametroFactorconversionList()) {
+                Parametros oldIdParametroOfParametroFactorconversionListParametroFactorconversion = parametroFactorconversionListParametroFactorconversion.getIdParametro();
+                parametroFactorconversionListParametroFactorconversion.setIdParametro(parametros);
+                parametroFactorconversionListParametroFactorconversion = em.merge(parametroFactorconversionListParametroFactorconversion);
+                if (oldIdParametroOfParametroFactorconversionListParametroFactorconversion != null) {
+                    oldIdParametroOfParametroFactorconversionListParametroFactorconversion.getParametroFactorconversionList().remove(parametroFactorconversionListParametroFactorconversion);
+                    oldIdParametroOfParametroFactorconversionListParametroFactorconversion = em.merge(oldIdParametroOfParametroFactorconversionListParametroFactorconversion);
+                }
+            }
+            for (CargaParametro cargaParametroListCargaParametro : parametros.getCargaParametroList()) {
+                Parametros oldParaIdOfCargaParametroListCargaParametro = cargaParametroListCargaParametro.getParaId();
+                cargaParametroListCargaParametro.setParaId(parametros);
+                cargaParametroListCargaParametro = em.merge(cargaParametroListCargaParametro);
+                if (oldParaIdOfCargaParametroListCargaParametro != null) {
+                    oldParaIdOfCargaParametroListCargaParametro.getCargaParametroList().remove(cargaParametroListCargaParametro);
+                    oldParaIdOfCargaParametroListCargaParametro = em.merge(oldParaIdOfCargaParametroListCargaParametro);
                 }
             }
             em.getTransaction().commit();
@@ -91,19 +110,13 @@ public class ParametrosJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Parametros persistentParametros = em.find(Parametros.class, parametros.getParaId());
-            List<CargaParametro> cargaParametrolistOld = persistentParametros.getCargaParametrolist();
-            List<CargaParametro> cargaParametrolistNew = parametros.getCargaParametrolist();
             List<ParametroLabels> parametroLabelsListOld = persistentParametros.getParametroLabelsList();
             List<ParametroLabels> parametroLabelsListNew = parametros.getParametroLabelsList();
+            List<ParametroFactorconversion> parametroFactorconversionListOld = persistentParametros.getParametroFactorconversionList();
+            List<ParametroFactorconversion> parametroFactorconversionListNew = parametros.getParametroFactorconversionList();
+            List<CargaParametro> cargaParametroListOld = persistentParametros.getCargaParametroList();
+            List<CargaParametro> cargaParametroListNew = parametros.getCargaParametroList();
             List<String> illegalOrphanMessages = null;
-            for (CargaParametro cargaParametrolistOldCargaParametro : cargaParametrolistOld) {
-                if (!cargaParametrolistNew.contains(cargaParametrolistOldCargaParametro)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain CargaParametro " + cargaParametrolistOldCargaParametro + " since its paraId field is not nullable.");
-                }
-            }
             for (ParametroLabels parametroLabelsListOldParametroLabels : parametroLabelsListOld) {
                 if (!parametroLabelsListNew.contains(parametroLabelsListOldParametroLabels)) {
                     if (illegalOrphanMessages == null) {
@@ -112,16 +125,17 @@ public class ParametrosJpaController implements Serializable {
                     illegalOrphanMessages.add("You must retain ParametroLabels " + parametroLabelsListOldParametroLabels + " since its paraId field is not nullable.");
                 }
             }
+            for (CargaParametro cargaParametroListOldCargaParametro : cargaParametroListOld) {
+                if (!cargaParametroListNew.contains(cargaParametroListOldCargaParametro)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain CargaParametro " + cargaParametroListOldCargaParametro + " since its paraId field is not nullable.");
+                }
+            }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            List<CargaParametro> attachedCargaParametrolistNew = new ArrayList<CargaParametro>();
-            for (CargaParametro cargaParametrolistNewCargaParametroToAttach : cargaParametrolistNew) {
-                cargaParametrolistNewCargaParametroToAttach = em.getReference(cargaParametrolistNewCargaParametroToAttach.getClass(), cargaParametrolistNewCargaParametroToAttach.getCapaId());
-                attachedCargaParametrolistNew.add(cargaParametrolistNewCargaParametroToAttach);
-            }
-            cargaParametrolistNew = attachedCargaParametrolistNew;
-            parametros.setCargaParametrolist(cargaParametrolistNew);
             List<ParametroLabels> attachedParametroLabelsListNew = new ArrayList<ParametroLabels>();
             for (ParametroLabels parametroLabelsListNewParametroLabelsToAttach : parametroLabelsListNew) {
                 parametroLabelsListNewParametroLabelsToAttach = em.getReference(parametroLabelsListNewParametroLabelsToAttach.getClass(), parametroLabelsListNewParametroLabelsToAttach.getPalaId());
@@ -129,18 +143,21 @@ public class ParametrosJpaController implements Serializable {
             }
             parametroLabelsListNew = attachedParametroLabelsListNew;
             parametros.setParametroLabelsList(parametroLabelsListNew);
-            parametros = em.merge(parametros);
-            for (CargaParametro cargaParametrolistNewCargaParametro : cargaParametrolistNew) {
-                if (!cargaParametrolistOld.contains(cargaParametrolistNewCargaParametro)) {
-                    Parametros oldParaIdOfCargaParametrolistNewCargaParametro = cargaParametrolistNewCargaParametro.getParaId();
-                    cargaParametrolistNewCargaParametro.setParaId(parametros);
-                    cargaParametrolistNewCargaParametro = em.merge(cargaParametrolistNewCargaParametro);
-                    if (oldParaIdOfCargaParametrolistNewCargaParametro != null && !oldParaIdOfCargaParametrolistNewCargaParametro.equals(parametros)) {
-                        oldParaIdOfCargaParametrolistNewCargaParametro.getCargaParametrolist().remove(cargaParametrolistNewCargaParametro);
-                        oldParaIdOfCargaParametrolistNewCargaParametro = em.merge(oldParaIdOfCargaParametrolistNewCargaParametro);
-                    }
-                }
+            List<ParametroFactorconversion> attachedParametroFactorconversionListNew = new ArrayList<ParametroFactorconversion>();
+            for (ParametroFactorconversion parametroFactorconversionListNewParametroFactorconversionToAttach : parametroFactorconversionListNew) {
+                parametroFactorconversionListNewParametroFactorconversionToAttach = em.getReference(parametroFactorconversionListNewParametroFactorconversionToAttach.getClass(), parametroFactorconversionListNewParametroFactorconversionToAttach.getId());
+                attachedParametroFactorconversionListNew.add(parametroFactorconversionListNewParametroFactorconversionToAttach);
             }
+            parametroFactorconversionListNew = attachedParametroFactorconversionListNew;
+            parametros.setParametroFactorconversionList(parametroFactorconversionListNew);
+            List<CargaParametro> attachedCargaParametroListNew = new ArrayList<CargaParametro>();
+            for (CargaParametro cargaParametroListNewCargaParametroToAttach : cargaParametroListNew) {
+                cargaParametroListNewCargaParametroToAttach = em.getReference(cargaParametroListNewCargaParametroToAttach.getClass(), cargaParametroListNewCargaParametroToAttach.getCapaId());
+                attachedCargaParametroListNew.add(cargaParametroListNewCargaParametroToAttach);
+            }
+            cargaParametroListNew = attachedCargaParametroListNew;
+            parametros.setCargaParametroList(cargaParametroListNew);
+            parametros = em.merge(parametros);
             for (ParametroLabels parametroLabelsListNewParametroLabels : parametroLabelsListNew) {
                 if (!parametroLabelsListOld.contains(parametroLabelsListNewParametroLabels)) {
                     Parametros oldParaIdOfParametroLabelsListNewParametroLabels = parametroLabelsListNewParametroLabels.getParaId();
@@ -149,6 +166,34 @@ public class ParametrosJpaController implements Serializable {
                     if (oldParaIdOfParametroLabelsListNewParametroLabels != null && !oldParaIdOfParametroLabelsListNewParametroLabels.equals(parametros)) {
                         oldParaIdOfParametroLabelsListNewParametroLabels.getParametroLabelsList().remove(parametroLabelsListNewParametroLabels);
                         oldParaIdOfParametroLabelsListNewParametroLabels = em.merge(oldParaIdOfParametroLabelsListNewParametroLabels);
+                    }
+                }
+            }
+            for (ParametroFactorconversion parametroFactorconversionListOldParametroFactorconversion : parametroFactorconversionListOld) {
+                if (!parametroFactorconversionListNew.contains(parametroFactorconversionListOldParametroFactorconversion)) {
+                    parametroFactorconversionListOldParametroFactorconversion.setIdParametro(null);
+                    parametroFactorconversionListOldParametroFactorconversion = em.merge(parametroFactorconversionListOldParametroFactorconversion);
+                }
+            }
+            for (ParametroFactorconversion parametroFactorconversionListNewParametroFactorconversion : parametroFactorconversionListNew) {
+                if (!parametroFactorconversionListOld.contains(parametroFactorconversionListNewParametroFactorconversion)) {
+                    Parametros oldIdParametroOfParametroFactorconversionListNewParametroFactorconversion = parametroFactorconversionListNewParametroFactorconversion.getIdParametro();
+                    parametroFactorconversionListNewParametroFactorconversion.setIdParametro(parametros);
+                    parametroFactorconversionListNewParametroFactorconversion = em.merge(parametroFactorconversionListNewParametroFactorconversion);
+                    if (oldIdParametroOfParametroFactorconversionListNewParametroFactorconversion != null && !oldIdParametroOfParametroFactorconversionListNewParametroFactorconversion.equals(parametros)) {
+                        oldIdParametroOfParametroFactorconversionListNewParametroFactorconversion.getParametroFactorconversionList().remove(parametroFactorconversionListNewParametroFactorconversion);
+                        oldIdParametroOfParametroFactorconversionListNewParametroFactorconversion = em.merge(oldIdParametroOfParametroFactorconversionListNewParametroFactorconversion);
+                    }
+                }
+            }
+            for (CargaParametro cargaParametroListNewCargaParametro : cargaParametroListNew) {
+                if (!cargaParametroListOld.contains(cargaParametroListNewCargaParametro)) {
+                    Parametros oldParaIdOfCargaParametroListNewCargaParametro = cargaParametroListNewCargaParametro.getParaId();
+                    cargaParametroListNewCargaParametro.setParaId(parametros);
+                    cargaParametroListNewCargaParametro = em.merge(cargaParametroListNewCargaParametro);
+                    if (oldParaIdOfCargaParametroListNewCargaParametro != null && !oldParaIdOfCargaParametroListNewCargaParametro.equals(parametros)) {
+                        oldParaIdOfCargaParametroListNewCargaParametro.getCargaParametroList().remove(cargaParametroListNewCargaParametro);
+                        oldParaIdOfCargaParametroListNewCargaParametro = em.merge(oldParaIdOfCargaParametroListNewCargaParametro);
                     }
                 }
             }
@@ -182,13 +227,6 @@ public class ParametrosJpaController implements Serializable {
                 throw new NonexistentEntityException("The parametros with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<CargaParametro> cargaParametrolistOrphanCheck = parametros.getCargaParametrolist();
-            for (CargaParametro cargaParametrolistOrphanCheckCargaParametro : cargaParametrolistOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Parametros (" + parametros + ") cannot be destroyed since the CargaParametro " + cargaParametrolistOrphanCheckCargaParametro + " in its cargaParametrolist field has a non-nullable paraId field.");
-            }
             List<ParametroLabels> parametroLabelsListOrphanCheck = parametros.getParametroLabelsList();
             for (ParametroLabels parametroLabelsListOrphanCheckParametroLabels : parametroLabelsListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
@@ -196,8 +234,20 @@ public class ParametrosJpaController implements Serializable {
                 }
                 illegalOrphanMessages.add("This Parametros (" + parametros + ") cannot be destroyed since the ParametroLabels " + parametroLabelsListOrphanCheckParametroLabels + " in its parametroLabelsList field has a non-nullable paraId field.");
             }
+            List<CargaParametro> cargaParametroListOrphanCheck = parametros.getCargaParametroList();
+            for (CargaParametro cargaParametroListOrphanCheckCargaParametro : cargaParametroListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Parametros (" + parametros + ") cannot be destroyed since the CargaParametro " + cargaParametroListOrphanCheckCargaParametro + " in its cargaParametroList field has a non-nullable paraId field.");
+            }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            List<ParametroFactorconversion> parametroFactorconversionList = parametros.getParametroFactorconversionList();
+            for (ParametroFactorconversion parametroFactorconversionListParametroFactorconversion : parametroFactorconversionList) {
+                parametroFactorconversionListParametroFactorconversion.setIdParametro(null);
+                parametroFactorconversionListParametroFactorconversion = em.merge(parametroFactorconversionListParametroFactorconversion);
             }
             em.remove(parametros);
             em.getTransaction().commit();

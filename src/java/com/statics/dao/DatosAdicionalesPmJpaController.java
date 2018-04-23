@@ -32,19 +32,19 @@ public class DatosAdicionalesPmJpaController implements Serializable {
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-    
-     public List<DatosAdicionalesPm> findDatosadicionalesByMicrolocalizacion(int idMiccrolocalizacion) {
-         String sqlQuery="SELECT da.* FROM datos_adicionales_pm da INNER JOIN datosadicionales_microlocalizacion dam "
-                 + "ON da.id=dam.id_datos_adicionales WHERE dam.id_microlocalizacion="+idMiccrolocalizacion;
-         List<DatosAdicionalesPm> lista=new ArrayList();
-        EntityManager em=getEntityManager();
-        try{
-            Query q=em.createNativeQuery(sqlQuery,DatosAdicionalesPm.class);
-            lista=q.getResultList();
-        }catch(Exception e){
+
+    public List<DatosAdicionalesPm> findDatosadicionalesByMicrolocalizacion(int idMiccrolocalizacion) {
+        String sqlQuery = "SELECT da.* FROM datos_adicionales_pm da INNER JOIN datosadicionales_microlocalizacion dam "
+                + "ON da.id=dam.id_datos_adicionales WHERE dam.id_microlocalizacion=" + idMiccrolocalizacion;
+        List<DatosAdicionalesPm> lista = new ArrayList();
+        EntityManager em = getEntityManager();
+        try {
+            Query q = em.createNativeQuery(sqlQuery, DatosAdicionalesPm.class);
+            lista = q.getResultList();
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally{
-            if (em!=null) {
+        } finally {
+            if (em != null) {
                 em.close();
             }
         }
@@ -204,5 +204,5 @@ public class DatosAdicionalesPmJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }

@@ -20,21 +20,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import org.eclipse.persistence.annotations.Cache;
 
 /**
  *
- * @author Usuario
+ * @author FoxHG
  */
 @Entity
 @Table(name = "grupo")
-@Cache(expiry = -1)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Grupo.findAll", query = "SELECT g FROM Grupo g")
@@ -45,9 +42,6 @@ import org.eclipse.persistence.annotations.Cache;
     , @NamedQuery(name = "Grupo.findByGrupFechacambio", query = "SELECT g FROM Grupo g WHERE g.grupFechacambio = :grupFechacambio")
     , @NamedQuery(name = "Grupo.findByGrupFechacreacion", query = "SELECT g FROM Grupo g WHERE g.grupFechacreacion = :grupFechacreacion")})
 public class Grupo implements Serializable {
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "grupId")
-    private List<GrupoUsuarios> grupoUsuariosList;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -71,8 +65,8 @@ public class Grupo implements Serializable {
     @Column(name = "grup_fechacreacion")
     @Temporal(TemporalType.TIMESTAMP)
     private Date grupFechacreacion;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "grupo")
-    private GrupoUsuarios grupoUsuarios;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "grupId")
+    private List<GrupoUsuarios> grupoUsuariosList;
     @JoinColumn(name = "esta_id", referencedColumnName = "esta_id")
     @ManyToOne(optional = false)
     private Estados estaId;
@@ -144,12 +138,13 @@ public class Grupo implements Serializable {
         this.grupFechacreacion = grupFechacreacion;
     }
 
-    public GrupoUsuarios getGrupoUsuarios() {
-        return grupoUsuarios;
+    @XmlTransient
+    public List<GrupoUsuarios> getGrupoUsuariosList() {
+        return grupoUsuariosList;
     }
 
-    public void setGrupoUsuarios(GrupoUsuarios grupoUsuarios) {
-        this.grupoUsuarios = grupoUsuarios;
+    public void setGrupoUsuariosList(List<GrupoUsuarios> grupoUsuariosList) {
+        this.grupoUsuariosList = grupoUsuariosList;
     }
 
     public Estados getEstaId() {
@@ -201,15 +196,6 @@ public class Grupo implements Serializable {
     @Override
     public String toString() {
         return "com.statics.vo.Grupo[ grupId=" + grupId + " ]";
-    }
-
-    @XmlTransient
-    public List<GrupoUsuarios> getGrupoUsuariosList() {
-        return grupoUsuariosList;
-    }
-
-    public void setGrupoUsuariosList(List<GrupoUsuarios> grupoUsuariosList) {
-        this.grupoUsuariosList = grupoUsuariosList;
     }
     
 }

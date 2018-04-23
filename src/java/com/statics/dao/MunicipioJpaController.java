@@ -33,7 +33,7 @@ public class MunicipioJpaController implements Serializable {
         return emf.createEntityManager();
     }
     
-    public List<Municipio> findMunicipiosByDepartamento(int idDepartamento){
+        public List<Municipio> findMunicipiosByDepartamento(int idDepartamento){
         String sqlQuery="SELECT * FROM municipio WHERE id_departamento="+idDepartamento;
         List<Municipio> lista=new ArrayList();
         EntityManager em=null;
@@ -169,7 +169,6 @@ public class MunicipioJpaController implements Serializable {
 
     private List<Municipio> findMunicipioEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
-        List<Municipio> lista;
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             cq.select(cq.from(Municipio.class));
@@ -178,8 +177,7 @@ public class MunicipioJpaController implements Serializable {
                 q.setMaxResults(maxResults);
                 q.setFirstResult(firstResult);
             }
-            lista=q.getResultList();
-            return lista;
+            return q.getResultList();
         } finally {
             em.close();
         }

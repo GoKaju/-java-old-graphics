@@ -12,7 +12,6 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,21 +20,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import org.eclipse.persistence.annotations.Cache;
 
 /**
  *
- * @author Usuario
+ * @author FoxHG
  */
 @Entity
 @Table(name = "punto_muestral")
-@Cache(expiry = -1)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "PuntoMuestral.findAll", query = "SELECT p FROM PuntoMuestral p")
@@ -49,61 +45,53 @@ import org.eclipse.persistence.annotations.Cache;
     , @NamedQuery(name = "PuntoMuestral.findByPumuFechacambio", query = "SELECT p FROM PuntoMuestral p WHERE p.pumuFechacambio = :pumuFechacambio")})
 public class PuntoMuestral implements Serializable {
 
-    @JoinColumn(name = "id_macrolocalizacion", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private MacrolocalizacionPm idMacrolocalizacion;
-    @JoinColumn(name = "id_microlocalizacion", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private MicrolocalizacionPm idMicrolocalizacion;
-    @JoinColumn(name = "id_ubicacion", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private UbicacionPm idUbicacion;
-    @JoinColumn(name = "id_logistica", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private LogisticaPm idLogistica;
-    @OneToMany(mappedBy = "idPunto", fetch = FetchType.LAZY)
-    private List<FotoPuntomuestral> fotoPuntomuestralList;
-
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "pumu_id")
     private Integer pumuId;
-    
     @Column(name = "pumu_nombre")
     private String pumuNombre;
-    
     @Column(name = "pumu_descripcion")
     private String pumuDescripcion;
-    
     @Column(name = "pumu_long")
     private String pumuLong;
-    
     @Column(name = "pumu_lat")
     private String pumuLat;
-    
     @Column(name = "pumu_fechainicial")
     @Temporal(TemporalType.TIMESTAMP)
     private Date pumuFechainicial;
-    
     @Column(name = "pumu_registradopor")
     private Integer pumuRegistradopor;
-    
     @Column(name = "pumu_fechacambio")
     @Temporal(TemporalType.TIMESTAMP)
     private Date pumuFechacambio;
-    
     @JoinColumn(name = "esta_id", referencedColumnName = "esta_id")
     @ManyToOne
     private Estaciones estaId;
-    
     @JoinColumn(name = "camp_id", referencedColumnName = "camp_id")
     @ManyToOne
     private Campanas campId;
-    
+    @JoinColumn(name = "id_macrolocalizacion", referencedColumnName = "id")
+    @ManyToOne
+    private MacrolocalizacionPm idMacrolocalizacion;
+    @JoinColumn(name = "id_microlocalizacion", referencedColumnName = "id")
+    @ManyToOne
+    private MicrolocalizacionPm idMicrolocalizacion;
+    @JoinColumn(name = "id_ubicacion", referencedColumnName = "id")
+    @ManyToOne
+    private UbicacionPm idUbicacion;
+    @JoinColumn(name = "id_logistica", referencedColumnName = "id")
+    @ManyToOne
+    private LogisticaPm idLogistica;
+    @OneToMany(mappedBy = "idPuntoMuestral")
+    private List<DatoProcesado> datoProcesadoList;
+    @OneToMany(mappedBy = "idPunto")
+    private List<FotoPuntomuestral> fotoPuntomuestralList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pumuId")
     private List<Cargas> cargasList;
-    
+
     public PuntoMuestral() {
     }
 
@@ -191,40 +179,6 @@ public class PuntoMuestral implements Serializable {
         this.campId = campId;
     }
 
-    @XmlTransient
-    public List<Cargas> getCargasList() {
-        return cargasList;
-    }
-
-    public void setCargasList(List<Cargas> cargasList) {
-        this.cargasList = cargasList;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (pumuId != null ? pumuId.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof PuntoMuestral)) {
-            return false;
-        }
-        PuntoMuestral other = (PuntoMuestral) object;
-        if ((this.pumuId == null && other.pumuId != null) || (this.pumuId != null && !this.pumuId.equals(other.pumuId))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.statics.vo.PuntoMuestral[ pumuId=" + pumuId + " ]";
-    }    
-
     public MacrolocalizacionPm getIdMacrolocalizacion() {
         return idMacrolocalizacion;
     }
@@ -258,6 +212,15 @@ public class PuntoMuestral implements Serializable {
     }
 
     @XmlTransient
+    public List<DatoProcesado> getDatoProcesadoList() {
+        return datoProcesadoList;
+    }
+
+    public void setDatoProcesadoList(List<DatoProcesado> datoProcesadoList) {
+        this.datoProcesadoList = datoProcesadoList;
+    }
+
+    @XmlTransient
     public List<FotoPuntomuestral> getFotoPuntomuestralList() {
         return fotoPuntomuestralList;
     }
@@ -265,4 +228,39 @@ public class PuntoMuestral implements Serializable {
     public void setFotoPuntomuestralList(List<FotoPuntomuestral> fotoPuntomuestralList) {
         this.fotoPuntomuestralList = fotoPuntomuestralList;
     }
+
+    @XmlTransient
+    public List<Cargas> getCargasList() {
+        return cargasList;
+    }
+
+    public void setCargasList(List<Cargas> cargasList) {
+        this.cargasList = cargasList;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (pumuId != null ? pumuId.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof PuntoMuestral)) {
+            return false;
+        }
+        PuntoMuestral other = (PuntoMuestral) object;
+        if ((this.pumuId == null && other.pumuId != null) || (this.pumuId != null && !this.pumuId.equals(other.pumuId))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "com.statics.vo.PuntoMuestral[ pumuId=" + pumuId + " ]";
+    }
+    
 }

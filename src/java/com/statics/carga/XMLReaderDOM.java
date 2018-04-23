@@ -197,6 +197,11 @@ public class XMLReaderDOM {
             carga.setCargExitosos(cargados);
 
             cjc.edit(carga);
+            
+//            ejecutar procedimiento de promedios
+                 
+            
+            
                 System.out.println(":::4--> "+carga.getUltimaFechacargada());
 
             System.out.flush();

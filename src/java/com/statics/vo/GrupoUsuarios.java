@@ -17,32 +17,24 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.eclipse.persistence.annotations.Cache;
 
 /**
  *
- * @author Usuario
+ * @author FoxHG
  */
 @Entity
 @Table(name = "grupo_usuarios")
-@Cache(expiry = -1)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "GrupoUsuarios.findAll", query = "SELECT g FROM GrupoUsuarios g")
     , @NamedQuery(name = "GrupoUsuarios.findByGrusId", query = "SELECT g FROM GrupoUsuarios g WHERE g.grusId = :grusId")
-    , @NamedQuery(name = "GrupoUsuarios.findByGrupId", query = "SELECT g FROM GrupoUsuarios g WHERE g.grupId = :grupId")
     , @NamedQuery(name = "GrupoUsuarios.findByGrusRegistradopor", query = "SELECT g FROM GrupoUsuarios g WHERE g.grusRegistradopor = :grusRegistradopor")
     , @NamedQuery(name = "GrupoUsuarios.findByGrusFechacambio", query = "SELECT g FROM GrupoUsuarios g WHERE g.grusFechacambio = :grusFechacambio")})
 public class GrupoUsuarios implements Serializable {
-
-    @JoinColumn(name = "grup_id", referencedColumnName = "grup_id")
-    @ManyToOne(optional = false)
-    private Grupo grupId;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -51,16 +43,15 @@ public class GrupoUsuarios implements Serializable {
     @Column(name = "grus_id")
     private Integer grusId;
     @Basic(optional = false)
-   
     @Column(name = "grus_registradopor")
     private int grusRegistradopor;
     @Basic(optional = false)
     @Column(name = "grus_fechacambio")
     @Temporal(TemporalType.TIMESTAMP)
     private Date grusFechacambio;
-    @JoinColumn(name = "grus_id", referencedColumnName = "grup_id", insertable = false, updatable = false)
-    @OneToOne(optional = false)
-    private Grupo grupo;
+    @JoinColumn(name = "grup_id", referencedColumnName = "grup_id")
+    @ManyToOne(optional = false)
+    private Grupo grupId;
     @JoinColumn(name = "usua_id", referencedColumnName = "usua_id")
     @ManyToOne(optional = false)
     private Usuarios usuaId;
@@ -72,9 +63,8 @@ public class GrupoUsuarios implements Serializable {
         this.grusId = grusId;
     }
 
-    public GrupoUsuarios(Integer grusId, Grupo grupId, int grusRegistradopor, Date grusFechacambio) {
+    public GrupoUsuarios(Integer grusId, int grusRegistradopor, Date grusFechacambio) {
         this.grusId = grusId;
-        this.grupId = grupId;
         this.grusRegistradopor = grusRegistradopor;
         this.grusFechacambio = grusFechacambio;
     }
@@ -86,7 +76,6 @@ public class GrupoUsuarios implements Serializable {
     public void setGrusId(Integer grusId) {
         this.grusId = grusId;
     }
-
 
     public int getGrusRegistradopor() {
         return grusRegistradopor;
@@ -104,12 +93,12 @@ public class GrupoUsuarios implements Serializable {
         this.grusFechacambio = grusFechacambio;
     }
 
-    public Grupo getGrupo() {
-        return grupo;
+    public Grupo getGrupId() {
+        return grupId;
     }
 
-    public void setGrupo(Grupo grupo) {
-        this.grupo = grupo;
+    public void setGrupId(Grupo grupId) {
+        this.grupId = grupId;
     }
 
     public Usuarios getUsuaId() {
@@ -143,14 +132,6 @@ public class GrupoUsuarios implements Serializable {
     @Override
     public String toString() {
         return "com.statics.vo.GrupoUsuarios[ grusId=" + grusId + " ]";
-    }
-
-    public Grupo getGrupId() {
-        return grupId;
-    }
-
-    public void setGrupId(Grupo grupId) {
-        this.grupId = grupId;
     }
     
 }

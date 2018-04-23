@@ -9,7 +9,6 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -42,21 +41,10 @@ public class FotoPuntomuestral implements Serializable {
     @Column(name = "nombre")
     private String nombre;
     @JoinColumn(name = "id_punto", referencedColumnName = "pumu_id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private PuntoMuestral idPunto;
 
     public FotoPuntomuestral() {
-    }
-
-    public FotoPuntomuestral(Integer id, String nombre, PuntoMuestral idPunto) {
-        this.id = id;
-        this.nombre = nombre;
-        this.idPunto = idPunto;
-    }
-
-    public FotoPuntomuestral(String nombre, PuntoMuestral idPunto) {
-        this.nombre = nombre;
-        this.idPunto = idPunto;
     }
 
     public FotoPuntomuestral(Integer id) {

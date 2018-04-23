@@ -23,7 +23,7 @@ import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author Usuario
+ * @author FoxHG
  */
 public class CargaParametroJpaController implements Serializable {
 
@@ -62,7 +62,7 @@ public class CargaParametroJpaController implements Serializable {
             cargaParametro.setDatosList(attachedDatosList);
             em.persist(cargaParametro);
             if (paraId != null) {
-                paraId.getCargaParametrolist().add(cargaParametro);
+                paraId.getCargaParametroList().add(cargaParametro);
                 paraId = em.merge(paraId);
             }
             if (cargId != null) {
@@ -127,11 +127,11 @@ public class CargaParametroJpaController implements Serializable {
             cargaParametro.setDatosList(datosListNew);
             cargaParametro = em.merge(cargaParametro);
             if (paraIdOld != null && !paraIdOld.equals(paraIdNew)) {
-                paraIdOld.getCargaParametrolist().remove(cargaParametro);
+                paraIdOld.getCargaParametroList().remove(cargaParametro);
                 paraIdOld = em.merge(paraIdOld);
             }
             if (paraIdNew != null && !paraIdNew.equals(paraIdOld)) {
-                paraIdNew.getCargaParametrolist().add(cargaParametro);
+                paraIdNew.getCargaParametroList().add(cargaParametro);
                 paraIdNew = em.merge(paraIdNew);
             }
             if (cargIdOld != null && !cargIdOld.equals(cargIdNew)) {
@@ -195,7 +195,7 @@ public class CargaParametroJpaController implements Serializable {
             }
             Parametros paraId = cargaParametro.getParaId();
             if (paraId != null) {
-                paraId.getCargaParametrolist().remove(cargaParametro);
+                paraId.getCargaParametroList().remove(cargaParametro);
                 paraId = em.merge(paraId);
             }
             Cargas cargId = cargaParametro.getCargId();

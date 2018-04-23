@@ -21,20 +21,17 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.eclipse.persistence.annotations.Cache;
 
 /**
  *
- * @author Usuario
+ * @author FoxHG
  */
 @Entity
 @Table(name = "parametro_labels")
-@Cache(expiry = -1)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "ParametroLabels.findAll", query = "SELECT p FROM ParametroLabels p")
     , @NamedQuery(name = "ParametroLabels.findByPalaId", query = "SELECT p FROM ParametroLabels p WHERE p.palaId = :palaId")
-    , @NamedQuery(name = "ParametroLabels.findActivos", query = "SELECT p FROM ParametroLabels p inner join Parametros as pa on p.paraId = pa WHERE pa.paraEstado>0")
     , @NamedQuery(name = "ParametroLabels.findByPalaLabel", query = "SELECT p FROM ParametroLabels p WHERE p.palaLabel = :palaLabel")
     , @NamedQuery(name = "ParametroLabels.findByPalaRegistradopor", query = "SELECT p FROM ParametroLabels p WHERE p.palaRegistradopor = :palaRegistradopor")
     , @NamedQuery(name = "ParametroLabels.findByPalaFechacambio", query = "SELECT p FROM ParametroLabels p WHERE p.palaFechacambio = :palaFechacambio")})

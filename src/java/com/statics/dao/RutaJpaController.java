@@ -5,7 +5,7 @@
  */
 package com.statics.dao;
 
-import com.statics.carga.exceptions.NonexistentEntityException;
+import com.statics.dao.exceptions.NonexistentEntityException;
 import com.statics.vo.Ruta;
 import java.io.Serializable;
 import java.util.List;

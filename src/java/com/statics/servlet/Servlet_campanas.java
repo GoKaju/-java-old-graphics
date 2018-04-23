@@ -6,6 +6,7 @@
 package com.statics.servlet;
 
 import com.statics.dao.CampanasJpaController;
+import com.statics.dao.ClienteJpaController;
 import com.statics.dao.ClimaPmJpaController;
 import com.statics.dao.CriterioMicrolocalizacionJpaController;
 import com.statics.dao.CriterioPmJpaController;
@@ -107,6 +108,7 @@ public class Servlet_campanas extends HttpServlet {
 
                 if (modulo.equals("1")) {
                     RutaJpaController rutaDao = new RutaJpaController(emf);
+                    ClienteJpaController clienteDao=new ClienteJpaController(emf);
                     String bucketName = "";
                     Ruta ruta = rutaDao.findRuta(1);
 
@@ -123,9 +125,11 @@ public class Servlet_campanas extends HttpServlet {
                         mc.makeBucket(bucketName);
                         elem.setCampBucket(bucketName);
                     }
+                    Cliente cliente=clienteDao.findCliente(Integer.parseInt(o.getvariable("idCliente")));
+                    
                     elem.setCampNombre(o.getvariable("Nombre"));
                     elem.setCampDescripcion(o.getvariable("descripcion"));
-                    elem.setCliente(o.getvariable("cliente"));
+                    elem.setIdCliente(cliente);
                     elem.setEstaId(1);
                     elem.setCampRegistradapor(user.getUsuaId());
                     elem.setCampFechacambio(Fechas.getFechaHoraTimeStamp());
@@ -184,7 +188,7 @@ public class Servlet_campanas extends HttpServlet {
                     String direccionGradosPM = o.getvariable("direccionGrados");
                     String puntoCriticoPM = o.getvariable("puntoCritico");
                     String observacionPuntoCriticoPM = o.getvariable("observacionPuntoCritico");
-                    
+
                     String ruralesFondoPM = o.getvariable("ruralesFondo");
                     String descripcionRutaPM = o.getvariable("descripcionRuta");
 
@@ -208,7 +212,7 @@ public class Servlet_campanas extends HttpServlet {
                     PuntoMuestralJpaController puntoMuestralDao = new PuntoMuestralJpaController(emf);
                     EstacionesJpaController estacionDao = new EstacionesJpaController(emf);
                     RutaJpaController rutaDao = new RutaJpaController(emf);
-                    
+
                     //Ubicacion
                     Departamento departamento = departamentoDao.findDepartamento(departamentoPM);
                     Municipio municipio = municipioDao.findMunicipio(municipioPM);
@@ -222,10 +226,10 @@ public class Servlet_campanas extends HttpServlet {
                     ClimaPm clima = climaDao.findClimaPm(climaPM);
                     MacrolocalizacionPm macrolocalizacion
                             = new MacrolocalizacionPm(
-                                    puntoCriticoPM,ruralesFondoPM,distanciaBordePM, anchoViaPM, sentidoUnoPM,
+                                    puntoCriticoPM, ruralesFondoPM, distanciaBordePM, anchoViaPM, sentidoUnoPM,
                                     sentidoDosPM, velocidadPromedioPM, vehiculosPesadosPM, estadoViaPM,
                                     tiempoMuestreoPM, tipoPM, distanciaFuentePM, direccionGradosPM,
-                                    observacionPuntoCriticoPM,tipoArea, tiempo,
+                                    observacionPuntoCriticoPM, tipoArea, tiempo,
                                     emisionDominante, clima);
                     macrolocalizacionDao.create(macrolocalizacion);
 
@@ -337,8 +341,34 @@ public class Servlet_campanas extends HttpServlet {
                     }
                     System.out.println("cadena-->" + cadena);
                     out.println(" $('#cmbMunicipio').html(\"" + cadena + "\");");
+                    //AGREGAR CLIENTE
+                } else if (modulo.equals("6")) {
+                    int idCliente = o.getvariable("idCliente") != "" ? Integer.parseInt(o.getvariable("idCliente")) : 0;
+
+                    String nombre = o.getvariable("nombreCliente");
+                    String direccion = o.getvariable("direccionCliente");
+                    String email = o.getvariable("emailCliente");
+                    String nit = o.getvariable("nitCliente");
+                    String telefono = o.getvariable("telefonoCliente");
+
+                    ClienteJpaController clienteDao = new ClienteJpaController(emf);
+                    Cliente cliente;
+                    if (idCliente != 0) {
+                        cliente=clienteDao.findCliente(idCliente);
+                        cliente.setNombre(nombre);
+                        cliente.setDireccion(direccion);
+                        cliente.setEmail(email);
+                        cliente.setNit(nit);
+                        cliente.setTelefono(telefono);
+                        clienteDao.edit(cliente);
+                    } else {
+                        cliente=new Cliente(nombre, direccion, email, nit, telefono, user.getUsuaId(), new Date());
+                        clienteDao.create(cliente);
+                    }
+                    out.println("alerta('OK','¡Operacion exitosa!'); RecargaPanel('panels/campanas/campanas_nuevo.jsp?rfid=" + o.getvariable("rfid") + "&index="+o.getvariable("index")+"','content','closeModal()');");
                 } else {
                     out.println("alerta('ERROR','¡Modulo no encontrado!');");
+
                 }
 
             } else {

@@ -9,7 +9,6 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -45,10 +44,10 @@ public class CriterioMicrolocalizacion implements Serializable {
     @Column(name = "observacion_criterio")
     private String observacionCriterio;
     @JoinColumn(name = "id_microlocalizacion", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private MicrolocalizacionPm idMicrolocalizacion;
     @JoinColumn(name = "id_criterio", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private CriterioPm idCriterio;
 
     public CriterioMicrolocalizacion() {

@@ -10,7 +10,6 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -44,13 +43,10 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "MacrolocalizacionPm.findByTipo", query = "SELECT m FROM MacrolocalizacionPm m WHERE m.tipo = :tipo")
     , @NamedQuery(name = "MacrolocalizacionPm.findByDistanciaFuente", query = "SELECT m FROM MacrolocalizacionPm m WHERE m.distanciaFuente = :distanciaFuente")
     , @NamedQuery(name = "MacrolocalizacionPm.findByDireccionGrados", query = "SELECT m FROM MacrolocalizacionPm m WHERE m.direccionGrados = :direccionGrados")
-    , @NamedQuery(name = "MacrolocalizacionPm.findByObservacionPuntoCritico", query = "SELECT m FROM MacrolocalizacionPm m WHERE m.observacionPuntoCritico = :observacionPuntoCritico")})
+    , @NamedQuery(name = "MacrolocalizacionPm.findByPuntoCritico", query = "SELECT m FROM MacrolocalizacionPm m WHERE m.puntoCritico = :puntoCritico")
+    , @NamedQuery(name = "MacrolocalizacionPm.findByObservacionPuntoCritico", query = "SELECT m FROM MacrolocalizacionPm m WHERE m.observacionPuntoCritico = :observacionPuntoCritico")
+    , @NamedQuery(name = "MacrolocalizacionPm.findByRuralesFondo", query = "SELECT m FROM MacrolocalizacionPm m WHERE m.ruralesFondo = :ruralesFondo")})
 public class MacrolocalizacionPm implements Serializable {
-
-    @Column(name = "punto_critico")
-    private String puntoCritico;
-    @Column(name = "rurales_fondo")
-    private String ruralesFondo;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -81,21 +77,25 @@ public class MacrolocalizacionPm implements Serializable {
     private Double distanciaFuente;
     @Column(name = "direccion_grados")
     private String direccionGrados;
+    @Column(name = "punto_critico")
+    private String puntoCritico;
     @Column(name = "observacion_punto_critico")
     private String observacionPuntoCritico;
-    @OneToMany(mappedBy = "idMacrolocalizacion", fetch = FetchType.LAZY)
+    @Column(name = "rurales_fondo")
+    private String ruralesFondo;
+    @OneToMany(mappedBy = "idMacrolocalizacion")
     private List<PuntoMuestral> puntoMuestralList;
     @JoinColumn(name = "id_tipo_area", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private TipoAreaPm idTipoArea;
     @JoinColumn(name = "id_tiempo", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private TiempoPm idTiempo;
     @JoinColumn(name = "id_emision_dominante", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private EmisionDominantePm idEmisionDominante;
     @JoinColumn(name = "id_clima", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private ClimaPm idClima;
 
     public MacrolocalizacionPm() {
@@ -104,6 +104,7 @@ public class MacrolocalizacionPm implements Serializable {
     public MacrolocalizacionPm(Integer id) {
         this.id = id;
     }
+
 
     public MacrolocalizacionPm(String puntoCritico, String ruralesFondo, Double distanciaAlBorde, Double anchoVia, Boolean traficoDiario1, Boolean traficoDiario2, Double velocidadPromedio, Integer porcentajeVehiculosPesados, String estadoVia, Integer tiempoMuestreo, String tipo, Double distanciaFuente, String direccionGrados, String observacionPuntoCritico, TipoAreaPm idTipoArea, TiempoPm idTiempo, EmisionDominantePm idEmisionDominante, ClimaPm idClima) {
         this.puntoCritico = puntoCritico;
@@ -125,7 +126,6 @@ public class MacrolocalizacionPm implements Serializable {
         this.idEmisionDominante = idEmisionDominante;
         this.idClima = idClima;
     }
-    
 
     public Integer getId() {
         return id;
@@ -223,12 +223,28 @@ public class MacrolocalizacionPm implements Serializable {
         this.direccionGrados = direccionGrados;
     }
 
+    public String getPuntoCritico() {
+        return puntoCritico;
+    }
+
+    public void setPuntoCritico(String puntoCritico) {
+        this.puntoCritico = puntoCritico;
+    }
+
     public String getObservacionPuntoCritico() {
         return observacionPuntoCritico;
     }
 
     public void setObservacionPuntoCritico(String observacionPuntoCritico) {
         this.observacionPuntoCritico = observacionPuntoCritico;
+    }
+
+    public String getRuralesFondo() {
+        return ruralesFondo;
+    }
+
+    public void setRuralesFondo(String ruralesFondo) {
+        this.ruralesFondo = ruralesFondo;
     }
 
     @XmlTransient
@@ -295,22 +311,6 @@ public class MacrolocalizacionPm implements Serializable {
     @Override
     public String toString() {
         return "com.statics.vo.MacrolocalizacionPm[ id=" + id + " ]";
-    }
-
-    public String getPuntoCritico() {
-        return puntoCritico;
-    }
-
-    public void setPuntoCritico(String puntoCritico) {
-        this.puntoCritico = puntoCritico;
-    }
-
-    public String getRuralesFondo() {
-        return ruralesFondo;
-    }
-
-    public void setRuralesFondo(String ruralesFondo) {
-        this.ruralesFondo = ruralesFondo;
     }
 
 }

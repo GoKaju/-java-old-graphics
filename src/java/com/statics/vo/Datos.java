@@ -21,15 +21,13 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.eclipse.persistence.annotations.Cache;
 
 /**
  *
- * @author Usuario
+ * @author FoxHG
  */
 @Entity
 @Table(name = "datos")
-@Cache(expiry = -1)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Datos.findAll", query = "SELECT d FROM Datos d")
@@ -38,16 +36,15 @@ import org.eclipse.persistence.annotations.Cache;
     , @NamedQuery(name = "Datos.findByDatoFecha", query = "SELECT d FROM Datos d WHERE d.datoFecha = :datoFecha")})
 public class Datos implements Serializable {
 
-    @Basic(optional = false)
-    @Column(name = "dato_data")
-    private String datoData;
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "dato_id")
     private Integer datoId;
+    @Basic(optional = false)
+    @Column(name = "dato_data")
+    private String datoData;
     @Basic(optional = false)
     @Column(name = "dato_fecha")
     @Temporal(TemporalType.TIMESTAMP)
@@ -77,6 +74,13 @@ public class Datos implements Serializable {
         this.datoId = datoId;
     }
 
+    public String getDatoData() {
+        return datoData;
+    }
+
+    public void setDatoData(String datoData) {
+        this.datoData = datoData;
+    }
 
     public Date getDatoFecha() {
         return datoFecha;
@@ -117,14 +121,6 @@ public class Datos implements Serializable {
     @Override
     public String toString() {
         return "com.statics.vo.Datos[ datoId=" + datoId + " ]";
-    }
-
-    public String getDatoData() {
-        return datoData;
-    }
-
-    public void setDatoData(String datoData) {
-        this.datoData = datoData;
     }
     
 }

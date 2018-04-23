@@ -11,7 +11,6 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -46,12 +45,12 @@ public class MicrolocalizacionPm implements Serializable {
     @Column(name = "fechaCreado")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreado;
-    @OneToMany(mappedBy = "idMicrolocalizacion", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "idMicrolocalizacion")
     private List<PuntoMuestral> puntoMuestralList;
-    @OneToMany(mappedBy = "idMicrolocalizacion", fetch = FetchType.LAZY)
-    private List<DatosadicionalesMicrolocalizacion> datosadicionalesMicrolocalizacionList;
-    @OneToMany(mappedBy = "idMicrolocalizacion", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "idMicrolocalizacion")
     private List<CriterioMicrolocalizacion> criterioMicrolocalizacionList;
+    @OneToMany(mappedBy = "idMicrolocalizacion")
+    private List<DatosadicionalesMicrolocalizacion> datosadicionalesMicrolocalizacionList;
 
     public MicrolocalizacionPm() {
     }
@@ -90,21 +89,21 @@ public class MicrolocalizacionPm implements Serializable {
     }
 
     @XmlTransient
-    public List<DatosadicionalesMicrolocalizacion> getDatosadicionalesMicrolocalizacionList() {
-        return datosadicionalesMicrolocalizacionList;
-    }
-
-    public void setDatosadicionalesMicrolocalizacionList(List<DatosadicionalesMicrolocalizacion> datosadicionalesMicrolocalizacionList) {
-        this.datosadicionalesMicrolocalizacionList = datosadicionalesMicrolocalizacionList;
-    }
-
-    @XmlTransient
     public List<CriterioMicrolocalizacion> getCriterioMicrolocalizacionList() {
         return criterioMicrolocalizacionList;
     }
 
     public void setCriterioMicrolocalizacionList(List<CriterioMicrolocalizacion> criterioMicrolocalizacionList) {
         this.criterioMicrolocalizacionList = criterioMicrolocalizacionList;
+    }
+
+    @XmlTransient
+    public List<DatosadicionalesMicrolocalizacion> getDatosadicionalesMicrolocalizacionList() {
+        return datosadicionalesMicrolocalizacionList;
+    }
+
+    public void setDatosadicionalesMicrolocalizacionList(List<DatosadicionalesMicrolocalizacion> datosadicionalesMicrolocalizacionList) {
+        this.datosadicionalesMicrolocalizacionList = datosadicionalesMicrolocalizacionList;
     }
 
     @Override

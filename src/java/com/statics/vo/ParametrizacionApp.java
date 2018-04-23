@@ -20,19 +20,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author Usuario
+ * @author FoxHG
  */
 @Entity
 @Table(name = "parametrizacion_app")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "ParametrizacionApp.findAll", query = "SELECT p FROM ParametrizacionApp p")
-    , @NamedQuery(name = "ParametrizacionApp.findByPaapId", query = "SELECT p FROM ParametrizacionApp p WHERE p.paapId = :paapId")
-    , @NamedQuery(name = "ParametrizacionApp.findByPaapTipo", query = "SELECT p FROM ParametrizacionApp p WHERE p.paapTipo = :paapTipo")
-    , @NamedQuery(name = "ParametrizacionApp.findByPaapDescripcion", query = "SELECT p FROM ParametrizacionApp p WHERE p.paapDescripcion = :paapDescripcion")
-    , @NamedQuery(name = "ParametrizacionApp.findByPaapValor", query = "SELECT p FROM ParametrizacionApp p WHERE p.paapValor = :paapValor")
-    , @NamedQuery(name = "ParametrizacionApp.findByPaapRegistradopor", query = "SELECT p FROM ParametrizacionApp p WHERE p.paapRegistradopor = :paapRegistradopor")
-    , @NamedQuery(name = "ParametrizacionApp.findByPaapFechacambio", query = "SELECT p FROM ParametrizacionApp p WHERE p.paapFechacambio = :paapFechacambio")})
+    @NamedQuery(name = "ParametroLabels.findAll", query = "SELECT p FROM ParametroLabels p")
+    , @NamedQuery(name = "ParametroLabels.findByPalaId", query = "SELECT p FROM ParametroLabels p WHERE p.palaId = :palaId")
+    , @NamedQuery(name = "ParametroLabels.findActivos", query = "SELECT p FROM ParametroLabels p inner join Parametros as pa on p.paraId = pa WHERE pa.paraEstado>0")
+    , @NamedQuery(name = "ParametroLabels.findByPalaLabel", query = "SELECT p FROM ParametroLabels p WHERE p.palaLabel = :palaLabel")
+    , @NamedQuery(name = "ParametroLabels.findByPalaRegistradopor", query = "SELECT p FROM ParametroLabels p WHERE p.palaRegistradopor = :palaRegistradopor")
+    , @NamedQuery(name = "ParametroLabels.findByPalaFechacambio", query = "SELECT p FROM ParametroLabels p WHERE p.palaFechacambio = :palaFechacambio")})
 public class ParametrizacionApp implements Serializable {
 
     private static final long serialVersionUID = 1L;

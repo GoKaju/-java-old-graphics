@@ -10,7 +10,6 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -44,13 +43,13 @@ public class UbicacionPm implements Serializable {
     private Integer id;
     @Column(name = "direccion")
     private String direccion;
-    @OneToMany(mappedBy = "idUbicacion", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "idUbicacion")
     private List<PuntoMuestral> puntoMuestralList;
     @JoinColumn(name = "id_departamento", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Departamento idDepartamento;
     @JoinColumn(name = "id_municipio", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Municipio idMunicipio;
 
     public UbicacionPm() {
@@ -65,6 +64,7 @@ public class UbicacionPm implements Serializable {
         this.idDepartamento = idDepartamento;
         this.idMunicipio = idMunicipio;
     }
+    
     
 
     public Integer getId() {

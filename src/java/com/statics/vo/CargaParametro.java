@@ -19,19 +19,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import org.eclipse.persistence.annotations.Cache;
 
 /**
  *
- * @author Usuario
+ * @author FoxHG
  */
 @Entity
 @Table(name = "carga_parametro")
-@Cache(expiry = -1)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "CargaParametro.findAll", query = "SELECT c FROM CargaParametro c")
@@ -50,7 +47,7 @@ public class CargaParametro implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "papuId")
     private List<Datos> datosList;
     @JoinColumn(name = "para_id", referencedColumnName = "para_id")
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     private Parametros paraId;
     @JoinColumn(name = "carg_id", referencedColumnName = "carg_id")
     @ManyToOne(optional = false)
