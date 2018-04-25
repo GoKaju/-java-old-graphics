@@ -15,6 +15,7 @@ import javax.persistence.criteria.Root;
 import com.statics.vo.PuntoMuestral;
 import com.statics.vo.UnidadTiempo;
 import com.statics.vo.ParametroFactorconversion;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -32,6 +33,45 @@ public class DatoProcesadoJpaController implements Serializable {
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
+    }
+    
+    public List<DatoProcesado> findDatosByIdPunto24Hours(int id){
+        String sqlQuery="SELECT * FROM dato_procesado WHERE id_punto_muestral="+id+" AND fecha "
+                + "BETWEEN (SELECT MAX(fecha) - INTERVAL 24 HOUR FROM dato_procesado) AND (SELECT MAX(fecha) FROM dato_procesado)";
+        List<DatoProcesado> lista=new ArrayList();
+        EntityManager em=null;
+        try{
+            em=getEntityManager();
+            Query q=em.createNativeQuery(sqlQuery, DatoProcesado.class);
+            lista=q.getResultList();
+        }catch(Exception e){
+            e.printStackTrace();
+        } finally{
+            if (em!=null) {
+                em.close();
+            }
+        }
+        return lista;
+    }
+    
+        public List<String> findParametrosByIdPuntoMuestral(int id){
+        String sqlQuery="SELECT DISTINCT(pare_nombre) FROM dato_procesado dp "
+                + "INNER JOIN parametro_factorconversion pfc ON dp.id_parametro_factorconversion=pfc.id "
+                + "INNER JOIN parametros p ON p.para_id=pfc.id_parametro WHERE id_punto_muestral="+id;
+        List<String> lista=new ArrayList();
+        EntityManager em=null;
+        try{
+            em=getEntityManager();
+            Query q=em.createNativeQuery(sqlQuery);
+            lista=q.getResultList();
+        }catch(Exception e){
+            e.printStackTrace();
+        } finally{
+            if (em!=null) {
+                em.close();
+            }
+        }
+        return lista;
     }
 
     public void create(DatoProcesado datoProcesado) {

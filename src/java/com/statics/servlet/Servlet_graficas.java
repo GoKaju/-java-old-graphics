@@ -8,6 +8,7 @@ package com.statics.servlet;
 //import com.statics.dao.ArchivosJpaController;
 import com.statics.carga.DataJson;
 import com.statics.dao.CampanasJpaController;
+import com.statics.dao.DatoProcesadoJpaController;
 import com.statics.dao.ParametrosJpaController;
 import com.statics.dao.PuntoMuestralJpaController;
 import com.statics.util.Cadenas;
@@ -16,6 +17,7 @@ import com.statics.util.Fechas;
 import com.statics.vo.Campanas;
 import com.statics.vo.CargaParametro;
 import com.statics.vo.Cargas;
+import com.statics.vo.DatoProcesado;
 import com.statics.vo.Datos;
 import com.statics.vo.Parametros;
 import com.statics.vo.PuntoMuestral;
@@ -289,22 +291,22 @@ public class Servlet_graficas extends HttpServlet {
                     }
 
                 } else if (modulo.equals("4")) {
-
-//                    cargar punto muestral
-                    PuntoMuestral pumu = new PuntoMuestralJpaController(emf).findPuntoMuestral(Integer.parseInt(o.getvariable("cod")));
-
-                    
-
-                    
+                    int idPuntoMuestral=Integer.parseInt(o.getvariable("cod"));
                     String tipo = o.getvariable("tipoGrafica");
+                    
+                    //PuntoMuestralJpaController puntoMuestralDao=new PuntoMuestralJpaController(emf);
+                    DatoProcesadoJpaController datoProcesadoDao=new DatoProcesadoJpaController(emf);
+
                     DataJson datos = new DataJson();
                     datos.setNombreGraphic("Nombre grafica");
                     datos.setTipo("Timeseries");
                     datos.setDatos(new ArrayList());
-
-                    List<Integer> cargasList = new ArrayList();
+                    List<DatoProcesado> listaDatosProcesados=datoProcesadoDao.findDatosByIdPunto24Hours(idPuntoMuestral);
+                    List<String> listaParametros=datoProcesadoDao.findParametrosByIdPuntoMuestral(idPuntoMuestral);
+                    /*List<Integer> cargasList = new ArrayList();
+                    PuntoMuestral pumu = puntoMuestralDao.findPuntoMuestral(idPuntoMuestral);
                    
-                    if(pumu.getCargasList()!=null &&!pumu.getCargasList().isEmpty()){
+                    if(pumu.getCargasList()!=null && !pumu.getCargasList().isEmpty()){
                     int ultima = pumu.getCargasList().get( pumu.getCargasList().size()-1).getCargId();
                     cargasList.add(ultima);
                     }
@@ -317,36 +319,29 @@ public class Servlet_graficas extends HttpServlet {
                         List<Parametros> lista = consulta.getResultList();
 
 
-                        int con = 0;
                         for (Parametros parametro : lista) {
                             TypedQuery<CargaParametro> cons = em.createNamedQuery("CargaParametroGrafica1", CargaParametro.class);
                             cons.setParameter("cargas", cargasList);
                             cons.setParameter("para", parametro);
                             List<CargaParametro> lis = cons.getResultList();
                             System.out.println("--> " + lis.size());
+                    */
+                        int con = 0;
+                        for(DatoProcesado dp:listaDatosProcesados){
                             DataJson.DataUnit dat = datos.new DataUnit();
                             dat.setX("x" + con);
-                            dat.setLabel(parametro.getPareNombre());
+                            dat.setLabel(dp.getIdParametroFactorconversion().getIdParametro().getPareNombre());
                             dat.setFechas(new ArrayList());
                             dat.setDatos(new ArrayList());
-
-                            for (CargaParametro li : lis) {
-                                for (Datos d : li.getDatosList()) {
-                                    dat.getFechas().add(Fechas.DevuelveFormato(d.getDatoFecha(), "yyyy-MM-dd HH:mm"));
-                                    dat.getDatos().add(d.getDatoData());
-
-                                }
-
-                            }
+                            
+                                    //dat.getFechas().add(Fechas.DevuelveFormato(d.getDatoFecha(), "yyyy-MM-dd HH:mm"));
+                                    //dat.getDatos().add(d.getDatoData());
                             datos.getDatos().add(dat);
                             con++;
-                        }
                         String nombre = "grap" + Fechas.getCadena();
                         session.setAttribute(nombre, datos);
-
-                        out.println(" graficarDial('" + pumu.getPumuId() + "','" + nombre + "');");
-
-                    }
+                        }
+                        //out.println(" graficarDial('" + pumu.getPumuId() + "','" + nombre + "');");
 
                 } else {
 

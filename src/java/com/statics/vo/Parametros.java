@@ -44,6 +44,10 @@ import javax.xml.bind.annotation.XmlTransient;
 })
 public class Parametros implements Serializable {
 
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "masa_molar")
+    private Double masaMolar;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -199,6 +203,14 @@ public class Parametros implements Serializable {
     @Override
     public String toString() {
         return "com.statics.vo.Parametros[ paraId=" + paraId + " ]";
+    }
+
+    public Double getMasaMolar() {
+        return masaMolar;
+    }
+
+    public void setMasaMolar(Double masaMolar) {
+        this.masaMolar = masaMolar;
     }
     
 }

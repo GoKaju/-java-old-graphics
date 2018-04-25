@@ -36,6 +36,14 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "DatoProcesado.findByValor", query = "SELECT d FROM DatoProcesado d WHERE d.valor = :valor")})
 public class DatoProcesado implements Serializable {
 
+    @Column(name = "fecha")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fecha;
+    @Basic(optional = false)
+    @Column(name = "fecha_conversion")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaConversion;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -136,6 +144,22 @@ public class DatoProcesado implements Serializable {
     @Override
     public String toString() {
         return "com.statics.vo.DatoProcesado[ id=" + id + " ]";
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
+
+    public Date getFechaConversion() {
+        return fechaConversion;
+    }
+
+    public void setFechaConversion(Date fechaConversion) {
+        this.fechaConversion = fechaConversion;
     }
     
 }

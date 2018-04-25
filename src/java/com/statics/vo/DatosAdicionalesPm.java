@@ -39,6 +39,9 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "DatosAdicionalesPm.findByOtros", query = "SELECT d FROM DatosAdicionalesPm d WHERE d.otros = :otros")})
 public class DatosAdicionalesPm implements Serializable {
 
+    @Column(name = "celular")
+    private Long celular;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,8 +52,6 @@ public class DatosAdicionalesPm implements Serializable {
     private String decripcion;
     @Column(name = "nombre_apellido")
     private String nombreApellido;
-    @Column(name = "celular")
-    private Long celular;
     @Column(name = "fijo")
     private Integer fijo;
     @Column(name = "email")
@@ -101,13 +102,6 @@ public class DatosAdicionalesPm implements Serializable {
         this.nombreApellido = nombreApellido;
     }
 
-    public Long getCelular() {
-        return celular;
-    }
-
-    public void setCelular(Long celular) {
-        this.celular = celular;
-    }
 
     public Integer getFijo() {
         return fijo;
@@ -165,6 +159,14 @@ public class DatosAdicionalesPm implements Serializable {
     @Override
     public String toString() {
         return "com.statics.vo.DatosAdicionalesPm[ id=" + id + " ]";
+    }
+
+    public Long getCelular() {
+        return celular;
+    }
+
+    public void setCelular(Long celular) {
+        this.celular = celular;
     }
     
 }

@@ -34,6 +34,9 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "ParametroFactorconversion.findById", query = "SELECT p FROM ParametroFactorconversion p WHERE p.id = :id")})
 public class ParametroFactorconversion implements Serializable {
 
+    @Column(name = "is_default")
+    private Boolean isDefault;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -134,6 +137,14 @@ public class ParametroFactorconversion implements Serializable {
     @Override
     public String toString() {
         return "com.statics.vo.ParametroFactorconversion[ id=" + id + " ]";
+    }
+
+    public Boolean getIsDefault() {
+        return isDefault;
+    }
+
+    public void setIsDefault(Boolean isDefault) {
+        this.isDefault = isDefault;
     }
     
 }
