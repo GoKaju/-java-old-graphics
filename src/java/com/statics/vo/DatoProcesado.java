@@ -32,7 +32,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "DatoProcesado.findAll", query = "SELECT d FROM DatoProcesado d")
     , @NamedQuery(name = "DatoProcesado.findById", query = "SELECT d FROM DatoProcesado d WHERE d.id = :id")
-    , @NamedQuery(name = "DatoProcesado.findByFacha", query = "SELECT d FROM DatoProcesado d WHERE d.facha = :facha")
     , @NamedQuery(name = "DatoProcesado.findByValor", query = "SELECT d FROM DatoProcesado d WHERE d.valor = :valor")})
 public class DatoProcesado implements Serializable {
 
@@ -50,9 +49,6 @@ public class DatoProcesado implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Column(name = "facha")
-    @Temporal(TemporalType.DATE)
-    private Date facha;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "valor")
     private Double valor;
@@ -80,15 +76,7 @@ public class DatoProcesado implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
-
-    public Date getFacha() {
-        return facha;
-    }
-
-    public void setFacha(Date facha) {
-        this.facha = facha;
-    }
-
+    
     public Double getValor() {
         return valor;
     }

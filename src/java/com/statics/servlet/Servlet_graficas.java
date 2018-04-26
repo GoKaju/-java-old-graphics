@@ -9,6 +9,7 @@ package com.statics.servlet;
 import com.statics.carga.DataJson;
 import com.statics.dao.CampanasJpaController;
 import com.statics.dao.DatoProcesadoJpaController;
+import com.statics.dao.ParametroFactorconversionJpaController;
 import com.statics.dao.ParametrosJpaController;
 import com.statics.dao.PuntoMuestralJpaController;
 import com.statics.util.Cadenas;
@@ -19,6 +20,7 @@ import com.statics.vo.CargaParametro;
 import com.statics.vo.Cargas;
 import com.statics.vo.DatoProcesado;
 import com.statics.vo.Datos;
+import com.statics.vo.ParametroFactorconversion;
 import com.statics.vo.Parametros;
 import com.statics.vo.PuntoMuestral;
 //import com.statics.vo.Archivos;
@@ -296,13 +298,14 @@ public class Servlet_graficas extends HttpServlet {
                     
                     //PuntoMuestralJpaController puntoMuestralDao=new PuntoMuestralJpaController(emf);
                     DatoProcesadoJpaController datoProcesadoDao=new DatoProcesadoJpaController(emf);
+                    ParametroFactorconversionJpaController pfcDao=new ParametroFactorconversionJpaController(emf);
 
                     DataJson datos = new DataJson();
                     datos.setNombreGraphic("Nombre grafica");
                     datos.setTipo("Timeseries");
                     datos.setDatos(new ArrayList());
-                    List<DatoProcesado> listaDatosProcesados=datoProcesadoDao.findDatosByIdPunto24Hours(idPuntoMuestral);
-                    List<String> listaParametros=datoProcesadoDao.findParametrosByIdPuntoMuestral(idPuntoMuestral);
+                    List<DatoProcesado> listaDatosProcesados;
+                    List<ParametroFactorconversion> listaParametroFactorconversions=pfcDao.findPFCInPunto(idPuntoMuestral);
                     /*List<Integer> cargasList = new ArrayList();
                     PuntoMuestral pumu = puntoMuestralDao.findPuntoMuestral(idPuntoMuestral);
                    
@@ -327,21 +330,27 @@ public class Servlet_graficas extends HttpServlet {
                             System.out.println("--> " + lis.size());
                     */
                         int con = 0;
-                        for(DatoProcesado dp:listaDatosProcesados){
+                        for(ParametroFactorconversion pfc:listaParametroFactorconversions){
                             DataJson.DataUnit dat = datos.new DataUnit();
                             dat.setX("x" + con);
-                            dat.setLabel(dp.getIdParametroFactorconversion().getIdParametro().getPareNombre());
+                            dat.setLabel(pfc.getIdParametro().getPareNombre());
                             dat.setFechas(new ArrayList());
                             dat.setDatos(new ArrayList());
-                            
-                                    //dat.getFechas().add(Fechas.DevuelveFormato(d.getDatoFecha(), "yyyy-MM-dd HH:mm"));
-                                    //dat.getDatos().add(d.getDatoData());
+                            dat.setMaxValue(0.0);
+                            listaDatosProcesados=datoProcesadoDao.findDatosByIdPuntoAndParametro24Hours(idPuntoMuestral,pfc.getId());
+                            for(DatoProcesado dp:listaDatosProcesados){
+                                dat.getFechas().add(Fechas.DevuelveFormato(dp.getFecha(), "yyyy-MM-dd HH:mm"));
+                                dat.getDatos().add(dp.getValor().toString());
+                                if(dp.getValor()>dat.getMaxValue()){
+                                    dat.setMaxValue(dp.getValor());
+                                }
+                            }
                             datos.getDatos().add(dat);
                             con++;
+                        }
                         String nombre = "grap" + Fechas.getCadena();
                         session.setAttribute(nombre, datos);
-                        }
-                        //out.println(" graficarDial('" + pumu.getPumuId() + "','" + nombre + "');");
+                        out.println(" graficarDial('" +idPuntoMuestral+ "','" + nombre + "');");
 
                 } else {
 

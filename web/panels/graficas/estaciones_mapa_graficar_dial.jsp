@@ -95,7 +95,7 @@
                             <i   data-parent="#accordion<%=ramdom%>" data-toggle="collapse" style="cursor: pointer; display: inline-block; width: 4%;height: 25px;padding-top: 5px" data-target="#collapse<%=dat.hashCode() + ramdom%>" class="glyphicon glyphicon glyphicon-chevron-down pull-right"></i>
                         </div>
                         <div class="col-md-3 col-sm-3 pull-right text-center" style="background-color: <%= color[i] %>;height: 25px;margin-right: 10px">
-                            <span style="padding-top: 5px"><%= cont[i] %></span>
+                            <span style="padding-top: 5px"><%=String.format("%.2f",dat.getMaxValue()) + " "+ dat.getLabel()%></span>
                         </div>
                     </div>
                     <div  id="collapse<%=dat.hashCode() + ramdom%>" class="collapse">
@@ -180,11 +180,7 @@
                     multiline: false
                 }
 //            height: 130
-            },
-                y:{
-                    max:400,
-                    min: -100
-                }
+            }
         },
         zoom: {
             enabled: true

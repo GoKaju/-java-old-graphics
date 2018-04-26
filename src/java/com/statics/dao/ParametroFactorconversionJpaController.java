@@ -37,6 +37,26 @@ public class ParametroFactorconversionJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
+     public List<ParametroFactorconversion> findPFCInPunto(int id){
+        String sqlQuery="SELECT pfc.* FROM parametro_factorconversion pfc "
+                + "INNER JOIN dato_procesado dp ON dp.id_parametro_factorconversion=pfc.id "
+                + "WHERE id_punto_muestral="+id+" GROUP BY id_parametro";
+        List<ParametroFactorconversion> lista=new ArrayList();
+        EntityManager em=null;
+        try{
+            em=getEntityManager();
+            Query q=em.createNativeQuery(sqlQuery, ParametroFactorconversion.class);
+            lista=q.getResultList();
+        }catch(Exception e){
+            e.printStackTrace();
+        } finally{
+            if (em!=null) {
+                em.close();
+            }
+        }
+        return lista;
+    }
+     
     public void create(ParametroFactorconversion parametroFactorconversion) {
         if (parametroFactorconversion.getDatoProcesadoList() == null) {
             parametroFactorconversion.setDatoProcesadoList(new ArrayList<DatoProcesado>());

@@ -15,6 +15,7 @@ import javax.persistence.criteria.Root;
 import com.statics.vo.PuntoMuestral;
 import com.statics.vo.UnidadTiempo;
 import com.statics.vo.ParametroFactorconversion;
+import com.statics.vo.Parametros;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -35,9 +36,8 @@ public class DatoProcesadoJpaController implements Serializable {
         return emf.createEntityManager();
     }
     
-    public List<DatoProcesado> findDatosByIdPunto24Hours(int id){
-        String sqlQuery="SELECT * FROM dato_procesado WHERE id_punto_muestral="+id+" AND fecha "
-                + "BETWEEN (SELECT MAX(fecha) - INTERVAL 24 HOUR FROM dato_procesado) AND (SELECT MAX(fecha) FROM dato_procesado)";
+    public List<DatoProcesado> findDatosByIdPuntoAndParametro24Hours(int idPuntoMuestral, int idPFC){
+        String sqlQuery="SELECT * FROM dato_procesado WHERE id_punto_muestral="+idPuntoMuestral+" AND id_parametro_factorconversion="+idPFC+" AND fecha BETWEEN (SELECT MAX(fecha) - INTERVAL 24 HOUR FROM dato_procesado) AND (SELECT MAX(fecha) FROM dato_procesado)";
         List<DatoProcesado> lista=new ArrayList();
         EntityManager em=null;
         try{
@@ -54,15 +54,16 @@ public class DatoProcesadoJpaController implements Serializable {
         return lista;
     }
     
-        public List<String> findParametrosByIdPuntoMuestral(int id){
-        String sqlQuery="SELECT DISTINCT(pare_nombre) FROM dato_procesado dp "
+        public List<Parametros> findParametrosByIdPuntoMuestral(int id){
+        String sqlQuery="SELECT p.* FROM dato_procesado dp "
                 + "INNER JOIN parametro_factorconversion pfc ON dp.id_parametro_factorconversion=pfc.id "
-                + "INNER JOIN parametros p ON p.para_id=pfc.id_parametro WHERE id_punto_muestral="+id;
-        List<String> lista=new ArrayList();
+                + "INNER JOIN parametros p ON p.para_id=pfc.id_parametro "
+                + "WHERE id_punto_muestral="+id+" GROUP BY pare_nombre";
+        List<Parametros> lista=new ArrayList();
         EntityManager em=null;
         try{
             em=getEntityManager();
-            Query q=em.createNativeQuery(sqlQuery);
+            Query q=em.createNativeQuery(sqlQuery,Parametros.class);
             lista=q.getResultList();
         }catch(Exception e){
             e.printStackTrace();

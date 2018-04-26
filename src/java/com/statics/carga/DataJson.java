@@ -44,11 +44,28 @@ public class DataJson {
     
    
 public class DataUnit{
-
+Double maxValue;
+    String unidadMedida;
 String label;
 String x;
     List<String> datos = new ArrayList();
     List<String> Fechas = new ArrayList();
+
+        public Double getMaxValue() {
+            return maxValue;
+        }
+
+        public void setMaxValue(Double maxValue) {
+            this.maxValue = maxValue;
+        }
+
+        public String getUnidadMedida() {
+            return unidadMedida;
+        }
+
+        public void setUnidadMedida(String unidadMedida) {
+            this.unidadMedida = unidadMedida;
+        }
 
         public String getLabel() {
             return label;
