@@ -31,6 +31,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.ParameterMode;
+import javax.persistence.Query;
+import javax.persistence.StoredProcedureQuery;
 import javax.persistence.TypedQuery;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -199,11 +202,18 @@ public class XMLReaderDOM {
             cjc.edit(carga);
             
 //            ejecutar procedimiento de promedios
-                 
+            StoredProcedureQuery query = em
+                    .createStoredProcedureQuery("procesaDatos")
+                    .registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN)
+                    .setParameter(1, carga.getCargId());
+
+            if(!query.execute()){
+            System.out.println("EJECUTADO PROCESADATOS");
+            }
             
             
                 System.out.println(":::4--> "+carga.getUltimaFechacargada());
-
+em.flush();
             System.out.flush();
         } catch (SAXException | ParserConfigurationException | IOException e1) {
             e1.printStackTrace();

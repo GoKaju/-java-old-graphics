@@ -94,14 +94,12 @@ public class Servlet_graficas extends HttpServlet {
                     out.println(" $('#pumu_sel').html(\"" + cadena + "\"); $('#carg_sel').html('')");
 
                 } else if (modulo.equals("2")) {
-
-                    PuntoMuestral elem = pmjc.findPuntoMuestral(Integer.parseInt(o.getvariable("index")));
+                    int idPuntoMuestral=Integer.parseInt(o.getvariable("index"));
+                    DatoProcesadoJpaController datoProcesadoDao=new DatoProcesadoJpaController(emf);
+                    List<Parametros> listaParametros=datoProcesadoDao.findParametrosByIdPuntoMuestral(idPuntoMuestral);
                     String cadena = "";
-                    List<Cargas> listCargas = elem.getCargasList();
-                    Collections.reverse(listCargas);
-                    for (Cargas pm : listCargas) {
-                        cadena += "<option value='" + pm.getCargId() + "' >" + pm.getCargArchivo() + "</option>";
-
+                    for (Parametros p : listaParametros) {
+                        cadena += "<option value='" + p.getParaId() + "' >" + p.getPareNombre() + "</option>";
                     }
 
 //                 cadena = elem.getPuntoMuestralList().stream().map((puntoMuestral) -> <).reduce(cadena, String::concat);

@@ -66,26 +66,20 @@
                 <div class="col-md-12">
                     <div class="form-group ">
                         <label>Tipo de grafica  *</label>
-
                         <select name="tipoGrafica" class="form-control"  required="" data-parsley-id="7052" onchange="recargarTipoGrafica(this.value)">
-
-                            <option value="1">X punto muestral</option>
                             <option value="2">X punto muestral - Fechas</option>
-
                         </select>
                         <ul class="parsley-errors-list" id="parsley-id-7052"></ul>
                     </div>
                 </div>
             </div>
             <div class="row" id="graf01" >
-
                 <div class="col-md-3">
                     <div class="form-group ">
                         <label>Campaña  *</label>
-
                         <select name="Campana" class="form-control"  required="" data-parsley-id="7052" onchange="recargarEstaciones(this.value)">
                             <option value="">Seleccone...</option>
-                            <%                            EntityManager em = emf.createEntityManager();
+                            <%  EntityManager em = emf.createEntityManager();
                                 TypedQuery<Campanas> consulta = em.createNamedQuery("Campanas.findByGroupId", Campanas.class);
                                 consulta.setParameter("grupId", user.getGrupoUsuariosList().get(0).getGrupId().getGrupId());
                                 List<Campanas> lista = consulta.getResultList();
@@ -111,28 +105,14 @@
                 <div class="col-md-3">
                     <div class="form-group ">
                         <label>Punto Muestral  *</label>
-
-                        <select onchange="recargarCargas(this.value)" id="pumu_sel" name="pumu_sel" class="form-control"  required="" data-parsley-id="7052">
-
+                        <select onchange="recargarParametros(this.value)" id="pumu_sel" name="pumu_sel" class="form-control"  required="" data-parsley-id="7052">
                         </select>
                         <ul class="parsley-errors-list" id="parsley-id-7052"></ul>
                     </div>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="form-group ">
-                        <label>Cargas *</label>
-
-                        <select id="carg_sel" name="carg_sel" style="height: 150px" class=" form-control"  required="" data-parsley-id="7052" multiple="">
-
-                        </select>
-                        <ul class="parsley-errors-list" id="parsley-id-7052"></ul>
-                    </div>
-                </div>    
+                </div>   
                 <div class="col-md-3">
                     <div class="form-group ">
                         <label>Parametros *</label>
-
                         <select id="para_sel" name="para_sel" style="height: 150px" class=" form-control"  required="" data-parsley-id="7052" multiple>
                             <%
                                 TypedQuery<Parametros> consultaPara = em.createNamedQuery("Parametros.findByTipoGraf", Parametros.class);
@@ -216,7 +196,16 @@
 <script src="assets/plugins/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js"></script>
 <!--<script src="assets/plugins/bootstrap-select/bootstrap-select.min.js"></script>-->
 <script>
+$('#btn_datos').css('visibility', 'visible');
+                                $('#carg_sel').removeAttr('required');
+                                $('#carg_sel').attr('disabled', 'true');
+                                $('#carg_sel').parent().parent().hide();
 
+                                $('#fini_txt').attr('required', 'true');
+                                $('#ffin_txt').attr('required', 'true');
+                                $('#fini_txt').removeAttr('disabled');
+                                $('#ffin_txt').removeAttr('disabled');
+                                $('#FormAplication').parsley().reset();
                     $('.datepicker').datepicker({
                         todayHighlight: true,
                         language: 'es',
@@ -266,12 +255,12 @@
 
                     }
                     function recargarEstaciones(x) {
-                        console.log(x)
+                        console.log(x);
                         peticionAjax('Graficas', 'modulo=1&index=' + x + '');
 
                     }
-                    function recargarCargas(x) {
-                        console.log(x)
+                    function recargarParametros(x) {
+                        console.log(x);
                         peticionAjax('Graficas', 'modulo=2&index=' + x + '');
 
                     }

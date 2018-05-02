@@ -36,8 +36,35 @@ public class DatoProcesadoJpaController implements Serializable {
         return emf.createEntityManager();
     }
     
+    public List<Parametros> findParametrosByIdPuntoMuestral(int idPuntoMuestral){
+        String sqlQuery="SELECT DISTINCT(p.para_id), pare_nombre, pare_descripcion,"
+                + " pare_registradopor, pare_fechacambio, para_estado, para_codigo,"
+                + " para_tipografica, masa_molar FROM dato_procesado dp "
+                + "INNER JOIN parametro_factorconversion pfc ON pfc.id=dp.id_parametro_factorconversion "
+                + "INNER JOIN parametros p ON p.para_id=pfc.id_parametro "
+                + "WHERE id_punto_muestral="+idPuntoMuestral;
+        List<Parametros> lista=new ArrayList();
+        EntityManager em=null;
+        try{
+            em=getEntityManager();
+            Query q=em.createNativeQuery(sqlQuery, Parametros.class);
+            lista=q.getResultList();
+        }catch(Exception e){
+            e.printStackTrace();
+        } finally{
+            if (em!=null) {
+                em.close();
+            }
+        }
+        return lista;
+    }
+    
     public List<DatoProcesado> findDatosByIdPuntoAndParametro24Hours(int idPuntoMuestral, int idPFC){
-        String sqlQuery="SELECT * FROM dato_procesado WHERE id_punto_muestral="+idPuntoMuestral+" AND id_parametro_factorconversion="+idPFC+" AND fecha BETWEEN (SELECT MAX(fecha) - INTERVAL 24 HOUR FROM dato_procesado) AND (SELECT MAX(fecha) FROM dato_procesado)";
+        String sqlQuery="SELECT * FROM dato_procesado "
+                + "WHERE id_punto_muestral="+idPuntoMuestral+" "
+                + "AND id_parametro_factorconversion="+idPFC+" "
+                + "AND fecha BETWEEN (SELECT MAX(fecha) - INTERVAL 24 HOUR FROM dato_procesado WHERE id_punto_muestral="+idPuntoMuestral+") "
+                + "AND (SELECT MAX(fecha) FROM dato_procesado WHERE id_punto_muestral="+idPuntoMuestral+")";
         List<DatoProcesado> lista=new ArrayList();
         EntityManager em=null;
         try{
@@ -54,7 +81,7 @@ public class DatoProcesadoJpaController implements Serializable {
         return lista;
     }
     
-        public List<Parametros> findParametrosByIdPuntoMuestral(int id){
+        public List<Parametros> findParametrosByIdPuntoMuestra(int id){
         String sqlQuery="SELECT p.* FROM dato_procesado dp "
                 + "INNER JOIN parametro_factorconversion pfc ON dp.id_parametro_factorconversion=pfc.id "
                 + "INNER JOIN parametros p ON p.para_id=pfc.id_parametro "

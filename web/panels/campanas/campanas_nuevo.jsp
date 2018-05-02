@@ -81,7 +81,7 @@
                                 List<Cliente> listaClientes = new ClienteJpaController(emf).findClienteEntities();
                                 String selected="";
                                 for (Cliente c : listaClientes) {
-                                    if(c.getId()==elem.getIdCliente().getId()){
+                                    if(elem.getIdCliente() != null && c.getId()==elem.getIdCliente().getId()){
                                         selected="selected";
                                     }
                             %>
