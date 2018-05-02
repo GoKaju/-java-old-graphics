@@ -114,25 +114,7 @@
                     <div class="form-group ">
                         <label>Parametros *</label>
                         <select id="para_sel" name="para_sel" style="height: 150px" class=" form-control"  required="" data-parsley-id="7052" multiple>
-                            <%
-                                TypedQuery<Parametros> consultaPara = em.createNamedQuery("Parametros.findByTipoGraf", Parametros.class);
-                                consultaPara.setParameter("tipo", Constantes.TIPO_GRAFICA_LINEA);
-                                List<Parametros> listaParam = consultaPara.getResultList();
-                                em.close();
-                                if (!lista.isEmpty()) {
-
-                                    for (Parametros s : listaParam) {
-                                        String sel = "";
-
-
-                            %>
-
-                            <option <%=sel%> value="<%=o.notEmpty(s.getParaId().toString())%>" title=""><%=o.notEmpty(s.getPareNombre())%></option>
-
-                            <%
-                                    }
-                                }
-                            %>
+                            
                         </select>
                         <ul class="parsley-errors-list" id="parsley-id-7052"></ul>
                     </div>
@@ -209,7 +191,7 @@ $('#btn_datos').css('visibility', 'visible');
                     $('.datepicker').datepicker({
                         todayHighlight: true,
                         language: 'es',
-                        format: 'dd/mm/yyyy'
+                        format: 'yyyy-mm-dd'
                     });
               
 

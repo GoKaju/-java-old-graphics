@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -104,7 +105,7 @@ public class Servlet_graficas extends HttpServlet {
 
 //                 cadena = elem.getPuntoMuestralList().stream().map((puntoMuestral) -> <).reduce(cadena, String::concat);
                     System.out.println("cadena-->" + cadena);
-                    out.println(" $('#carg_sel').html(\"" + cadena + "\");");
+                    out.println("$('#para_sel').html(\"" + cadena + "\");");
 
                 } else if (modulo.equals("3")) {
 
@@ -198,21 +199,14 @@ public class Servlet_graficas extends HttpServlet {
                                 for (String p : Param) {
                                     Parametros parametro = new ParametrosJpaController(emf).findParametros(Integer.parseInt(p));
 
-                                    Query cons = em.createNativeQuery("SELECT\n"
-                                            + "d.*\n"
-                                            + "FROM\n"
-                                            + "Datos as d\n"
-                                            + "INNER JOIN carga_parametro as c ON d.papu_id=c.capa_id\n"
-                                            + "INNER JOIN cargas ca ON ca.carg_id=c.carg_id\n"
-                                            + "WHERE\n"
-                                            + "DATE_FORMAT(d.dato_fecha, \"%Y-%m-%d\") BETWEEN ? AND ? \n"
-                                            + "AND c.para_id=?\n"
-                                            + "AND ca.pumu_id=?", Datos.class);
-                                    cons.setParameter(1, fechaini);
-                                    cons.setParameter(2, fechafin);
-                                    cons.setParameter(3, parametro.getParaId());
-                                    cons.setParameter(4, pumu.getPumuId());
-                                    List<Datos> lis = cons.getResultList();
+                                    Query cons = em.createNativeQuery(" SELECT dp.* FROM dato_procesado dp "
+                                            + "INNER JOIN parametro_factorconversion pfc ON dp.id_parametro_factorconversion=pfc.id "
+                                            + "WHERE dp.id_punto_muestral=? AND pfc.id_parametro=? AND fecha BETWEEN ? AND ?", DatoProcesado.class);
+                                    cons.setParameter(1, pumu.getPumuId());
+                                    cons.setParameter(2, parametro.getParaId());
+                                    cons.setParameter(3, fechaini);
+                                    cons.setParameter(4, fechafin);
+                                    List<DatoProcesado> lis = cons.getResultList();
 
                                     System.out.println("--> " + lis.size());
                                     DataJson.DataUnit dat = datos.new DataUnit();
@@ -221,9 +215,9 @@ public class Servlet_graficas extends HttpServlet {
                                     dat.setFechas(new ArrayList());
                                     dat.setDatos(new ArrayList());
 
-                                    for (Datos d : lis) {
-                                        dat.getFechas().add(Fechas.DevuelveFormato(d.getDatoFecha(), "yyyy-MM-dd HH:mm"));
-                                        dat.getDatos().add(d.getDatoData());
+                                    for (DatoProcesado d : lis) {
+                                        dat.getFechas().add(Fechas.DevuelveFormato(d.getFecha(), "yyyy-MM-dd HH:mm"));
+                                        dat.getDatos().add(d.getValor().toString());
 
                                     }
 
