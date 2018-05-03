@@ -14,16 +14,17 @@ CREATE TABLE cliente(
 	PRIMARY KEY (id)
 );
 
+INSERT INTO cliente (nombre, direccion) VALUES ('Jimmi','qdasdasd');
+
 ALTER TABLE campanas DROP COLUMN cliente;
 ALTER TABLE campanas ADD COLUMN id_cliente INT;
 ALTER TABLE campanas ADD FOREIGN KEY (id_cliente) REFERENCES cliente (id);
 
 ALTER TABLE parametros ADD masa_molar DOUBLE;
-UPDATE parametros SET masa_molar=30.01 WHERE para_id=1;
+UPDATE parametros SET masa_molar=30.0061 WHERE para_id=1;
 UPDATE parametros SET masa_molar=46.0055 WHERE para_id=2;
 UPDATE parametros SET masa_molar=46.01 WHERE para_id=4;
-UPDATE parametros SET masa_molar=1450 WHERE para_id=5;
-UPDATE parametros SET masa_molar=144.912749 WHERE para_id=5;
+UPDATE parametros SET masa_molar=64.638 WHERE para_id=4;
 
 CREATE TABLE pais (
 	id INT AUTO_INCREMENT,
@@ -47,6 +48,25 @@ INSERT INTO unidad_medida (descripcion, factor) VALUES ("ug/m3", 0);
 INSERT INTO unidad_medida (descripcion, factor) VALUES ("Int", 0);
 INSERT INTO unidad_medida (descripcion, factor) VALUES ("C°", 0);
 INSERT INTO unidad_medida (descripcion, factor) VALUES ("Grados", 0);
+
+CREATE TABLE unidadmedida_parametro(
+	id INT AUTO_INCREMENT,
+	id_parametro INT,
+	id_unidad_medida INT,
+	PRIMARY KEY (id),
+	FOREIGN KEY (id_unidad_medida) REFERENCES unidad_medida (id),
+	FOREIGN KEY (id_parametro) REFERENCES parametros (para_id)
+);
+
+INSERT INTO unidadmedida_parametro (id_parametro,id_unidad_medida) VALUES (1,1);
+INSERT INTO unidadmedida_parametro (id_parametro,id_unidad_medida) VALUES (2,1);
+INSERT INTO unidadmedida_parametro (id_parametro,id_unidad_medida) VALUES (4,1);
+INSERT INTO unidadmedida_parametro (id_parametro,id_unidad_medida) VALUES (5,3);
+INSERT INTO unidadmedida_parametro (id_parametro,id_unidad_medida) VALUES (6,3);
+INSERT INTO unidadmedida_parametro (id_parametro,id_unidad_medida) VALUES (7,4);
+INSERT INTO unidadmedida_parametro (id_parametro,id_unidad_medida) VALUES (8,4);
+INSERT INTO unidadmedida_parametro (id_parametro,id_unidad_medida) VALUES (9,1);
+
 
 CREATE TABLE factor_conversion(
 	id INT AUTO_INCREMENT,
@@ -85,6 +105,8 @@ INSERT INTO parametro_factorconversion (id_parametro, id_unidad_medida, id_facto
 INSERT INTO parametro_factorconversion (id_parametro, id_unidad_medida, id_factor_conversion, is_default) VALUES (7, 4, 4, 1);
 INSERT INTO parametro_factorconversion (id_parametro, id_unidad_medida, id_factor_conversion, is_default) VALUES (8, 4, 4, 1);
 INSERT INTO parametro_factorconversion (id_parametro, id_unidad_medida, id_factor_conversion, is_default) VALUES (9, 1, 1, 1);
+INSERT INTO parametro_factorconversion (id_parametro, id_unidad_medida, id_factor_conversion, is_default) VALUES (2, 1, 3, 0);
+INSERT INTO parametro_factorconversion (id_parametro, id_unidad_medida, id_factor_conversion, is_default) VALUES (9, 1, 3, 0);
 
 CREATE TABLE unidad_tiempo (
 	id INT AUTO_INCREMENT,
@@ -113,6 +135,11 @@ CREATE TABLE nivel_maximo(
 	FOREIGN KEY (id_unidad_tiempo) REFERENCES unidad_tiempo(id)
 );
 
+INSERT INTO nivel_maximo (id_parametro_factorconversion, id_unidad_tiempo, nivel_minimo, nivel_maximo) 
+VALUES (2, 1, 0, 29.230),(10, 1, 0, 60),(2, 7, 0, 97.435),(10, 7, 0, 200),
+(9, 4, 0, 17.508),(11, 4, 0, 50),(9, 7, 0, 35.016),(11, 7, 0, 100),
+(5, 1, 0, 50),(5, 4, 0, 100),
+(6, 1, 0, 25),(6, 4, 0, 50);
 
 CREATE TABLE dato_procesado(
 	id INT AUTO_INCREMENT,
@@ -145,5 +172,6 @@ WHERE cp.carg_id = id_carga GROUP BY para_id, hora;
 END$$
 
 DELIMITER ;
-
+CALL procesaDatos(23);
+DELETE FROM dato_procesado WHERE fecha >'2018-01-24 21:00:00' AND id_punto_muestral=5	
 COMMIT;

@@ -44,12 +44,21 @@ public class DataJson {
     
    
 public class DataUnit{
+    int porcentaje;
 Double maxValue;
     String unidadMedida;
 String label;
 String x;
     List<String> datos = new ArrayList();
     List<String> Fechas = new ArrayList();
+
+        public int getPorcentaje() {
+            return porcentaje;
+        }
+
+        public void setPorcentaje(int porcentaje) {
+            this.porcentaje = porcentaje;
+        }
 
         public Double getMaxValue() {
             return maxValue;

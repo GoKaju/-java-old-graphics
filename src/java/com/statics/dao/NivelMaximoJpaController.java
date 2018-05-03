@@ -13,7 +13,9 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import com.statics.vo.ParametroFactorconversion;
+import com.statics.vo.Parametros;
 import com.statics.vo.UnidadTiempo;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -33,6 +35,25 @@ public class NivelMaximoJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
+    public NivelMaximo findMaximoByIdParameterAndIdUnidadTiempo(int idParameter, int idUnidadTiempo){
+        String sqlQuery="SELECT nm.* FROM nivel_maximo nm INNER JOIN parametro_factorconversion pfc ON nm.id_parametro_factorconversion=pfc.id "
+                + "WHERE id_parametro="+idParameter+" AND id_unidad_tiempo="+idUnidadTiempo;
+        NivelMaximo lista=new NivelMaximo();
+        EntityManager em=null;
+        try{
+            em=getEntityManager();
+            Query q=em.createNativeQuery(sqlQuery, NivelMaximo.class);
+            lista=(NivelMaximo) q.getSingleResult();
+        }catch(Exception e){
+            e.printStackTrace();
+        } finally{
+            if (em!=null) {
+                em.close();
+            }
+        }
+        return lista;
+    }
+    
     public void create(NivelMaximo nivelMaximo) {
         EntityManager em = null;
         try {

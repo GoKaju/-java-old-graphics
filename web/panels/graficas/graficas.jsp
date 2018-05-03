@@ -5,6 +5,9 @@
 --%>
 
 
+<%@page import="com.statics.vo.UnidadTiempo"%>
+<%@page import="javax.persistence.Query"%>
+<%@page import="com.statics.vo.UnidadMedida"%>
 <%@page import="com.statics.util.Constantes"%>
 <%@page import="com.statics.vo.Parametros"%>
 <%@page import="java.util.List"%>
@@ -133,6 +136,32 @@
                     <div class="form-group ">
                         <label>Fecha Final *</label>
                         <input type="text"   id="ffin_txt" name="ffin_txt" class="form-control datepicker"   disabled=""  />
+                        <ul class="parsley-errors-list" ></ul>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group ">
+                        <label>Horario *</label>
+                        <select type="text" id="horario" name="horario" class="form-control" >
+                            <%  
+                                Query qq = em.createNativeQuery("select * from unidad_tiempo", UnidadTiempo.class);
+                                List<UnidadTiempo> listaHorarios = qq.getResultList();
+
+                                if (!listaHorarios.isEmpty()) {
+
+                                    for (UnidadTiempo s : listaHorarios) {
+                                        String sel = "";
+
+
+                            %>
+
+                            <option <%=sel%> value="<%=o.notEmpty(s.getId().toString())%>" title=""><%=o.notEmpty(s.getDescripcion())%></option>
+
+                            <%
+                                    }
+                                }
+                            %>
+                        </select>
                         <ul class="parsley-errors-list" ></ul>
                     </div>
                 </div>

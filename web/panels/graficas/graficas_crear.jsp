@@ -105,6 +105,15 @@
                 }
             }
         },
+        grid: {
+        y: {
+            lines: [
+                {value: 50, text: 'Label 50 for y'},
+                {value: 1300, text: 'Label 1300 for y2', axis: 'y2', position: 'start'},
+                {value: 350, text: 'Label 350 for y', position: 'middle'}
+            ]
+        }
+    },
         subchart: {
             show: true
         },
@@ -113,7 +122,7 @@
         },
         point: {
             r: false,
-            focus: {
+            focus: {    
                 expand: {
                     r: 4
                 }

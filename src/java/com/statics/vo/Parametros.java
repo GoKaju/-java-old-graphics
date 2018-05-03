@@ -43,6 +43,8 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Parametros.findByTipoGraf", query = "SELECT p FROM Parametros p WHERE p.paraTipografica = :tipo")
 })
 public class Parametros implements Serializable {
+    @OneToMany(mappedBy = "idParametro")
+    private List<UnidadmedidaParametro> unidadmedidaParametroList;
 
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "masa_molar")
@@ -211,6 +213,15 @@ public class Parametros implements Serializable {
 
     public void setMasaMolar(Double masaMolar) {
         this.masaMolar = masaMolar;
+    }
+
+    @XmlTransient
+    public List<UnidadmedidaParametro> getUnidadmedidaParametroList() {
+        return unidadmedidaParametroList;
+    }
+
+    public void setUnidadmedidaParametroList(List<UnidadmedidaParametro> unidadmedidaParametroList) {
+        this.unidadmedidaParametroList = unidadmedidaParametroList;
     }
     
 }

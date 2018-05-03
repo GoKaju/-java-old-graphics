@@ -33,6 +33,8 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "UnidadMedida.findByDescripcion", query = "SELECT u FROM UnidadMedida u WHERE u.descripcion = :descripcion")
     , @NamedQuery(name = "UnidadMedida.findByFactor", query = "SELECT u FROM UnidadMedida u WHERE u.factor = :factor")})
 public class UnidadMedida implements Serializable {
+    @OneToMany(mappedBy = "idUnidadMedida")
+    private List<UnidadmedidaParametro> unidadmedidaParametroList;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -122,6 +124,15 @@ public class UnidadMedida implements Serializable {
     @Override
     public String toString() {
         return "com.statics.vo.UnidadMedida[ id=" + id + " ]";
+    }
+
+    @XmlTransient
+    public List<UnidadmedidaParametro> getUnidadmedidaParametroList() {
+        return unidadmedidaParametroList;
+    }
+
+    public void setUnidadmedidaParametroList(List<UnidadmedidaParametro> unidadmedidaParametroList) {
+        this.unidadmedidaParametroList = unidadmedidaParametroList;
     }
     
 }

@@ -9,6 +9,7 @@ package com.statics.servlet;
 import com.statics.carga.DataJson;
 import com.statics.dao.CampanasJpaController;
 import com.statics.dao.DatoProcesadoJpaController;
+import com.statics.dao.NivelMaximoJpaController;
 import com.statics.dao.ParametroFactorconversionJpaController;
 import com.statics.dao.ParametrosJpaController;
 import com.statics.dao.PuntoMuestralJpaController;
@@ -20,6 +21,7 @@ import com.statics.vo.CargaParametro;
 import com.statics.vo.Cargas;
 import com.statics.vo.DatoProcesado;
 import com.statics.vo.Datos;
+import com.statics.vo.NivelMaximo;
 import com.statics.vo.ParametroFactorconversion;
 import com.statics.vo.Parametros;
 import com.statics.vo.PuntoMuestral;
@@ -184,8 +186,9 @@ public class Servlet_graficas extends HttpServlet {
                             break;
                         case "2":
                             if (o.getvariable("excel").equals("")) {
+                                int idUnidadTiempo=Integer.parseInt(o.getvariable("horario"));
                                 PuntoMuestral pumu = pmjc.findPuntoMuestral(Integer.parseInt(o.getvariable("pumu_sel")));
-
+                                NivelMaximoJpaController nivelMaximoDao=new NivelMaximoJpaController(emf);
                                 datos = new DataJson();
 
                                 String fechaini = o.getvariable("fini_txt");
@@ -214,11 +217,21 @@ public class Servlet_graficas extends HttpServlet {
                                     dat.setLabel(parametro.getPareNombre());
                                     dat.setFechas(new ArrayList());
                                     dat.setDatos(new ArrayList());
-
+                                    //NivelMaximo nm=nivelMaximoDao.
+                                      //      findMaximoByIdParameterAndIdUnidadTiempo(parametro.getParaId(),idUnidadTiempo);
+                                    //if (nm!=null) {
+                                      //  dat.setMaxValue(nm.getNivelMaximo());
+                                    //}
                                     for (DatoProcesado d : lis) {
-                                        dat.getFechas().add(Fechas.DevuelveFormato(d.getFecha(), "yyyy-MM-dd HH:mm"));
-                                        dat.getDatos().add(d.getValor().toString());
-
+                                        int idParametro=d.getIdParametroFactorconversion().getIdParametro().getParaId();
+                                        if (idParametro==1 || idParametro==2 || idParametro==4 || idParametro==9) {
+                                            dat.getFechas().add(Fechas.DevuelveFormato(d.getFecha(), "yyyy-MM-dd HH:mm"));
+                                            double convertido=d.getValor()*(d.getIdParametroFactorconversion().getIdParametro().getMasaMolar()/22.4);
+                                            dat.getDatos().add(String.valueOf(convertido));
+                                        } else {
+                                            dat.getFechas().add(Fechas.DevuelveFormato(d.getFecha(), "yyyy-MM-dd HH:mm"));
+                                            dat.getDatos().add(d.getValor().toString());
+                                        }
                                     }
 
                                     datos.getDatos().add(dat);
@@ -328,6 +341,7 @@ public class Servlet_graficas extends HttpServlet {
                             dat.setLabel(pfc.getIdParametro().getPareNombre());
                             dat.setFechas(new ArrayList());
                             dat.setDatos(new ArrayList());
+                            dat.setUnidadMedida(pfc.getIdUnidadMedida().getDescripcion());
                             dat.setMaxValue(0.0);
                             listaDatosProcesados=datoProcesadoDao.findDatosByIdPuntoAndParametro24Hours(idPuntoMuestral,pfc.getId());
                             for(DatoProcesado dp:listaDatosProcesados){
