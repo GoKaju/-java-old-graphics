@@ -109,6 +109,7 @@
                         <p class="text-center text-inverse">
                         SICA &copy; powered by Ambientalia 
                         </p>
+                        <img class="image img-responsive" style="max-width: 70%; margin: auto" src="assets/img/Ambientalia_XL.png" alt="" />
                     </form>
                 </div>
                 

@@ -182,6 +182,10 @@ public class Servlet_graficas extends HttpServlet {
 
                                 out.println(" crearGrafica('" + nombre + "');");
 
+                                
+                                
+                                
+                                
                             }
                             break;
                         case "2":
@@ -202,7 +206,6 @@ public class Servlet_graficas extends HttpServlet {
                                 int con = 0;
                                 for (String p : Param) {
                                     Parametros parametro = new ParametrosJpaController(emf).findParametros(Integer.parseInt(p));
-
                                     Query cons = em.createNativeQuery(" SELECT dp.* FROM dato_procesado dp "
                                             + "INNER JOIN parametro_factorconversion pfc ON dp.id_parametro_factorconversion=pfc.id "
                                             + "WHERE dp.id_punto_muestral=? AND pfc.id_parametro=? AND fecha BETWEEN ? AND ?", DatoProcesado.class);
