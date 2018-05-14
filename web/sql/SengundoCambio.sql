@@ -48,6 +48,7 @@ INSERT INTO unidad_medida (descripcion, factor) VALUES ("ug/m3", 0);
 INSERT INTO unidad_medida (descripcion, factor) VALUES ("Int", 0);
 INSERT INTO unidad_medida (descripcion, factor) VALUES ("C°", 0);
 INSERT INTO unidad_medida (descripcion, factor) VALUES ("Grados", 0);
+INSERT INTO unidad_medida (descripcion, factor) VALUES ("mg/m3", 0);
 
 CREATE TABLE unidadmedida_parametro(
 	id INT AUTO_INCREMENT,

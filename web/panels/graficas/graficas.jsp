@@ -165,6 +165,32 @@
                         <ul class="parsley-errors-list" ></ul>
                     </div>
                 </div>
+                        <div class="col-md-3">
+                    <div class="form-group ">
+                        <label>unidadDeseada *</label>
+                        <select type="text" id="horario" name="unidadDeseada" class="form-control" >
+                            <%  
+                                Query qqq = em.createNativeQuery("select * from unidad_medida", UnidadMedida.class);
+                                List<UnidadMedida> listaUnidades = qqq.getResultList();
+
+                                if (!listaUnidades.isEmpty()) {
+
+                                    for (UnidadMedida s : listaUnidades) {
+                                        String sel = "";
+
+
+                            %>
+
+                            <option <%=sel%> value="<%=o.notEmpty(s.getId().toString())%>" title=""><%=o.notEmpty(s.getDescripcion())%></option>
+
+                            <%
+                                    }
+                                }
+                            %>
+                        </select>
+                        <ul class="parsley-errors-list" ></ul>
+                    </div>
+                </div>
             </div>
 
 

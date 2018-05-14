@@ -187,6 +187,7 @@ public class Servlet_graficas extends HttpServlet {
                         case "2":
                             if (o.getvariable("excel").equals("")) {
                                 int idUnidadTiempo=Integer.parseInt(o.getvariable("horario"));
+                                int idUnidadmedidaDeseada = Integer.parseInt(o.getvariable("unidadDeseada"));;
                                 PuntoMuestral pumu = pmjc.findPuntoMuestral(Integer.parseInt(o.getvariable("pumu_sel")));
                                 NivelMaximoJpaController nivelMaximoDao=new NivelMaximoJpaController(emf);
                                 datos = new DataJson();
@@ -222,16 +223,68 @@ public class Servlet_graficas extends HttpServlet {
                                     //if (nm!=null) {
                                       //  dat.setMaxValue(nm.getNivelMaximo());
                                     //}
+                                    double convertido=0;
                                     for (DatoProcesado d : lis) {
                                         int idParametro=d.getIdParametroFactorconversion().getIdParametro().getParaId();
-                                        if (idParametro==1 || idParametro==2 || idParametro==4 || idParametro==9) {
-                                            dat.getFechas().add(Fechas.DevuelveFormato(d.getFecha(), "yyyy-MM-dd HH:mm"));
-                                            double convertido=d.getValor()*(d.getIdParametroFactorconversion().getIdParametro().getMasaMolar()/22.4);
-                                            dat.getDatos().add(String.valueOf(convertido));
-                                        } else {
-                                            dat.getFechas().add(Fechas.DevuelveFormato(d.getFecha(), "yyyy-MM-dd HH:mm"));
-                                            dat.getDatos().add(d.getValor().toString());
+                                        int idUnidadMedidaActual=d.getIdParametroFactorconversion().getIdUnidadMedida().getId();
+                                        switch(idParametro){
+                                            case 9://SO2
+                                                if(idUnidadMedidaActual==2){//ppm
+                                                    if (idUnidadmedidaDeseada==3) {//ug/m3
+                                                        convertido=d.getValor()*2618.46;
+                                                    }
+                                                    if (idUnidadmedidaDeseada==7) {//mg/m3
+                                                        convertido=d.getValor()*2.618;
+                                                    }
+                                                } else if (idUnidadMedidaActual==1) {//ppb
+                                                    if (idUnidadmedidaDeseada==3) {//ug/m3
+                                                        convertido=d.getValor()*2.16185;
+                                                    }
+                                                    if (idUnidadmedidaDeseada==7) {//mg/m3
+                                                        convertido=d.getValor()*0.00;
+                                                    }
+                                                }
+                                                break;
+                                            case 2://NO2
+                                                if(idUnidadMedidaActual==2){//ppm
+                                                    if (idUnidadmedidaDeseada==7) {//mg/m3
+                                                        convertido=d.getValor()*1.8804;
+                                                    }
+                                                    if (idUnidadmedidaDeseada==3) {//ug/m3
+                                                        convertido=d.getValor()*1880.37;
+                                                    }
+                                                } else if (idUnidadMedidaActual==1) {//ppb
+                                                    if (idUnidadmedidaDeseada==7) {//mg/m3
+                                                        convertido=d.getValor()*0.00;
+                                                    }
+                                                    if (idUnidadmedidaDeseada==3) {//ug/m3
+                                                        convertido=d.getValor()*1.880;
+                                                    }
+                                                }
+                                                break;
+                                            case 1://NO
+                                                if(idUnidadMedidaActual==2){//ppm
+                                                    if (idUnidadmedidaDeseada==7) {//mg/m3
+                                                        convertido=d.getValor()*1.23;
+                                                    }
+                                                    if (idUnidadmedidaDeseada==3) {//ug/m3
+                                                        convertido=d.getValor()*1226.43;
+                                                    }
+                                                } else if (idUnidadMedidaActual==1) {//ppb
+                                                    if (idUnidadmedidaDeseada==7) {//mg/m3
+                                                        convertido=d.getValor()*0.00;
+                                                    }
+                                                    if (idUnidadmedidaDeseada==3) {//ug/m3
+                                                        convertido=d.getValor()*1.23;
+                                                    }
+                                                }
+                                                break;
+                                                default:
+                                                    convertido=d.getValor();
+                                                    break;
                                         }
+                                            dat.getFechas().add(Fechas.DevuelveFormato(d.getFecha(), "yyyy-MM-dd HH:mm"));
+                                            dat.getDatos().add(String.valueOf(convertido));
                                     }
 
                                     datos.getDatos().add(dat);
