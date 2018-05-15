@@ -15,7 +15,17 @@ import java.util.List;
 public class DataJson {
     String nombreGraphic;
     String tipo;
-      List<DataUnit> datos = new ArrayList();
+    List<DataUnit> datos = new ArrayList();
+    String concatX;
+
+    public String getConcatX() {
+        return concatX;
+    }
+
+    public void setConcatX(String concatX) {
+        this.concatX = concatX;
+    }
+    
 
     public String getNombreGraphic() {
         return nombreGraphic;
@@ -46,10 +56,21 @@ public class DataJson {
 public class DataUnit{
     int porcentaje;
 Double maxValue;
-    String unidadMedida;
+String unidadMedida;
 String label;
 String x;
+String concatDatos;
+
+        public String getConcatDatos() {
+            return String.join(",", datos);
+        }
+
+        public void setConcatDatos(String concatDatos) {
+            this.concatDatos = concatDatos;
+        }
+
     List<String> datos = new ArrayList();
+    
     List<String> Fechas = new ArrayList();
 
         public int getPorcentaje() {

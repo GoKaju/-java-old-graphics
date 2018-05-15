@@ -18,10 +18,8 @@ import com.statics.util.Constantes;
 import com.statics.util.Fechas;
 import com.statics.vo.Campanas;
 import com.statics.vo.CargaParametro;
-import com.statics.vo.Cargas;
 import com.statics.vo.DatoProcesado;
 import com.statics.vo.Datos;
-import com.statics.vo.NivelMaximo;
 import com.statics.vo.ParametroFactorconversion;
 import com.statics.vo.Parametros;
 import com.statics.vo.PuntoMuestral;
@@ -31,6 +29,7 @@ import com.statics.vo.Usuarios;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -289,7 +288,9 @@ public class Servlet_graficas extends HttpServlet {
                                             dat.getFechas().add(Fechas.DevuelveFormato(d.getFecha(), "yyyy-MM-dd HH:mm"));
                                             dat.getDatos().add(String.valueOf(convertido));
                                     }
-
+                                   
+                                if(datos.getConcatX() == null || datos.getConcatX().isEmpty())
+                               datos.setConcatX(String.join("\",\"", dat.getFechas()));
                                     datos.getDatos().add(dat);
                                     con++;
                                 }
@@ -400,6 +401,7 @@ public class Servlet_graficas extends HttpServlet {
                             dat.setUnidadMedida(pfc.getIdUnidadMedida().getDescripcion());
                             dat.setMaxValue(0.0);
                             listaDatosProcesados=datoProcesadoDao.findDatosByIdPuntoAndParametro24Hours(idPuntoMuestral,pfc.getId());
+                         
                             for(DatoProcesado dp:listaDatosProcesados){
                                 dat.getFechas().add(Fechas.DevuelveFormato(dp.getFecha(), "yyyy-MM-dd HH:mm"));
                                 dat.getDatos().add(dp.getValor().toString());
@@ -407,6 +409,7 @@ public class Servlet_graficas extends HttpServlet {
                                     dat.setMaxValue(dp.getValor());
                                 }
                             }
+                        
                             datos.getDatos().add(dat);
                             con++;
                         }

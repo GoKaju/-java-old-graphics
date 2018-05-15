@@ -330,11 +330,13 @@
 <!-- Load d3.js and c3.js -->
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.14/c3.min.js"></script>
-        <!-- ================== BEGIN PAGE LEVEL JS ================== -->
+        <!-- ================== CHARTJS ================== -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+        <script src="assets/plugins/chart-js/Chart.min.js"></script>
+        <!-- ================== END CHARTJS ================== -->
         <script src="js/Manejador.js"></script>
 
         <script src="assets/js/apps.min.js"></script>
-        <!-- ================== END PAGE LEVEL JS ================== -->
 
         <script>
                                                 $(document).ready(function () {

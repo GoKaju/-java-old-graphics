@@ -45,109 +45,108 @@
     </div>
     <div class="panel-body" >
 
-        <div  style="width: 100%" id="<%=o.getvariable("var")%>" >
+        <div style="width:100%;">
+            <canvas id="<%=o.getvariable("var")%>"></canvas>
+        </div>
 
-        </div> 
-
-<script type="text/javascript">
-    function resizechart() {
-        setTimeout(function () {
-            chart.resize();
-            chart.internal.selectChart.style('max-height', 'none');
-        }, 200);
-
-    }
+        <script type="text/javascript">
 
 
-    var chart = c3.generate({
-        bindto: '#<%=o.getvariable("var")%>',
-        data: {
-            xs: {
-    <%for (DataJson.DataUnit dat : datos.getDatos()) {%>
-                '<%=dat.getLabel()%>': '<%=dat.getX()%>',
-    <% }%>
-            },
-            xFormat: '%Y-%m-%d %H:%M',
-            columns: [
-    <%
-        for (DataJson.DataUnit dat : datos.getDatos()) {
-            StringBuilder x = new StringBuilder("['" + dat.getX() + "',");
-            for (String s : dat.getFechas()) {
-                x.append("'");
-                x.append(s);
-                x.append("',");
-            }
-            x.deleteCharAt(x.length() - 1);
-            x.append("]");
-            x.append(",");
-            out.println(x.toString());
-
-            StringBuilder data = new StringBuilder("['" + dat.getLabel() + "',");
-            for (String s : dat.getDatos()) {
-                data.append(s);
-                data.append(",");
-
-            }
-            data.deleteCharAt(data.length() - 1);
-            data.append("],");
-            out.println(data.toString());
-
-        }%>
-
-            ], type: 'area'
-        },
-        axis: {
-            x: {
-                type: 'timeseries',
-                tick: {
-                    format: '%Y-%m-%d %H:%M',
-                    rotate: 25
+            function hexToRGB(hex, alpha) {
+                var r = parseInt(hex.slice(1, 3), 16),
+                        g = parseInt(hex.slice(3, 5), 16),
+                        b = parseInt(hex.slice(5, 7), 16);
+                if (alpha) {
+                    return "rgba(" + r + ", " + g + ", " + b + ", " + alpha + ")";
+                } else {
+                    return "rgb(" + r + ", " + g + ", " + b + ")";
                 }
             }
-        },
-        grid: {
-        y: {
-            lines: [
-                {value: 50, text: 'Label 50 for y'},
-                {value: 1300, text: 'Label 1300 for y2', axis: 'y2', position: 'start'},
-                {value: 350, text: 'Label 350 for y', position: 'middle'}
-            ]
-        }
-    },
-        subchart: {
-            show: true
-        },
-        zoom: {
-            enabled: true
-        },
-        point: {
-            r: false,
-            focus: {    
-                expand: {
-                    r: 4
+
+            var y;
+            var ramdomNumbers = [];
+            
+            function  getColor(x) {
+                if (x) {
+                    var ram; 
+                    do{
+                        ram = Math.floor((Math.random() * 20) + 1);
+                    }while(ramdomNumbers.includes(ram))
+                    ramdomNumbers.push(ram);
+                    y = colors.colors[ram];
                 }
+                return y;
             }
-        }
-    
-    });
+            var colors = {colors: [
+                    {color: '#3366CC', bgcolor: hexToRGB('#3366CC', 0.5)},
+                    {color: '#DC3912', bgcolor: hexToRGB('#DC3912', 0.5)},
+                    {color: '#FF9900', bgcolor: hexToRGB('#FF9900', 0.5)},
+                    {color: '#109618', bgcolor: hexToRGB('#109618', 0.5)},
+                    {color: '#990099', bgcolor: hexToRGB('#990099', 0.5)},
+                    {color: '#3B3EAC', bgcolor: hexToRGB('#3B3EAC', 0.5)},
+                    {color: '#0099C6', bgcolor: hexToRGB('#0099C6', 0.5)},
+                    {color: '#DD4477', bgcolor: hexToRGB('#DD4477', 0.5)},
+                    {color: '#66AA00', bgcolor: hexToRGB('#66AA00', 0.5)},
+                    {color: '#B82E2E', bgcolor: hexToRGB('#B82E2E', 0.5)},
+                    {color: '#316395', bgcolor: hexToRGB('#316395', 0.5)},
+                    {color: '#994499', bgcolor: hexToRGB('#994499', 0.5)},
+                    {color: '#22AA99', bgcolor: hexToRGB('#22AA99', 0.5)},
+                    {color: '#AAAA11', bgcolor: hexToRGB('#AAAA11', 0.5)},
+                    {color: '#6633CC', bgcolor: hexToRGB('#6633CC', 0.5)},
+                    {color: '#E67300', bgcolor: hexToRGB('#E67300', 0.5)},
+                    {color: '#329262', bgcolor: hexToRGB('#329262', 0.5)},
+                    {color: '#8B0707', bgcolor: hexToRGB('#8B0707', 0.5)},
+                    {color: '#5574A6', bgcolor: hexToRGB('#5574A6', 0.5)},
+                    {color: '#3B3EAC', bgcolor: hexToRGB('#3B3EAC', 0.5)}]};
+
+            var ctx = document.getElementById("<%=o.getvariable("var")%>").getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ["<%=datos.getConcatX()%>"],
+                    datasets: [
+            <%for (DataJson.DataUnit du : datos.getDatos()) {%>
+                        {
+
+                            backgroundColor: getColor(true).bgcolor,
+                            borderColor: getColor(false).color,
+                            label: '<%=du.getLabel()%>(<%=du.getUnidadMedida()%>)',
+                            data: [<%=du.getConcatDatos()%>],
+                            borderWidth: 1
+                        },
+            <%}%>
+
+                    ]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                                type: 'time',
+                                distribution: 'series',
+                                ticks: {
+                                    source: 'labels'
+                                }
+                            }]
+                    }
+
+                }
+            });
+        </script>
 
 
-</script>
-
-
-<%
-} else {
-%>
-<script type="text/javascript">
-    alert("error al crear grafica");
-</script>
-<%        }
-} else {
-%>
-<script type="text/javascript">
-    location.href = 'logout.jsp'
-</script>
-<%        }
-    } catch (Exception ex) {
-        ex.printStackTrace();
-    }%>
+        <%
+        } else {
+        %>
+        <script type="text/javascript">
+            alert("error al crear grafica");
+        </script>
+        <%        }
+        } else {
+        %>
+        <script type="text/javascript">
+            location.href = 'logout.jsp'
+        </script>
+        <%        }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }%>
