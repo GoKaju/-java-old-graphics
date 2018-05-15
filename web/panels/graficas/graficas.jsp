@@ -42,6 +42,20 @@
             if (rf != null && rf.getRofuId() != null) {
 
 %>
+<style>
+    .ms-choice{
+        
+    height: 33px !important;
+    border: 1px solid lightgray !important;
+    }
+    
+    div.ms-parent{
+        width: 100% !important
+    }
+    
+</style>
+
+
 <!-- begin breadcrumb -->
 <ol class="breadcrumb pull-right">
     <li>Inicio</li>
@@ -115,9 +129,9 @@
                 </div>   
                 <div class="col-md-3">
                     <div class="form-group ">
-                        <label>Parametros *</label>
-                        <select id="para_sel" name="para_sel" style="height: 150px" class=" form-control"  required="" data-parsley-id="7052" multiple>
-                            
+                        <label>Parametros *</label> <br />
+                        <select id="para_sel" name="para_sel"    required="" data-parsley-id="7052" multiple>
+                            <option value="">Seleccione...</option>
                         </select>
                         <ul class="parsley-errors-list" id="parsley-id-7052"></ul>
                     </div>
@@ -143,7 +157,7 @@
                     <div class="form-group ">
                         <label>Horario *</label>
                         <select type="text" id="horario" name="horario" class="form-control" >
-                            <%  
+                            <%
                                 Query qq = em.createNativeQuery("select * from unidad_tiempo", UnidadTiempo.class);
                                 List<UnidadTiempo> listaHorarios = qq.getResultList();
 
@@ -165,11 +179,11 @@
                         <ul class="parsley-errors-list" ></ul>
                     </div>
                 </div>
-                        <div class="col-md-3">
+                <div class="col-md-3">
                     <div class="form-group ">
                         <label>unidadDeseada *</label>
                         <select type="text" id="horario" name="unidadDeseada" class="form-control" >
-                            <%  
+                            <%
                                 Query qqq = em.createNativeQuery("select * from unidad_medida", UnidadMedida.class);
                                 List<UnidadMedida> listaUnidades = qqq.getResultList();
 
@@ -233,22 +247,28 @@
 <script src="assets/plugins/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js"></script>
 <!--<script src="assets/plugins/bootstrap-select/bootstrap-select.min.js"></script>-->
 <script>
-$('#btn_datos').css('visibility', 'visible');
-                                $('#carg_sel').removeAttr('required');
-                                $('#carg_sel').attr('disabled', 'true');
-                                $('#carg_sel').parent().parent().hide();
+          $(function () {
+	$('#para_sel').multipleSelect();
+});   
 
-                                $('#fini_txt').attr('required', 'true');
-                                $('#ffin_txt').attr('required', 'true');
-                                $('#fini_txt').removeAttr('disabled');
-                                $('#ffin_txt').removeAttr('disabled');
-                                $('#FormAplication').parsley().reset();
+
+
+                    $('#btn_datos').css('visibility', 'visible');
+                    $('#carg_sel').removeAttr('required');
+                    $('#carg_sel').attr('disabled', 'true');
+                    $('#carg_sel').parent().parent().hide();
+
+                    $('#fini_txt').attr('required', 'true');
+                    $('#ffin_txt').attr('required', 'true');
+                    $('#fini_txt').removeAttr('disabled');
+                    $('#ffin_txt').removeAttr('disabled');
+                    $('#FormAplication').parsley().reset();
                     $('.datepicker').datepicker({
                         todayHighlight: true,
                         language: 'es',
                         format: 'yyyy-mm-dd'
                     });
-              
+
 
 
 
@@ -299,7 +319,8 @@ $('#btn_datos').css('visibility', 'visible');
                     function recargarParametros(x) {
                         console.log(x);
                         peticionAjax('Graficas', 'modulo=2&index=' + x + '');
-
+                        
+                
                     }
                     var cont = 0;
 

@@ -29,12 +29,7 @@ import com.statics.vo.Usuarios;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -106,7 +101,7 @@ public class Servlet_graficas extends HttpServlet {
 
 //                 cadena = elem.getPuntoMuestralList().stream().map((puntoMuestral) -> <).reduce(cadena, String::concat);
                     System.out.println("cadena-->" + cadena);
-                    out.println("$('#para_sel').html(\"" + cadena + "\");");
+                    out.println("$('#para_sel').html(\"" + cadena + "\"); $('#para_sel').multipleSelect('refresh'); ");
 
                 } else if (modulo.equals("3")) {
 

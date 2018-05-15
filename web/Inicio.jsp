@@ -33,6 +33,7 @@
         <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
         <!--<link href="assets/plugins/jquery-ui/themes/base/minified/jquery-ui.min.css" rel="stylesheet" />-->
         <link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="https://rawgit.com/wenzhixin/multiple-select/master/multiple-select.css" rel="stylesheet" />
        
         <link href="assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
         <link href="assets/css/animate.min.css" rel="stylesheet" />
@@ -310,7 +311,8 @@
         <script src="assets/plugins/jquery/jquery-1.9.1.min.js"></script>
         <script src="assets/plugins/jquery/jquery-migrate-1.1.0.min.js"></script>
         <script src="assets/plugins/jquery-ui/ui/minified/jquery-ui.min.js"></script>
-        <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+        <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>       
+        <script src="https://rawgit.com/wenzhixin/multiple-select/master/multiple-select.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
 
@@ -332,7 +334,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.14/c3.min.js"></script>
         <!-- ================== CHARTJS ================== -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-        <script src="assets/plugins/chart-js/Chart.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
         <!-- ================== END CHARTJS ================== -->
         <script src="js/Manejador.js"></script>
 
