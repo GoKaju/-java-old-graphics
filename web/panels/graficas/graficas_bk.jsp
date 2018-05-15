@@ -5,7 +5,6 @@
 --%>
 
 
-<%@page import="com.statics.vo.Cliente"%>
 <%@page import="com.statics.vo.UnidadTiempo"%>
 <%@page import="javax.persistence.Query"%>
 <%@page import="com.statics.vo.UnidadMedida"%>
@@ -43,20 +42,6 @@
             if (rf != null && rf.getRofuId() != null) {
 
 %>
-<style>
-    .ms-choice{
-        
-    height: 33px !important;
-    border: 1px solid lightgray !important;
-    }
-    
-    div.ms-parent{
-        width: 100% !important
-    }
-    
-</style>
-
-
 <!-- begin breadcrumb -->
 <ol class="breadcrumb pull-right">
     <li>Inicio</li>
@@ -80,34 +65,42 @@
     </div>
     <form id="FormAplication" action="Login" method="POST" class="margin-bottom-0" data-parsley-validate="true">
         <div class="panel-body">
-            <div class="row" id="graf01" >
-                <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
                     <div class="form-group ">
-                        <label>Cliente  *</label>
-                        <select name="Cliente" class="form-control"  required="" data-parsley-id="7052" onchange="recargarCampanas(this.value)">
-                            <option value="">Seleccone...</option>
-                            <%  EntityManager em = emf.createEntityManager();
-                                Query qqq = em.createNativeQuery("select * from cliente", Cliente.class);
-                                List<Cliente> listaClientes = qqq.getResultList();
-
-                                if (!listaClientes.isEmpty()) {
-                                    for (Cliente s : listaClientes) {
-                                        String sel = "";
-                            %>
-                            <option <%=sel%> value="<%=o.notEmpty(s.getId().toString())%>" title=""><%=o.notEmpty(s.getNombre())%></option>
-                            <%
-                                    }
-                                }
-                            %>
+                        <label>Tipo de grafica  *</label>
+                        <select name="tipoGrafica" class="form-control"  required="" data-parsley-id="7052" onchange="recargarTipoGrafica(this.value)">
+                            <option value="2">X punto muestral - Fechas</option>
                         </select>
                         <ul class="parsley-errors-list" id="parsley-id-7052"></ul>
                     </div>
                 </div>
+            </div>
+            <div class="row" id="graf01" >
                 <div class="col-md-3">
                     <div class="form-group ">
                         <label>Campaña  *</label>
-                        <select id="camp_sel" name="Campana" class="form-control"  required="" data-parsley-id="7052" onchange="recargarEstaciones(this.value)">
-                            
+                        <select name="Campana" class="form-control"  required="" data-parsley-id="7052" onchange="recargarEstaciones(this.value)">
+                            <option value="">Seleccone...</option>
+                            <%  EntityManager em = emf.createEntityManager();
+                                TypedQuery<Campanas> consulta = em.createNamedQuery("Campanas.findByGroupId", Campanas.class);
+                                consulta.setParameter("grupId", user.getGrupoUsuariosList().get(0).getGrupId().getGrupId());
+                                List<Campanas> lista = consulta.getResultList();
+
+                                if (!lista.isEmpty()) {
+
+                                    for (Campanas s : lista) {
+                                        String sel = "";
+
+
+                            %>
+
+                            <option <%=sel%> value="<%=o.notEmpty(s.getCampId().toString())%>" title=""><%=o.notEmpty(s.getCampNombre())%></option>
+
+                            <%
+                                    }
+                                }
+                            %>
                         </select>
                         <ul class="parsley-errors-list" id="parsley-id-7052"></ul>
                     </div>
@@ -122,9 +115,9 @@
                 </div>   
                 <div class="col-md-3">
                     <div class="form-group ">
-                        <label>Parametros *</label> <br />
-                        <select id="para_sel" name="para_sel"    required="" data-parsley-id="7052" multiple>
-                            <option value="">Seleccione...</option>
+                        <label>Parametros *</label>
+                        <select id="para_sel" name="para_sel" style="height: 150px" class=" form-control"  required="" data-parsley-id="7052" multiple>
+                            
                         </select>
                         <ul class="parsley-errors-list" id="parsley-id-7052"></ul>
                     </div>
@@ -151,7 +144,7 @@
                         <label>Horario *</label>
                         <select type="text" id="horario" name="horario" class="form-control" >
                             <%  
-                                Query qq = em.createNativeQuery("select * from unidad_tiempo order by 1 desc", UnidadTiempo.class);
+                                Query qq = em.createNativeQuery("select * from unidad_tiempo", UnidadTiempo.class);
                                 List<UnidadTiempo> listaHorarios = qq.getResultList();
 
                                 if (!listaHorarios.isEmpty()) {
@@ -159,9 +152,10 @@
                                     for (UnidadTiempo s : listaHorarios) {
                                         String sel = "";
 
+
                             %>
 
-                            <option <%=sel%> value="<%=o.notEmpty(s.getNumeroHoras().toString())%>" title=""><%=o.notEmpty(s.getDescripcion())%></option>
+                            <option <%=sel%> value="<%=o.notEmpty(s.getId().toString())%>" title=""><%=o.notEmpty(s.getDescripcion())%></option>
 
                             <%
                                     }
@@ -171,19 +165,24 @@
                         <ul class="parsley-errors-list" ></ul>
                     </div>
                 </div>
-                <div class="col-md-3">
+                        <div class="col-md-3">
                     <div class="form-group ">
                         <label>unidadDeseada *</label>
                         <select type="text" id="horario" name="unidadDeseada" class="form-control" >
-                            <%
-                                Query qqqq = em.createNativeQuery("select * from unidad_medida", UnidadMedida.class);
-                                List<UnidadMedida> listaUnidades = qqqq.getResultList();
+                            <%  
+                                Query qqq = em.createNativeQuery("select * from unidad_medida", UnidadMedida.class);
+                                List<UnidadMedida> listaUnidades = qqq.getResultList();
 
                                 if (!listaUnidades.isEmpty()) {
+
                                     for (UnidadMedida s : listaUnidades) {
                                         String sel = "";
+
+
                             %>
+
                             <option <%=sel%> value="<%=o.notEmpty(s.getId().toString())%>" title=""><%=o.notEmpty(s.getDescripcion())%></option>
+
                             <%
                                     }
                                 }
@@ -193,18 +192,6 @@
                     </div>
                 </div>
             </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                    <div class="form-group ">
-                        <label>Tipo Grafica  *</label>
-                        <select name="tipoGrafica1" class="form-control"  required="" data-parsley-id="7052">
-                            <option value="line">Area</option>
-                            <option value="bar">Barras</option>
-                        </select>
-                        <ul class="parsley-errors-list" id="parsley-id-7052"></ul>
-                    </div>
-                </div>
-                        </div>
 
 
         </div>
@@ -212,7 +199,6 @@
             <div>
                 <%if (rf.getRofuOperacion().contains("A")) {%>
                 <input type="hidden" name="modulo" value="3"/>
-                <input type="hidden" name="tipoGrafica" value="2">
                 <input type="hidden" name="rfid" value="<%=rfid%>"/>
                 <button type="button"  onclick="
 
@@ -247,28 +233,22 @@
 <script src="assets/plugins/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js"></script>
 <!--<script src="assets/plugins/bootstrap-select/bootstrap-select.min.js"></script>-->
 <script>
-          $(function () {
-	$('#para_sel').multipleSelect();
-});   
+$('#btn_datos').css('visibility', 'visible');
+                                $('#carg_sel').removeAttr('required');
+                                $('#carg_sel').attr('disabled', 'true');
+                                $('#carg_sel').parent().parent().hide();
 
-
-
-                    $('#btn_datos').css('visibility', 'visible');
-                    $('#carg_sel').removeAttr('required');
-                    $('#carg_sel').attr('disabled', 'true');
-                    $('#carg_sel').parent().parent().hide();
-
-                    $('#fini_txt').attr('required', 'true');
-                    $('#ffin_txt').attr('required', 'true');
-                    $('#fini_txt').removeAttr('disabled');
-                    $('#ffin_txt').removeAttr('disabled');
-                    $('#FormAplication').parsley().reset();
+                                $('#fini_txt').attr('required', 'true');
+                                $('#ffin_txt').attr('required', 'true');
+                                $('#fini_txt').removeAttr('disabled');
+                                $('#ffin_txt').removeAttr('disabled');
+                                $('#FormAplication').parsley().reset();
                     $('.datepicker').datepicker({
                         todayHighlight: true,
                         language: 'es',
                         format: 'yyyy-mm-dd'
                     });
-
+              
 
 
 
@@ -316,16 +296,10 @@
                         peticionAjax('Graficas', 'modulo=1&index=' + x + '');
 
                     }
-                    function recargarCampanas(x) {
-                        console.log(x);
-                        peticionAjax('Graficas', 'modulo=5&index=' + x + '');
-
-                    }
                     function recargarParametros(x) {
                         console.log(x);
                         peticionAjax('Graficas', 'modulo=2&index=' + x + '');
-                        
-                
+
                     }
                     var cont = 0;
 

@@ -8,6 +8,7 @@ package com.statics.servlet;
 //import com.statics.dao.ArchivosJpaController;
 import com.statics.carga.DataJson;
 import com.statics.dao.CampanasJpaController;
+import com.statics.dao.ClienteJpaController;
 import com.statics.dao.DatoProcesadoJpaController;
 import com.statics.dao.NivelMaximoJpaController;
 import com.statics.dao.ParametroFactorconversionJpaController;
@@ -18,10 +19,9 @@ import com.statics.util.Constantes;
 import com.statics.util.Fechas;
 import com.statics.vo.Campanas;
 import com.statics.vo.CargaParametro;
-import com.statics.vo.Cargas;
+import com.statics.vo.Cliente;
 import com.statics.vo.DatoProcesado;
 import com.statics.vo.Datos;
-import com.statics.vo.NivelMaximo;
 import com.statics.vo.ParametroFactorconversion;
 import com.statics.vo.Parametros;
 import com.statics.vo.PuntoMuestral;
@@ -32,10 +32,6 @@ import com.statics.vo.Usuarios;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -109,17 +105,18 @@ public class Servlet_graficas extends HttpServlet {
 
 //                 cadena = elem.getPuntoMuestralList().stream().map((puntoMuestral) -> <).reduce(cadena, String::concat);
                     System.out.println("cadena-->" + cadena);
-                    out.println("$('#para_sel').html(\"" + cadena + "\");");
+                    out.println("$('#para_sel').html(\"" + cadena + "\"); $('#para_sel').multipleSelect('refresh'); ");
 
                 } else if (modulo.equals("3")) {
 
                     String tipo = o.getvariable("tipoGrafica");
+                    String tipoGrafica1=o.getvariable("tipoGrafica1");
 
                     switch (tipo) {
                         case "1":
                             DataJson datos = new DataJson();
                             datos.setNombreGraphic("Nombre grafica");
-                            datos.setTipo("Timeseries");
+                            datos.setTipo(tipoGrafica1);
                             datos.setDatos(new ArrayList());
 
                             String cargas[] = request.getParameterValues("carg_sel");
@@ -202,7 +199,7 @@ public class Servlet_graficas extends HttpServlet {
                                 String fechafin = o.getvariable("ffin_txt");
 
                                 datos.setNombreGraphic(pumu.getPumuNombre() + " del " + fechaini + " al " + fechafin);
-                                datos.setTipo("Timeseries");
+                                datos.setTipo(tipoGrafica1);
                                 datos.setDatos(new ArrayList());
                                 String Param[] = request.getParameterValues("para_sel");
                                 int con = 0;
@@ -249,51 +246,63 @@ public class Servlet_graficas extends HttpServlet {
                                                 if(idUnidadMedidaActual==2){//ppm
                                                     if (idUnidadmedidaDeseada==3) {//ug/m3
                                                         convertido=d.getValor()*2618.46;
-                                                    }
-                                                    if (idUnidadmedidaDeseada==7) {//mg/m3
+                                                    } else if (idUnidadmedidaDeseada==7) {//mg/m3
                                                         convertido=d.getValor()*2.618;
+                                                    } else {
+                                                        convertido=d.getValor();
                                                     }
                                                 } else if (idUnidadMedidaActual==1) {//ppb
                                                     if (idUnidadmedidaDeseada==3) {//ug/m3
                                                         convertido=d.getValor()*2.16185;
-                                                    }
-                                                    if (idUnidadmedidaDeseada==7) {//mg/m3
+                                                    } else if (idUnidadmedidaDeseada==7) {//mg/m3
                                                         convertido=d.getValor()*0.00;
+                                                    } else {
+                                                        convertido=d.getValor();
                                                     }
+                                                } else {
+                                                    convertido=d.getValor();
                                                 }
                                                 break;
                                             case 2://NO2
                                                 if(idUnidadMedidaActual==2){//ppm
                                                     if (idUnidadmedidaDeseada==7) {//mg/m3
                                                         convertido=d.getValor()*1.8804;
-                                                    }
-                                                    if (idUnidadmedidaDeseada==3) {//ug/m3
+                                                    } else if (idUnidadmedidaDeseada==3) {//ug/m3
                                                         convertido=d.getValor()*1880.37;
+                                                    } else {
+                                                        convertido=d.getValor();
                                                     }
                                                 } else if (idUnidadMedidaActual==1) {//ppb
                                                     if (idUnidadmedidaDeseada==7) {//mg/m3
                                                         convertido=d.getValor()*0.00;
-                                                    }
-                                                    if (idUnidadmedidaDeseada==3) {//ug/m3
+                                                    } else if (idUnidadmedidaDeseada==3) {//ug/m3
                                                         convertido=d.getValor()*1.880;
+                                                    } else {
+                                                        convertido=d.getValor();
                                                     }
+                                                } else {
+                                                    convertido=d.getValor();
                                                 }
                                                 break;
                                             case 1://NO
                                                 if(idUnidadMedidaActual==2){//ppm
                                                     if (idUnidadmedidaDeseada==7) {//mg/m3
                                                         convertido=d.getValor()*1.23;
-                                                    }
-                                                    if (idUnidadmedidaDeseada==3) {//ug/m3
+                                                    } else if (idUnidadmedidaDeseada==3) {//ug/m3
                                                         convertido=d.getValor()*1226.43;
+                                                    } else {
+                                                        convertido=d.getValor();
                                                     }
                                                 } else if (idUnidadMedidaActual==1) {//ppb
                                                     if (idUnidadmedidaDeseada==7) {//mg/m3
                                                         convertido=d.getValor()*0.00;
-                                                    }
-                                                    if (idUnidadmedidaDeseada==3) {//ug/m3
+                                                    } else if (idUnidadmedidaDeseada==3) {//ug/m3
                                                         convertido=d.getValor()*1.23;
+                                                    } else {
+                                                        convertido=d.getValor();
                                                     }
+                                                } else {
+                                                    convertido=d.getValor();
                                                 }
                                                 break;
                                                 default:
@@ -303,7 +312,9 @@ public class Servlet_graficas extends HttpServlet {
                                             dat.getFechas().add(Fechas.DevuelveFormato(d.getFecha(), "yyyy-MM-dd HH:mm"));
                                             dat.getDatos().add(String.valueOf(convertido));
                                     }
-
+                                   
+                                if(datos.getConcatX() == null || datos.getConcatX().isEmpty())
+                               datos.setConcatX(String.join("\",\"", dat.getFechas()));
                                     datos.getDatos().add(dat);
                                     con++;
                                 }
@@ -414,6 +425,7 @@ public class Servlet_graficas extends HttpServlet {
                             dat.setUnidadMedida(pfc.getIdUnidadMedida().getDescripcion());
                             dat.setMaxValue(0.0);
                             listaDatosProcesados=datoProcesadoDao.findDatosByIdPuntoAndParametro24Hours(idPuntoMuestral,pfc.getId());
+                         
                             for(DatoProcesado dp:listaDatosProcesados){
                                 dat.getFechas().add(Fechas.DevuelveFormato(dp.getFecha(), "yyyy-MM-dd HH:mm"));
                                 dat.getDatos().add(dp.getValor().toString());
@@ -421,6 +433,7 @@ public class Servlet_graficas extends HttpServlet {
                                     dat.setMaxValue(dp.getValor());
                                 }
                             }
+                        
                             datos.getDatos().add(dat);
                             con++;
                         }
@@ -428,6 +441,18 @@ public class Servlet_graficas extends HttpServlet {
                         session.setAttribute(nombre, datos);
                         out.println(" graficarDial('" +idPuntoMuestral+ "','" + nombre + "');");
 
+                } else if (modulo.equals("5")) {
+                    int idCliente=Integer.parseInt(o.getvariable("index"));
+                    CampanasJpaController clienteDao=new CampanasJpaController(emf);
+                    List<Campanas> listaCampanas=clienteDao.findCampanasByCliente(idCliente);
+                    String cadena = "<option value='' >Seleccione...</option>";
+                    for (Campanas p : listaCampanas) {
+                        cadena += "<option value='" + p.getCampId()+ "' >" + p.getCampNombre()+ "</option>";
+                    }
+
+//                 cadena = elem.getPuntoMuestralList().stream().map((puntoMuestral) -> <).reduce(cadena, String::concat);
+                    System.out.println("cadena-->" + cadena);
+                    out.println("$('#camp_sel').html(\"" + cadena + "\"); $('#camp_sel')");
                 } else {
 
                     out.println("alerta(\"ERROR\",\"¡Modulo no encontrado!\");");

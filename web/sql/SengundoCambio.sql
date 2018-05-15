@@ -171,6 +171,50 @@ WHERE cp.carg_id = id_carga GROUP BY para_id, hora;
 END$$
 
 DELIMITER ;
-CALL procesaDatos(23);
-DELETE FROM dato_procesado WHERE fecha >'2018-01-24 21:00:00' AND id_punto_muestral=5	
-COMMIT;
+
+
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS calculaPromediosPorHorario; //
+CREATE PROCEDURE calculaPromediosPorHorario
+(IN horas INT,
+IN fechaInicio DATETIME,
+IN fechaFinal DATETIME,
+IN parametro INT,
+IN puntoMuestral INT)
+BEGIN
+DECLARE fecha DATETIME DEFAULT fechaInicio;
+DECLARE fechaF DATETIME DEFAULT fechaFinal;
+DROP TABLE IF EXISTS  tmp_datos2;
+CREATE TEMPORARY TABLE tmp_datos2 LIKE dato_procesado;
+
+DROP TABLE IF EXISTS  tmp_datos;
+CREATE TEMPORARY TABLE tmp_datos AS (
+SELECT dp.* FROM dato_procesado dp 
+INNER JOIN parametro_factorconversion pfc ON dp.id_parametro_factorconversion=pfc.id 
+WHERE dp.id_punto_muestral=puntoMuestral AND pfc.id_parametro=parametro AND fecha >= fechaInicio  AND fecha < fechaFinal );
+
+IF horas <> 8 THEN 
+SELECT tmp.id, tmp.id_punto_muestral, tmp.id_unidad_tiempo, tmp.id_parametro_factorconversion,
+ tmp.fecha, AVG(tmp.valor) AS valor, tmp.fecha_conversion 
+FROM tmp_datos tmp GROUP BY (
+	CASE WHEN horas = 1 THEN DATE_FORMAT(tmp.fecha, "%Y-%m-%d %H")
+	     WHEN horas = 24 THEN DATE_FORMAT(tmp.fecha,"%Y-%m-%d")
+	     WHEN horas = 730 THEN DATE_FORMAT(tmp.fecha,"%Y-%m")
+	     WHEN horas = 8760 THEN DATE_FORMAT(tmp.fecha,"%Y")
+	END);
+	
+ELSE
+
+SET fecha = (SELECT MIN(tmp.fecha) FROM tmp_datos tmp);
+SET fechaF = (SELECT MAX(tmp.fecha) FROM tmp_datos tmp);
+WHILE fecha <> fechaF DO
+INSERT INTO tmp_datos2 (valor,fecha, id_parametro_factorconversion, id_unidad_tiempo, id_punto_muestral) 
+SELECT AVG(tmp.valor) AS valor, tmp.fecha, tmp.id_parametro_factorconversion, tmp.id_unidad_tiempo,tmp.id_punto_muestral FROM tmp_datos tmp WHERE tmp.fecha BETWEEN fecha AND DATE_ADD(fecha, INTERVAL 8 HOUR);
+SET fecha = DATE_ADD(fecha, INTERVAL 1 HOUR);
+END WHILE;
+SELECT * FROM tmp_datos2;
+END IF;    
+END; //
+
+DELIMITER ;

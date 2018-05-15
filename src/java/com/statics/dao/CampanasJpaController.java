@@ -34,6 +34,23 @@ public class CampanasJpaController implements Serializable {
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
+    
+    public List<Campanas> findCampanasByCliente(int idCliente){
+        EntityManager em=null;
+        List<Campanas> lista=new ArrayList();
+        try{
+            em=getEntityManager();
+            Query q= em.createNativeQuery("select * from campanas where id_cliente="+idCliente, Campanas.class);
+            lista=q.getResultList();
+        } catch(Exception e) {
+            System.err.println(e.toString());
+        } finally{
+            if (em.isOpen()) {
+                em.close();
+            }
+        }
+        return lista;
+    }
 
     public void create(Campanas campanas) {
         if (campanas.getPuntoMuestralList() == null) {
