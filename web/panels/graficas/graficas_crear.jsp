@@ -70,8 +70,9 @@
                 if (x) {
                     var ram; 
                     do{
-                        ram = Math.floor((Math.random() * 20) + 1);
+                        ram = Math.floor((Math.random() * 20));
                     }while(ramdomNumbers.includes(ram))
+                    console.log("ram color -->"+ram);    
                     ramdomNumbers.push(ram);
                     y = colors.colors[ram];
                 }
