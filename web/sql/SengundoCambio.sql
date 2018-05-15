@@ -119,9 +119,7 @@ CREATE TABLE unidad_tiempo (
 
 INSERT INTO unidad_tiempo (descripcion, unidad, numero_horas) VALUES ("Año", "Hora", 8760);
 INSERT INTO unidad_tiempo (descripcion, unidad, numero_horas) VALUES ("Mes", "Hora", 730);
-INSERT INTO unidad_tiempo (descripcion, unidad, numero_horas) VALUES ("Semana", "Hora", 168);
 INSERT INTO unidad_tiempo (descripcion, unidad, numero_horas) VALUES ("Dia", "Hora", 24);
-INSERT INTO unidad_tiempo (descripcion, unidad, numero_horas) VALUES ("16", "Hora", 16);
 INSERT INTO unidad_tiempo (descripcion, unidad, numero_horas) VALUES ("8", "Hora", 8);
 INSERT INTO unidad_tiempo (descripcion, unidad, numero_horas) VALUES ("1", "Hora", 1);
 

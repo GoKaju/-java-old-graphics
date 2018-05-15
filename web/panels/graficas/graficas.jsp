@@ -144,7 +144,7 @@
                         <label>Horario *</label>
                         <select type="text" id="horario" name="horario" class="form-control" >
                             <%  
-                                Query qq = em.createNativeQuery("select * from unidad_tiempo", UnidadTiempo.class);
+                                Query qq = em.createNativeQuery("select * from unidad_tiempo order by 1 desc", UnidadTiempo.class);
                                 List<UnidadTiempo> listaHorarios = qq.getResultList();
 
                                 if (!listaHorarios.isEmpty()) {
@@ -152,10 +152,9 @@
                                     for (UnidadTiempo s : listaHorarios) {
                                         String sel = "";
 
-
                             %>
 
-                            <option <%=sel%> value="<%=o.notEmpty(s.getId().toString())%>" title=""><%=o.notEmpty(s.getDescripcion())%></option>
+                            <option <%=sel%> value="<%=o.notEmpty(s.getNumeroHoras().toString())%>" title=""><%=o.notEmpty(s.getDescripcion())%></option>
 
                             <%
                                     }
@@ -174,15 +173,10 @@
                                 List<UnidadMedida> listaUnidades = qqq.getResultList();
 
                                 if (!listaUnidades.isEmpty()) {
-
                                     for (UnidadMedida s : listaUnidades) {
                                         String sel = "";
-
-
                             %>
-
                             <option <%=sel%> value="<%=o.notEmpty(s.getId().toString())%>" title=""><%=o.notEmpty(s.getDescripcion())%></option>
-
                             <%
                                     }
                                 }

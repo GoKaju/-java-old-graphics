@@ -40,8 +40,10 @@ import java.util.Iterator;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.ParameterMode;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.persistence.StoredProcedureQuery;
 import javax.persistence.TypedQuery;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -190,7 +192,7 @@ public class Servlet_graficas extends HttpServlet {
                             break;
                         case "2":
                             if (o.getvariable("excel").equals("")) {
-                                int idUnidadTiempo=Integer.parseInt(o.getvariable("horario"));
+                                int horas=Integer.parseInt(o.getvariable("horario"));
                                 int idUnidadmedidaDeseada = Integer.parseInt(o.getvariable("unidadDeseada"));;
                                 PuntoMuestral pumu = pmjc.findPuntoMuestral(Integer.parseInt(o.getvariable("pumu_sel")));
                                 NivelMaximoJpaController nivelMaximoDao=new NivelMaximoJpaController(emf);
@@ -206,14 +208,26 @@ public class Servlet_graficas extends HttpServlet {
                                 int con = 0;
                                 for (String p : Param) {
                                     Parametros parametro = new ParametrosJpaController(emf).findParametros(Integer.parseInt(p));
-                                    Query cons = em.createNativeQuery(" SELECT dp.* FROM dato_procesado dp "
-                                            + "INNER JOIN parametro_factorconversion pfc ON dp.id_parametro_factorconversion=pfc.id "
-                                            + "WHERE dp.id_punto_muestral=? AND pfc.id_parametro=? AND fecha BETWEEN ? AND ?", DatoProcesado.class);
-                                    cons.setParameter(1, pumu.getPumuId());
-                                    cons.setParameter(2, parametro.getParaId());
-                                    cons.setParameter(3, fechaini);
-                                    cons.setParameter(4, fechafin);
-                                    List<DatoProcesado> lis = cons.getResultList();
+                                    //Query cons = em.createNativeQuery(" SELECT dp.* FROM dato_procesado dp "
+                                    //        + "INNER JOIN parametro_factorconversion pfc ON dp.id_parametro_factorconversion=pfc.id "
+                                    //        + "WHERE dp.id_punto_muestral=? AND pfc.id_parametro=? AND fecha BETWEEN ? AND ?", DatoProcesado.class);
+                                    //cons.setParameter(1, pumu.getPumuId());
+                                    //cons.setParameter(2, parametro.getParaId());
+                                    //cons.setParameter(3, fechaini);
+                                    //cons.setParameter(4, fechafin);
+                                    StoredProcedureQuery query = em
+                                            .createStoredProcedureQuery("calculaPromediosPorHorario", DatoProcesado.class)
+                                            .registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN)
+                                            .setParameter(1, horas)
+                                            .registerStoredProcedureParameter(2, String.class, ParameterMode.IN)
+                                            .setParameter(2, fechaini)
+                                            .registerStoredProcedureParameter(3, String.class, ParameterMode.IN)
+                                            .setParameter(3, fechafin)
+                                            .registerStoredProcedureParameter(4, Integer.class, ParameterMode.IN)
+                                            .setParameter(4, parametro.getParaId())
+                                            .registerStoredProcedureParameter(5, Integer.class, ParameterMode.IN)
+                                             .setParameter(5, pumu.getPumuId());
+                                    List<DatoProcesado> lis = query.getResultList();
 
                                     System.out.println("--> " + lis.size());
                                     DataJson.DataUnit dat = datos.new DataUnit();
