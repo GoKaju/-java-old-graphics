@@ -121,7 +121,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group ">
-                        <label>Punto Muestral  *</label>
+                        <label>Punto de Monitoreo  *</label>
                         <select onchange="recargarParametros(this.value)" id="pumu_sel" name="pumu_sel" class="form-control"  required="" data-parsley-id="7052">
                         </select>
                         <ul class="parsley-errors-list" id="parsley-id-7052"></ul>
@@ -129,7 +129,7 @@
                 </div>   
                 <div class="col-md-3">
                     <div class="form-group ">
-                        <label>Parametros *</label> <br />
+                        <label>Contaminantes *</label> <br />
                         <select id="para_sel" name="para_sel"    required="" data-parsley-id="7052" multiple>
                             <option value="">Seleccione...</option>
                         </select>
@@ -155,7 +155,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group ">
-                        <label>Horario *</label>
+                        <label>Promedio *</label>
                         <select type="text" id="horario" name="horario" class="form-control" >
                             <%
                                 Query qq = em.createNativeQuery("select * from unidad_tiempo", UnidadTiempo.class);
@@ -181,7 +181,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group ">
-                        <label>unidadDeseada *</label>
+                        <label>Unidad *</label>
                         <select type="text" id="horario" name="unidadDeseada" class="form-control" >
                             <%
                                 Query qqq = em.createNativeQuery("select * from unidad_medida", UnidadMedida.class);
