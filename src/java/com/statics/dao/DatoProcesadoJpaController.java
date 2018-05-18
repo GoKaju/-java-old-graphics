@@ -60,17 +60,12 @@ public class DatoProcesadoJpaController implements Serializable {
     }
     
     public List<DatoProcesado> findDatosByIdPuntoAndParametro24Hours(int idPuntoMuestral, int idPFC){
-        String sqlQuery="SELECT dp.id, dp.id_punto_muestral, dp.id_unidad_tiempo, "
-                + "dp.id_parametro_factorconversion, dp.fecha, ROUND(dp.valor,3) as valor, dp.fecha_conversion FROM dato_procesado dp "
-                + "WHERE dp.id_punto_muestral="+idPuntoMuestral+" "
-                + "AND dp.id_parametro_factorconversion="+idPFC+" "
-                + "AND dp.fecha BETWEEN (SELECT MAX(fecha) - INTERVAL 24 HOUR FROM dato_procesado WHERE id_punto_muestral="+idPuntoMuestral+") "
-                + "AND (SELECT MAX(fecha) FROM dato_procesado WHERE id_punto_muestral="+idPuntoMuestral+")";
+        String sqlQuery="CALL findDatosByIdPuntoAndParametro24Hours("+idPuntoMuestral+","+idPFC+")";
         List<DatoProcesado> lista=new ArrayList();
         EntityManager em=null;
         try{
             em=getEntityManager();
-            Query q=em.createNativeQuery(sqlQuery, DatoProcesado.class);
+            Query q=em.createStoredProcedureQuery(sqlQuery, DatoProcesado.class);
             lista=q.getResultList();
         }catch(Exception e){
             e.printStackTrace();

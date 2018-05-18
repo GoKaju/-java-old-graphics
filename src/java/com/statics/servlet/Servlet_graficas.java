@@ -392,29 +392,7 @@ public class Servlet_graficas extends HttpServlet {
                     datos.setDatos(new ArrayList());
                     List<DatoProcesado> listaDatosProcesados;
                     List<ParametroFactorconversion> listaParametroFactorconversions=pfcDao.findPFCInPunto(idPuntoMuestral);
-                    /*List<Integer> cargasList = new ArrayList();
-                    PuntoMuestral pumu = puntoMuestralDao.findPuntoMuestral(idPuntoMuestral);
-                   
-                    if(pumu.getCargasList()!=null && !pumu.getCargasList().isEmpty()){
-                    int ultima = pumu.getCargasList().get( pumu.getCargasList().size()-1).getCargId();
-                    cargasList.add(ultima);
-                    }
-                 
-                    if (!cargasList.isEmpty() ) {
 
-                        TypedQuery<Parametros> consulta = em.createNamedQuery("Parametros.findByCargaParametro", Parametros.class);
-                        consulta.setParameter("Cargas", cargasList);
-                        consulta.setParameter("tipo", Constantes.TIPO_GRAFICA_LINEA);
-                        List<Parametros> lista = consulta.getResultList();
-
-
-                        for (Parametros parametro : lista) {
-                            TypedQuery<CargaParametro> cons = em.createNamedQuery("CargaParametroGrafica1", CargaParametro.class);
-                            cons.setParameter("cargas", cargasList);
-                            cons.setParameter("para", parametro);
-                            List<CargaParametro> lis = cons.getResultList();
-                            System.out.println("--> " + lis.size());
-                    */
                         int con = 0;
                         for(ParametroFactorconversion pfc:listaParametroFactorconversions){
                             DataJson.DataUnit dat = datos.new DataUnit();

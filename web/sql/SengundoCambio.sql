@@ -216,5 +216,43 @@ END WHILE;
 SELECT * FROM tmp_datos2;
 END IF;    
 END; //
+DELIMITER ;
 
+
+
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS findDatosByIdPuntoAndParametro24Hours; //
+CREATE PROCEDURE findDatosByIdPuntoAndParametro24Hours
+(IN idPuntoMuestral INT,
+IN idParametroFactorConversion INT)
+BEGIN
+DECLARE fecha DATETIME;
+DECLARE fechaFin DATETIME;
+DECLARE results INT;
+
+SET fecha=DATE_FORMAT(CURDATE(), '%Y-%m-%d %H');
+SET fechaFin=DATE_ADD(fecha, INTERVAL -24 HOUR);
+
+DROP TABLE IF EXISTS tmp_datos;
+CREATE TEMPORARY TABLE tmp_datos LIKE dato_procesado;
+WHILE (fecha>fechaFin) DO
+SET results=(SELECT COUNT(*) FROM dato_procesado dp 
+		WHERE dp.id_punto_muestral=idPuntoMuestral 
+		AND dp.id_parametro_factorconversion=idParametroFactorConversion 
+		AND dp.fecha = fecha);
+IF(results>0) THEN 
+	 INSERT INTO tmp_datos (id, id_punto_muestral, id_unidad_tiempo, id_parametro_factorconversion, fecha, valor, fecha_conversion) 
+	 SELECT dp.id, dp.id_punto_muestral, dp.id_unidad_tiempo, 
+	 dp.id_parametro_factorconversion, dp.fecha, ROUND(dp.valor,3) AS valor, dp.fecha_conversion FROM dato_procesado dp 
+	 WHERE dp.id_punto_muestral=idPuntoMuestral AND dp.id_parametro_factorconversion=idParametroFactorConversion 
+	 AND dp.fecha = fecha;
+ELSE 
+	 INSERT INTO tmp_datos (id_punto_muestral, id_unidad_tiempo, id_parametro_factorconversion, fecha, valor, fecha_conversion) 
+	 VALUES (idPuntoMuestral,7,idParametroFactorConversion,fecha, 0, CURDATE());
+END IF;
+SET fecha=DATE_ADD(fecha, INTERVAL -1 HOUR);
+END WHILE; 
+SELECT * FROM tmp_datos;
+END; //
 DELIMITER ;
