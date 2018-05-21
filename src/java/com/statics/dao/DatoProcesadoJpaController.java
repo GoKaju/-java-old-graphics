@@ -77,6 +77,24 @@ public class DatoProcesadoJpaController implements Serializable {
         return lista;
     }
     
+        public List<DatoProcesado> findPromedioDatosPorHorario(int horas, int idPuntoMuestral, int idPFC){
+        String sqlQuery="CALL findPromedioDatosPorHorario("+horas+","+idPuntoMuestral+","+idPFC+")";
+        List<DatoProcesado> lista=new ArrayList();
+        EntityManager em=null;
+        try{
+            em=getEntityManager();
+            Query q=em.createStoredProcedureQuery(sqlQuery, DatoProcesado.class);
+            lista=q.getResultList();
+        }catch(Exception e){
+            e.printStackTrace();
+        } finally{
+            if (em!=null) {
+                em.close();
+            }
+        }
+        return lista;
+    }
+    
         public List<Parametros> findParametrosByIdPuntoMuestra(int id){
         String sqlQuery="SELECT p.* FROM dato_procesado dp "
                 + "INNER JOIN parametro_factorconversion pfc ON dp.id_parametro_factorconversion=pfc.id "

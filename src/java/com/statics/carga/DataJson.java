@@ -55,11 +55,28 @@ public class DataJson {
    
 public class DataUnit{
     int porcentaje;
-Double maxValue;
 String unidadMedida;
 String label;
 String x;
 String concatDatos;
+int color;
+double datoPromediado;
+
+        public int getColor() {
+            return color;
+        }
+
+        public void setColor(int color) {
+            this.color = color;
+        }
+
+        public double getDatoPromediado() {
+            return datoPromediado;
+        }
+
+        public void setDatoPromediado(double datoPromediado) {
+            this.datoPromediado = datoPromediado;
+        }
 
         public String getConcatDatos() {
             return String.join(",", datos);
@@ -79,14 +96,6 @@ String concatDatos;
 
         public void setPorcentaje(int porcentaje) {
             this.porcentaje = porcentaje;
-        }
-
-        public Double getMaxValue() {
-            return maxValue;
-        }
-
-        public void setMaxValue(Double maxValue) {
-            this.maxValue = maxValue;
         }
 
         public String getUnidadMedida() {

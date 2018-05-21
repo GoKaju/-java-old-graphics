@@ -73,18 +73,13 @@
         <div class="panel-body" style="">
             <div id="accordion<%=ramdom%>" class="row"   >
                 <%
-                    String[] color=new String[5];
-                    color[0]="#00e400";
-                    color[1]="#ffff00";
-                    color[2]="#ff7e00";
+                    String[] color=new String[6];
+                    color[0]="#30f90c";
+                    color[1]="#fff80f";
+                    color[2]="#ff7600";
                     color[3]="#ff0000";
-                    color[4]="#8f3f97";
-                    String[] cont=new String [5];
-                    cont[0]="PPB°";
-                    cont[1]="PPB°";
-                    cont[2]="ug/m3°";
-                    cont[3]="ug/m3°";
-                    cont[4]="ug/m3°";
+                    color[4]="#ef00ff";
+                    color[5]="#925904";
                     int i=0;
                     for (DataJson.DataUnit dat : datos.getDatos()) {
                 %>
@@ -95,7 +90,7 @@
                             <i   data-parent="#accordion<%=ramdom%>" data-toggle="collapse" style="cursor: pointer; display: inline-block; width: 4%;height: 25px;padding-top: 5px" data-target="#collapse<%=dat.hashCode() + ramdom%>" class="glyphicon glyphicon glyphicon-chevron-down pull-right"></i>
                         </div>
                         <div class="col-md-3 col-sm-3 pull-right text-center" style="background-color: <%= color[0] %>;height: 25px;margin-right: 10px">
-                            <span style="padding-top: 5px"><%=String.format("%.2f",dat.getMaxValue()) + " "+ dat.getUnidadMedida()%></span>
+                            <span style="padding-top: 5px"><%=String.format("%.2f",dat.getDatoPromediado()) + " "+ dat.getUnidadMedida()%></span>
                         </div>
                     </div>
                     <div  id="collapse<%=dat.hashCode() + ramdom%>" class="collapse">
