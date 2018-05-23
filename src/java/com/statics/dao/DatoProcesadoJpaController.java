@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureQuery;
 
 /**
  *
@@ -60,12 +62,17 @@ public class DatoProcesadoJpaController implements Serializable {
     }
     
     public List<DatoProcesado> findDatosByIdPuntoAndParametro24Hours(int idPuntoMuestral, int idPFC){
-        String sqlQuery="CALL findDatosByIdPuntoAndParametro24Hours("+idPuntoMuestral+","+idPFC+")";
+        String sqlQuery="findDatosByIdPuntoAndParametro24Hours";
         List<DatoProcesado> lista=new ArrayList();
         EntityManager em=null;
         try{
             em=getEntityManager();
-            Query q=em.createStoredProcedureQuery(sqlQuery, DatoProcesado.class);
+            StoredProcedureQuery  q=em.createStoredProcedureQuery(sqlQuery, DatoProcesado.class);
+            q.registerStoredProcedureParameter("pumu", Integer.class, ParameterMode.IN);
+            q.registerStoredProcedureParameter("pfc", Integer.class, ParameterMode.IN);
+            q.setParameter("pumu", idPuntoMuestral);
+            q.setParameter("pfc", idPFC);
+            q.execute();
             lista=q.getResultList();
         }catch(Exception e){
             e.printStackTrace();
@@ -78,12 +85,19 @@ public class DatoProcesadoJpaController implements Serializable {
     }
     
         public List<DatoProcesado> findPromedioDatosPorHorario(int horas, int idPuntoMuestral, int idPFC){
-        String sqlQuery="CALL findPromedioDatosPorHorario("+horas+","+idPuntoMuestral+","+idPFC+")";
+        String sqlQuery="findPromedioDatosPorHorario";
         List<DatoProcesado> lista=new ArrayList();
         EntityManager em=null;
         try{
             em=getEntityManager();
-            Query q=em.createStoredProcedureQuery(sqlQuery, DatoProcesado.class);
+            StoredProcedureQuery  q=em.createStoredProcedureQuery(sqlQuery, DatoProcesado.class);
+            q.registerStoredProcedureParameter("horas", Integer.class, ParameterMode.IN);
+            q.registerStoredProcedureParameter("pumu", Integer.class, ParameterMode.IN);
+            q.registerStoredProcedureParameter("pfc", Integer.class, ParameterMode.IN);
+            q.setParameter("horas", horas);
+            q.setParameter("pumu", idPuntoMuestral);
+            q.setParameter("pfc", idPFC);
+            q.execute();
             lista=q.getResultList();
         }catch(Exception e){
             e.printStackTrace();

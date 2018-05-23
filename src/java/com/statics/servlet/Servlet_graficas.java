@@ -407,9 +407,15 @@ public class Servlet_graficas extends HttpServlet {
                             dat.setDatos(new ArrayList());
                             dat.setUnidadMedida(pfc.getIdUnidadMedida().getDescripcion());
                             listaDatosProcesados=datoProcesadoDao.findDatosByIdPuntoAndParametro24Hours(idPuntoMuestral,pfc.getId());
+                            datoPromedio=datoProcesadoDao.findPromedioDatosPorHorario(24, idPuntoMuestral,pfc.getId());
+                            if (!datoPromedio.isEmpty()) {
+                                valor=datoPromedio.get(0).getValor();
+                            }
                             if(paraId==5){
                                 datoPromedio=datoProcesadoDao.findPromedioDatosPorHorario(24, idPuntoMuestral,pfc.getId());
+                                if (!datoPromedio.isEmpty()) {
                                 valor=datoPromedio.get(0).getValor();
+                            }
                                 if (valor>=0 && valor <54){
                                     color=0;
                                 } else if (valor>=54 && valor<155){
@@ -425,7 +431,9 @@ public class Servlet_graficas extends HttpServlet {
                                 }
                             } else if (paraId==6){
                                 datoPromedio=datoProcesadoDao.findPromedioDatosPorHorario(24, idPuntoMuestral,pfc.getId());
+                                if (!datoPromedio.isEmpty()) {
                                 valor=datoPromedio.get(0).getValor();
+                            }
                                 if (valor>=0 && valor <12){
                                     color=0;
                                 } else if (valor>=13 && valor<37){
@@ -441,7 +449,9 @@ public class Servlet_graficas extends HttpServlet {
                                 }
                             } else  if (paraId==9){
                                 datoPromedio=datoProcesadoDao.findPromedioDatosPorHorario(1, idPuntoMuestral,pfc.getId());
-                                valor=datoPromedio.get(0).getValor()*2.16185;
+                                if(!datoPromedio.isEmpty()){
+                                    valor=datoPromedio.get(0).getValor()*2.16185;
+                                }
                                 if (valor>=0 && valor <93){
                                     color=0;
                                 } else if (valor>=94 && valor<197){
@@ -457,7 +467,9 @@ public class Servlet_graficas extends HttpServlet {
                                 }
                             } else if (paraId==2){
                                 datoPromedio=datoProcesadoDao.findPromedioDatosPorHorario(1, idPuntoMuestral,pfc.getId());
-                                valor=datoPromedio.get(0).getValor()*1.880;
+                                if(!datoPromedio.isEmpty()){
+                                    valor=datoPromedio.get(0).getValor()*1.880;
+                                }
                                 if (valor>=0 && valor <100){
                                     color=0;
                                 } else if (valor>=101 && valor<189){
