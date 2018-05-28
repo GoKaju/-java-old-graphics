@@ -173,7 +173,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group ">
-                        <label>Unidad deseada *</label>
+                        <label>Unidad *</label>
                         <select type="text" id="horario" name="unidadDeseada" class="form-control" >
                             <%
                                 Query qqqq = em.createNativeQuery("select * from unidad_medida limit 3", UnidadMedida.class);
