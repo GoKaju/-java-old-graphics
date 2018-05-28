@@ -192,7 +192,7 @@ public class Servlet_graficas extends HttpServlet {
                                 int horas=Integer.parseInt(o.getvariable("horario"));
                                 int idUnidadmedidaDeseada = Integer.parseInt(o.getvariable("unidadDeseada"));;
                                 PuntoMuestral pumu = pmjc.findPuntoMuestral(Integer.parseInt(o.getvariable("pumu_sel")));
-                                NivelMaximoJpaController nivelMaximoDao=new NivelMaximoJpaController(emf);
+                                ParametroFactorconversionJpaController pfcDao=new ParametroFactorconversionJpaController(emf);
                                 datos = new DataJson();
 
                                 String fechaini = o.getvariable("fini_txt");
@@ -225,13 +225,13 @@ public class Servlet_graficas extends HttpServlet {
                                             .registerStoredProcedureParameter(5, Integer.class, ParameterMode.IN)
                                              .setParameter(5, pumu.getPumuId());
                                     List<DatoProcesado> lis = query.getResultList();
-
                                     System.out.println("--> " + lis.size());
                                     DataJson.DataUnit dat = datos.new DataUnit();
                                     dat.setX("x" + con);
                                     dat.setLabel(parametro.getPareNombre());
                                     dat.setFechas(new ArrayList());
                                     dat.setDatos(new ArrayList());
+                                    dat.setUnidadMedida(parametro.getParametroFactorconversionList().get(0).getIdUnidadMedida().getDescripcion());
                                     //NivelMaximo nm=nivelMaximoDao.
                                       //      findMaximoByIdParameterAndIdUnidadTiempo(parametro.getParaId(),idUnidadTiempo);
                                     //if (nm!=null) {
@@ -399,6 +399,7 @@ public class Servlet_graficas extends HttpServlet {
 
                         int con = 0;
                         for(ParametroFactorconversion pfc:listaParametroFactorconversions){
+                            valor=0;
                             int paraId=pfc.getIdParametro().getParaId();
                             DataJson.DataUnit dat = datos.new DataUnit();
                             dat.setX("x" + con);
@@ -407,10 +408,6 @@ public class Servlet_graficas extends HttpServlet {
                             dat.setDatos(new ArrayList());
                             dat.setUnidadMedida(pfc.getIdUnidadMedida().getDescripcion());
                             listaDatosProcesados=datoProcesadoDao.findDatosByIdPuntoAndParametro24Hours(idPuntoMuestral,pfc.getId());
-                            datoPromedio=datoProcesadoDao.findPromedioDatosPorHorario(24, idPuntoMuestral,pfc.getId());
-                            if (!datoPromedio.isEmpty()) {
-                                valor=datoPromedio.get(0).getValor();
-                            }
                             if(paraId==5){
                                 datoPromedio=datoProcesadoDao.findPromedioDatosPorHorario(24, idPuntoMuestral,pfc.getId());
                                 if (!datoPromedio.isEmpty()) {
@@ -483,7 +480,12 @@ public class Servlet_graficas extends HttpServlet {
                                 } else if (valor>=2350){
                                     color=5;
                                 }
-                            } 
+                            } else {
+                                datoPromedio=datoProcesadoDao.findPromedioDatosPorHorario(24, idPuntoMuestral,pfc.getId());
+                                if(!datoPromedio.isEmpty()){
+                                    valor=datoPromedio.get(0).getValor();
+                                }
+                            }
                             dat.setDatoPromediado(valor);
                             dat.setColor(color);
                             

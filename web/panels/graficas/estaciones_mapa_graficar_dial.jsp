@@ -89,7 +89,7 @@
                             <span data-parent="#accordion<%=ramdom%>" data-toggle="collapse" style="cursor: pointer; display: inline-block; width: 96%;height: 25px;padding-top: 5px" data-target="#collapse<%=dat.hashCode() + ramdom%>"><%=dat.getLabel()%></span>
                             <i   data-parent="#accordion<%=ramdom%>" data-toggle="collapse" style="cursor: pointer; display: inline-block; width: 4%;height: 25px;padding-top: 5px" data-target="#collapse<%=dat.hashCode() + ramdom%>" class="glyphicon glyphicon glyphicon-chevron-down pull-right"></i>
                         </div>
-                        <div class="col-md-3 col-sm-3 pull-right text-center" style="background-color: <%= color[0] %>;height: 25px;margin-right: 10px">
+                        <div class="col-md-3 col-sm-3 pull-right text-center" style="background-color: <%= color[dat.getColor()] %>;height: 25px;margin-right: 10px">
                             <span style="padding-top: 5px"><%=String.format("%.2f",dat.getDatoPromediado()) + " "+ dat.getUnidadMedida()%></span>
                         </div>
                     </div>

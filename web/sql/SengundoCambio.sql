@@ -231,7 +231,7 @@ DECLARE fecha DATETIME;
 DECLARE fechaFin DATETIME;
 DECLARE results INT;
 
-SET fecha=DATE_FORMAT('2018-04-20 11:00:00', '%Y-%m-%d %H');
+SET fecha=DATE_FORMAT(CURDATE(), '%Y-%m-%d %H');
 SET fechaFin=DATE_SUB(fecha, INTERVAL 24 HOUR);
 
 DROP TABLE IF EXISTS tmp_datos;
@@ -253,7 +253,7 @@ ELSE
 END IF;
 SET fecha=DATE_SUB(fecha, INTERVAL 1 HOUR);
 END WHILE; 
-SELECT * FROM tmp_datos;
+SELECT * FROM tmp_datos ORDER BY fecha ASC;
 END; //
 DELIMITER ;
 
@@ -268,20 +268,20 @@ DECLARE fecha DATETIME;
 DECLARE fechaFin DATETIME;
 DECLARE results INT;
 
-SET fecha=DATE_FORMAT('2018-04-20 11:00:00', '%Y-%m-%d %H');
+SET fecha=DATE_FORMAT(CURDATE(), '%Y-%m-%d %H');
 SET fechaFin=DATE_SUB(fecha, INTERVAL hora HOUR);
 
 DROP TABLE IF EXISTS tmp_datos;
 CREATE TEMPORARY TABLE tmp_datos LIKE dato_procesado;
 
 SET results=(SELECT COUNT(*) FROM dato_procesado dp 
-	 WHERE dp.id_punto_muestral=10 AND dp.id_parametro_factorconversion=6 
+	 WHERE dp.id_punto_muestral=idPuntoMuestral AND dp.id_parametro_factorconversion=idParametroFactorConversion
 	 AND dp.fecha BETWEEN fechaFin AND fecha);
 IF(results>0) THEN 
 	 INSERT INTO tmp_datos (id, id_punto_muestral, id_unidad_tiempo, id_parametro_factorconversion, fecha, valor, fecha_conversion) 
 	 SELECT dp.id, dp.id_punto_muestral, dp.id_unidad_tiempo, 
 	 dp.id_parametro_factorconversion, dp.fecha, ROUND(AVG(dp.valor),4) AS valor, dp.fecha_conversion FROM dato_procesado dp 
-	 WHERE dp.id_punto_muestral=10 AND dp.id_parametro_factorconversion=6 
+	 WHERE dp.id_punto_muestral=idPuntoMuestral AND dp.id_parametro_factorconversion=idParametroFactorConversion
 	 AND dp.fecha BETWEEN fechaFin AND fecha;
 ELSE 
 	 INSERT INTO tmp_datos (id_punto_muestral, id_unidad_tiempo, id_parametro_factorconversion, fecha, valor, fecha_conversion) 
@@ -291,5 +291,3 @@ SELECT * FROM tmp_datos;
 
 END; //
 DELIMITER ;
-
-CALL findPromedioDatosPorHorario(1,10,2);
