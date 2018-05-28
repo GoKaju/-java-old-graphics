@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureQuery;
 
 /**
  *
@@ -60,17 +62,42 @@ public class DatoProcesadoJpaController implements Serializable {
     }
     
     public List<DatoProcesado> findDatosByIdPuntoAndParametro24Hours(int idPuntoMuestral, int idPFC){
-        String sqlQuery="SELECT dp.id, dp.id_punto_muestral, dp.id_unidad_tiempo, "
-                + "dp.id_parametro_factorconversion, dp.fecha, ROUND(dp.valor,3) as valor, dp.fecha_conversion FROM dato_procesado dp "
-                + "WHERE dp.id_punto_muestral="+idPuntoMuestral+" "
-                + "AND dp.id_parametro_factorconversion="+idPFC+" "
-                + "AND dp.fecha BETWEEN (SELECT MAX(fecha) - INTERVAL 24 HOUR FROM dato_procesado WHERE id_punto_muestral="+idPuntoMuestral+") "
-                + "AND (SELECT MAX(fecha) FROM dato_procesado WHERE id_punto_muestral="+idPuntoMuestral+")";
+        String sqlQuery="findDatosByIdPuntoAndParametro24Hours";
         List<DatoProcesado> lista=new ArrayList();
         EntityManager em=null;
         try{
             em=getEntityManager();
-            Query q=em.createNativeQuery(sqlQuery, DatoProcesado.class);
+            StoredProcedureQuery  q=em.createStoredProcedureQuery(sqlQuery, DatoProcesado.class);
+            q.registerStoredProcedureParameter("pumu", Integer.class, ParameterMode.IN);
+            q.registerStoredProcedureParameter("pfc", Integer.class, ParameterMode.IN);
+            q.setParameter("pumu", idPuntoMuestral);
+            q.setParameter("pfc", idPFC);
+            q.execute();
+            lista=q.getResultList();
+        }catch(Exception e){
+            e.printStackTrace();
+        } finally{
+            if (em!=null) {
+                em.close();
+            }
+        }
+        return lista;
+    }
+    
+        public List<DatoProcesado> findPromedioDatosPorHorario(int horas, int idPuntoMuestral, int idPFC){
+        String sqlQuery="findPromedioDatosPorHorario";
+        List<DatoProcesado> lista=new ArrayList();
+        EntityManager em=null;
+        try{
+            em=getEntityManager();
+            StoredProcedureQuery  q=em.createStoredProcedureQuery(sqlQuery, DatoProcesado.class);
+            q.registerStoredProcedureParameter("horas", Integer.class, ParameterMode.IN);
+            q.registerStoredProcedureParameter("pumu", Integer.class, ParameterMode.IN);
+            q.registerStoredProcedureParameter("pfc", Integer.class, ParameterMode.IN);
+            q.setParameter("horas", horas);
+            q.setParameter("pumu", idPuntoMuestral);
+            q.setParameter("pfc", idPFC);
+            q.execute();
             lista=q.getResultList();
         }catch(Exception e){
             e.printStackTrace();

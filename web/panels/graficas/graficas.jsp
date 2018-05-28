@@ -148,7 +148,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group ">
-                        <label>Horario *</label>
+                        <label>Promedios *</label>
                         <select type="text" id="horario" name="horario" class="form-control" >
                             <%  
                                 Query qq = em.createNativeQuery("select * from unidad_tiempo order by 1 desc", UnidadTiempo.class);
@@ -173,10 +173,10 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group ">
-                        <label>unidadDeseada *</label>
+                        <label>Unidad deseada *</label>
                         <select type="text" id="horario" name="unidadDeseada" class="form-control" >
                             <%
-                                Query qqqq = em.createNativeQuery("select * from unidad_medida", UnidadMedida.class);
+                                Query qqqq = em.createNativeQuery("select * from unidad_medida limit 3", UnidadMedida.class);
                                 List<UnidadMedida> listaUnidades = qqqq.getResultList();
 
                                 if (!listaUnidades.isEmpty()) {
@@ -330,7 +330,7 @@
                     var cont = 0;
 
                     function crearGrafica(x) {
-                        $("#graphiContainer").append(' <div  id="graphiContent' + cont + '"></div>');
+                        $("#graphiContainer").prepend(' <div  id="graphiContent' + cont + '"></div>');
                         $("#graphiContent" + cont + "").load("panels/graficas/graficas_crear.jsp?var=" + x + "")
 
 
