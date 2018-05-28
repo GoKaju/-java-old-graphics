@@ -413,72 +413,72 @@ public class Servlet_graficas extends HttpServlet {
                                 if (!datoPromedio.isEmpty()) {
                                 valor=datoPromedio.get(0).getValor();
                             }
-                                if (valor>=0 && valor <54){
-                                    color=0;
-                                } else if (valor>=54 && valor<155){
+                                if (valor>0 && valor <54){
                                     color=1;
-                                } else if (valor>=155 && valor<254){
+                                } else if (valor>=54 && valor<155){
                                     color=2;
-                                } else if (valor>=254 && valor<354){
+                                } else if (valor>=155 && valor<254){
                                     color=3;
-                                } else if (valor>=355 && valor<424){
+                                } else if (valor>=254 && valor<354){
                                     color=4;
-                                } else if (valor>=425){
+                                } else if (valor>=355 && valor<424){
                                     color=5;
+                                } else if (valor>=425){
+                                    color=6;
                                 }
                             } else if (paraId==6){
                                 datoPromedio=datoProcesadoDao.findPromedioDatosPorHorario(24, idPuntoMuestral,pfc.getId());
                                 if (!datoPromedio.isEmpty()) {
                                 valor=datoPromedio.get(0).getValor();
                             }
-                                if (valor>=0 && valor <12){
-                                    color=0;
-                                } else if (valor>=13 && valor<37){
+                                if (valor>0 && valor <12){
                                     color=1;
-                                } else if (valor>=38 && valor<55){
+                                } else if (valor>=13 && valor<37){
                                     color=2;
-                                } else if (valor>=56 && valor<150){
+                                } else if (valor>=38 && valor<55){
                                     color=3;
-                                } else if (valor>=151 && valor<250){
+                                } else if (valor>=56 && valor<150){
                                     color=4;
-                                } else if (valor>=251){
+                                } else if (valor>=151 && valor<250){
                                     color=5;
+                                } else if (valor>=251){
+                                    color=6;
                                 }
                             } else  if (paraId==9){
                                 datoPromedio=datoProcesadoDao.findPromedioDatosPorHorario(1, idPuntoMuestral,pfc.getId());
                                 if(!datoPromedio.isEmpty()){
                                     valor=datoPromedio.get(0).getValor()*2.16185;
                                 }
-                                if (valor>=0 && valor <93){
-                                    color=0;
-                                } else if (valor>=94 && valor<197){
+                                if (valor>0 && valor <93){
                                     color=1;
-                                } else if (valor>=198 && valor<486){
+                                } else if (valor>=94 && valor<197){
                                     color=2;
-                                } else if (valor>=487 && valor<797){
+                                } else if (valor>=198 && valor<486){
                                     color=3;
-                                } else if (valor>=798 && valor<1583){
+                                } else if (valor>=487 && valor<797){
                                     color=4;
-                                } else if (valor>=1584){
+                                } else if (valor>=798 && valor<1583){
                                     color=5;
+                                } else if (valor>=1584){
+                                    color=6;
                                 }
                             } else if (paraId==2){
                                 datoPromedio=datoProcesadoDao.findPromedioDatosPorHorario(1, idPuntoMuestral,pfc.getId());
                                 if(!datoPromedio.isEmpty()){
                                     valor=datoPromedio.get(0).getValor()*1.880;
                                 }
-                                if (valor>=0 && valor <100){
-                                    color=0;
-                                } else if (valor>=101 && valor<189){
+                                if (valor>0 && valor <100){
                                     color=1;
-                                } else if (valor>=190 && valor<677){
+                                } else if (valor>=101 && valor<189){
                                     color=2;
-                                } else if (valor>=678 && valor<1221){
+                                } else if (valor>=190 && valor<677){
                                     color=3;
-                                } else if (valor>=1222 && valor<2349){
+                                } else if (valor>=678 && valor<1221){
                                     color=4;
-                                } else if (valor>=2350){
+                                } else if (valor>=1222 && valor<2349){
                                     color=5;
+                                } else if (valor>=2350){
+                                    color=6;
                                 }
                             } else {
                                 datoPromedio=datoProcesadoDao.findPromedioDatosPorHorario(24, idPuntoMuestral,pfc.getId());
