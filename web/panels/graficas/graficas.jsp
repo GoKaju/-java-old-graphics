@@ -76,7 +76,7 @@
             <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
             <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
         </div>
-        <h2 class="panel-title">&zwj;</h2>
+        <h2 class="panel-title">&zwj; &zwj;</h2>
     </div>
     <form id="FormAplication" action="Login" method="POST" class="margin-bottom-0" data-parsley-validate="true">
         <div class="panel-body">
@@ -84,6 +84,7 @@
                 <div class="col-md-3">
                     <div class="form-group ">
                         <label>Cliente  *</label>
+                        
                         <select name="Cliente" class="form-control"  required="" data-parsley-id="7052" onchange="recargarCampanas(this.value)">
                             <option value="">Seleccone...</option>
                             <%  EntityManager em = emf.createEntityManager();
