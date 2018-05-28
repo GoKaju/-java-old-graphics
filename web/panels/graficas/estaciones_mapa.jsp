@@ -93,7 +93,7 @@
         });
         
         var icon = {
-            url: "/graphics/assets/img/map_marker.svg", // url
+            url: "/-java-old-graphics/assets/img/map_marker.svg", // url
             scaledSize: new google.maps.Size(50, 70), // scaled size
             origin: new google.maps.Point(0, 0) // origin
 
