@@ -73,7 +73,7 @@
         <div class="panel-body" style="">
             <div id="accordion<%=ramdom%>" class="row"   >
                 <%
-                    String[] color=new String[6];
+                    String[] color=new String[7];
                     color[0]="#BDBDBD";
                     color[1]="#30f90c";
                     color[2]="#fff80f";
@@ -171,7 +171,7 @@
             x: {
                 type: 'timeseries',
                 tick: {
-                    format: '%H:%M',
+                    format: '%Y-%m-%d %H:%M',
                     rotate: 75,
                     multiline: false
                 }
