@@ -1,6 +1,6 @@
 START TRANSACTION;
 
-DROP TABLE cliente;
+DROP TABLE IF EXISTS cliente;
 
 CREATE TABLE cliente(
 	id INT AUTO_INCREMENT, 
@@ -14,7 +14,7 @@ CREATE TABLE cliente(
 	PRIMARY KEY (id)
 );
 
-INSERT INTO cliente (nombre, direccion) VALUES ('Jimmi','qdasdasd');
+INSERT INTO cliente (nombre, direccion) VALUES ('Default','Direccion');
 
 ALTER TABLE campanas DROP COLUMN cliente;
 ALTER TABLE campanas ADD COLUMN id_cliente INT;
@@ -134,11 +134,11 @@ CREATE TABLE nivel_maximo(
 	FOREIGN KEY (id_unidad_tiempo) REFERENCES unidad_tiempo(id)
 );
 
-INSERT INTO nivel_maximo (id_parametro_factorconversion, id_unidad_tiempo, nivel_minimo, nivel_maximo) 
-VALUES (2, 1, 0, 29.230),(10, 1, 0, 60),(2, 7, 0, 97.435),(10, 7, 0, 200),
-(9, 4, 0, 17.508),(11, 4, 0, 50),(9, 7, 0, 35.016),(11, 7, 0, 100),
-(5, 1, 0, 50),(5, 4, 0, 100),
-(6, 1, 0, 25),(6, 4, 0, 50);
+/*INSERT INTO nivel_maximo (id_parametro_factorconversion, id_unidad_tiempo, nivel_minimo, nivel_maximo) 
+VALUES (2, 1, 0, 29.230),(10, 1, 0, 60),(2, 5, 0, 97.435),(10, 5, 0, 200),
+(9, 3, 0, 17.508),(11, 3, 0, 50),(9, 5, 0, 35.016),(11, 5, 0, 100),
+(5, 1, 0, 50),(5, 3, 0, 100),
+(6, 1, 0, 25),(6, 3, 0, 50);*/
 
 CREATE TABLE dato_procesado(
 	id INT AUTO_INCREMENT,
