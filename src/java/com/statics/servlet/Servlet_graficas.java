@@ -14,6 +14,7 @@ import com.statics.dao.NivelMaximoJpaController;
 import com.statics.dao.ParametroFactorconversionJpaController;
 import com.statics.dao.ParametrosJpaController;
 import com.statics.dao.PuntoMuestralJpaController;
+import com.statics.dao.UnidadmedidaParametroJpaController;
 import com.statics.util.Cadenas;
 import com.statics.util.Constantes;
 import com.statics.util.Fechas;
@@ -193,6 +194,9 @@ public class Servlet_graficas extends HttpServlet {
                                 int idUnidadmedidaDeseada = Integer.parseInt(o.getvariable("unidadDeseada"));;
                                 PuntoMuestral pumu = pmjc.findPuntoMuestral(Integer.parseInt(o.getvariable("pumu_sel")));
                                 ParametroFactorconversionJpaController pfcDao=new ParametroFactorconversionJpaController(emf);
+                                UnidadmedidaParametroJpaController unidadMedidaDao=new UnidadmedidaParametroJpaController(emf);
+                                String unidadMedida=unidadMedidaDao.findUnidadmedidaParametro(idUnidadmedidaDeseada).getIdUnidadMedida().getDescripcion();
+                                        
                                 datos = new DataJson();
 
                                 String fechaini = o.getvariable("fini_txt");
@@ -231,7 +235,7 @@ public class Servlet_graficas extends HttpServlet {
                                     dat.setLabel(parametro.getPareNombre());
                                     dat.setFechas(new ArrayList());
                                     dat.setDatos(new ArrayList());
-                                    dat.setUnidadMedida(parametro.getParametroFactorconversionList().get(0).getIdUnidadMedida().getDescripcion());
+                                    dat.setUnidadMedida(unidadMedida);
                                     //NivelMaximo nm=nivelMaximoDao.
                                       //      findMaximoByIdParameterAndIdUnidadTiempo(parametro.getParaId(),idUnidadTiempo);
                                     //if (nm!=null) {
