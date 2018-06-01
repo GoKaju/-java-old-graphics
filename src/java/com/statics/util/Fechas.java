@@ -46,7 +46,7 @@ public class Fechas {
         final long start = System.currentTimeMillis();
         Date date = null;
         try {
-        if(cadena.split(" ").length==1){
+        if(cadena.split(" ").length==1 && format.equals("dd/MM/yyyy HH:mm:ss")){
             cadena=cadena.concat(" 00:00:00");
         }
             DateFormat formatter = new SimpleDateFormat(format);
