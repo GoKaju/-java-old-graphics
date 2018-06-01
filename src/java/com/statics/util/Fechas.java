@@ -46,9 +46,12 @@ public class Fechas {
         final long start = System.currentTimeMillis();
         Date date = null;
         try {
+        if(cadena.split(" ").length==1){
+            cadena=cadena.concat(" 00:00:00");
+        }
             DateFormat formatter = new SimpleDateFormat(format);
-            date = formatter.parse(cadena);
-        } catch (java.text.ParseException e) {
+            date=formatter.parse(cadena);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         System.out.println("-->## Elapsed retornaDate " + (System.currentTimeMillis() - start) + " ms");
