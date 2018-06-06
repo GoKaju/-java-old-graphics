@@ -65,13 +65,13 @@
 
             var y;
             var ramdomNumbers = [];
-            
+
             function  getColor(x) {
                 if (x) {
-                    var ram; 
-                    do{
+                    var ram;
+                    do {
                         ram = Math.floor((Math.random() * 20));
-                    }while(ramdomNumbers.includes(ram))
+                    } while (ramdomNumbers.includes(ram))
                     ramdomNumbers.push(ram);
                     y = colors.colors[ram];
                 }
@@ -101,18 +101,18 @@
 
             var ctx = document.getElementById("<%=o.getvariable("var")%>").getContext('2d');
             var myChart = new Chart(ctx, {
-                type: '<%= datos.getTipo() %>',
+                type: '<%= datos.getTipo().replace("only","") %>',
                 data: {
                     labels: ["<%=datos.getConcatX()%>"],
                     datasets: [
             <%for (DataJson.DataUnit du : datos.getDatos()) {%>
                         {
-
                             backgroundColor: getColor(true).bgcolor,
                             borderColor: getColor(false).color,
                             label: '<%=du.getLabel()%>(<%=du.getUnidadMedida()%>)',
                             data: [<%=du.getConcatDatos()%>],
-                            borderWidth: 1
+                            borderWidth: 1,
+                            fill:<%=datos.getTipo().equalsIgnoreCase("onlyline")?false:true %>
                         },
             <%}%>
 
@@ -122,10 +122,16 @@
                     scales: {
                         xAxes: [{
                                 type: 'time',
-                                distribution: 'series',
-                                ticks: {
-                                    source: 'labels'
-                                }
+                                time: {
+                                    format: 'YYYY-MM-DD HH:mm',
+                                    displayFormat: 'HH:mm',
+                unit: 'minute',
+                min: '<%=datos.getMin()%>',
+                max: '<%= datos.getMax()%>'
+                                },
+                                    ticks: {
+                                        source: 'labels'
+                                    }
                             }]
                     }
 

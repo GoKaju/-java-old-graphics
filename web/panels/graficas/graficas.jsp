@@ -172,7 +172,7 @@
                         <ul class="parsley-errors-list" ></ul>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <!--<div class="col-md-3">
                     <div class="form-group ">
                         <label>Unidad *</label>
                         <select type="text" id="horario" name="unidadDeseada" class="form-control" >
@@ -192,22 +192,20 @@
                         </select>
                         <ul class="parsley-errors-list" ></ul>
                     </div>
-                </div>
-            </div>
-                        <div class="row">
+                </div>-->
                             <div class="col-md-3">
                     <div class="form-group ">
                         <label>Tipo Grafica  *</label>
                         <select name="tipoGrafica1" class="form-control"  required="" data-parsley-id="7052">
+                            <option value=onlyline>Lineas</option>
                             <option value="line">Area</option>
                             <option value="bar">Barras</option>
+                            
                         </select>
                         <ul class="parsley-errors-list" id="parsley-id-7052"></ul>
                     </div>
                 </div>
-                        </div>
-
-
+            </div>
         </div>
         <div class="modal-footer">
             <div>

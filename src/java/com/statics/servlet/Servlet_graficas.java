@@ -32,7 +32,9 @@ import com.statics.vo.Usuarios;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -191,17 +193,20 @@ public class Servlet_graficas extends HttpServlet {
                         case "2":
                             if (o.getvariable("excel").equals("")) {
                                 int horas=Integer.parseInt(o.getvariable("horario"));
-                                int idUnidadmedidaDeseada = Integer.parseInt(o.getvariable("unidadDeseada"));;
+                                //int idUnidadmedidaDeseada = Integer.parseInt(o.getvariable("unidadDeseada"));;
+                                int idUnidadmedidaDeseada = 0;
                                 PuntoMuestral pumu = pmjc.findPuntoMuestral(Integer.parseInt(o.getvariable("pumu_sel")));
                                 ParametroFactorconversionJpaController pfcDao=new ParametroFactorconversionJpaController(emf);
                                 UnidadmedidaParametroJpaController unidadMedidaDao=new UnidadmedidaParametroJpaController(emf);
-                                String unidadMedida=unidadMedidaDao.findUnidadmedidaParametro(idUnidadmedidaDeseada).getIdUnidadMedida().getDescripcion();
+                                //String unidadMedida=unidadMedidaDao.findUnidadmedidaParametro(idUnidadmedidaDeseada).getIdUnidadMedida().getDescripcion();
+                                
                                         
                                 datos = new DataJson();
 
                                 String fechaini = o.getvariable("fini_txt");
                                 String fechafin = o.getvariable("ffin_txt");
-
+                                datos.setMin(fechaini);
+                                datos.setMax(fechafin);
                                 datos.setNombreGraphic(pumu.getPumuNombre() + " del " + fechaini + " al " + fechafin);
                                 datos.setTipo(tipoGrafica1);
                                 datos.setDatos(new ArrayList());
@@ -209,6 +214,7 @@ public class Servlet_graficas extends HttpServlet {
                                 int con = 0;
                                 for (String p : Param) {
                                     Parametros parametro = new ParametrosJpaController(emf).findParametros(Integer.parseInt(p));
+                                    String unidadMedida=pfcDao.findPFCByIdParametro(parametro.getParaId()).get(0).getIdUnidadMedida().getDescripcion();
                                     //Query cons = em.createNativeQuery(" SELECT dp.* FROM dato_procesado dp "
                                     //        + "INNER JOIN parametro_factorconversion pfc ON dp.id_parametro_factorconversion=pfc.id "
                                     //        + "WHERE dp.id_punto_muestral=? AND pfc.id_parametro=? AND fecha BETWEEN ? AND ?", DatoProcesado.class);
@@ -217,7 +223,7 @@ public class Servlet_graficas extends HttpServlet {
                                     //cons.setParameter(3, fechaini);
                                     //cons.setParameter(4, fechafin);
                                     StoredProcedureQuery query = em
-                                            .createStoredProcedureQuery("calculaPromediosPorHorario", DatoProcesado.class)
+                                            .createStoredProcedureQuery("calculaPromediosPorHorario")
                                             .registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN)
                                             .setParameter(1, horas)
                                             .registerStoredProcedureParameter(2, String.class, ParameterMode.IN)
@@ -228,7 +234,7 @@ public class Servlet_graficas extends HttpServlet {
                                             .setParameter(4, parametro.getParaId())
                                             .registerStoredProcedureParameter(5, Integer.class, ParameterMode.IN)
                                              .setParameter(5, pumu.getPumuId());
-                                    List<DatoProcesado> lis = query.getResultList();
+                                    List<Object[]> lis = query.getResultList();
                                     System.out.println("--> " + lis.size());
                                     DataJson.DataUnit dat = datos.new DataUnit();
                                     dat.setX("x" + con);
@@ -242,8 +248,8 @@ public class Servlet_graficas extends HttpServlet {
                                       //  dat.setMaxValue(nm.getNivelMaximo());
                                     //}
                                     double convertido=0;
-                                    for (DatoProcesado d : lis) {
-                                        int idParametro=d.getIdParametroFactorconversion().getIdParametro().getParaId();
+                                    for (Object[] d : lis) {
+                                        /*int idParametro=d.getIdParametroFactorconversion().getIdParametro().getParaId();
                                         int idUnidadMedidaActual=d.getIdParametroFactorconversion().getIdUnidadMedida().getId();
                                         switch(idParametro){
                                             case 9://SO2
@@ -312,9 +318,10 @@ public class Servlet_graficas extends HttpServlet {
                                                 default:
                                                     convertido=d.getValor();
                                                     break;
-                                        }
-                                            dat.getFechas().add(Fechas.DevuelveFormato(d.getFecha(), "yyyy-MM-dd HH:mm"));
-                                            dat.getDatos().add(String.valueOf(convertido));
+                                        }*/
+                                        
+                                            dat.getFechas().add(d[4].toString());
+                                            dat.getDatos().add(d[5].toString());
                                     }
                                    
                                 if(datos.getConcatX() == null || datos.getConcatX().isEmpty())
@@ -489,6 +496,7 @@ public class Servlet_graficas extends HttpServlet {
                                 if(!datoPromedio.isEmpty()){
                                     valor=datoPromedio.get(0).getValor();
                                 }
+                                color = 7;
                             }
                             dat.setDatoPromediado(valor);
                             dat.setColor(color);

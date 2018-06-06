@@ -56,6 +56,25 @@ public class ParametroFactorconversionJpaController implements Serializable {
         }
         return lista;
     }
+
+     public List<ParametroFactorconversion> findPFCByIdParametro(int id){
+        String sqlQuery="SELECT pfc.* FROM parametro_factorconversion pfc "
+                + "Where id_parametro="+id;
+        List<ParametroFactorconversion> lista=new ArrayList();
+        EntityManager em=null;
+        try{
+            em=getEntityManager();
+            Query q=em.createNativeQuery(sqlQuery, ParametroFactorconversion.class);
+            lista=q.getResultList();
+        }catch(Exception e){
+            e.printStackTrace();
+        } finally{
+            if (em!=null) {
+                em.close();
+            }
+        }
+        return lista;
+    }
      
     public void create(ParametroFactorconversion parametroFactorconversion) {
         if (parametroFactorconversion.getDatoProcesadoList() == null) {

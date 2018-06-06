@@ -13,11 +13,29 @@ import java.util.List;
  * @author Usuario
  */
 public class DataJson {
+    String min;
+    String max;
     String nombreGraphic;
     String tipo;
     List<DataUnit> datos = new ArrayList();
     String concatX;
 
+    public String getMin() {
+        return min;
+    }
+
+    public void setMin(String min) {
+        this.min = min;
+    }
+
+    public String getMax() {
+        return max;
+    }
+
+    public void setMax(String max) {
+        this.max = max;
+    }
+    
     public String getConcatX() {
         return concatX;
     }

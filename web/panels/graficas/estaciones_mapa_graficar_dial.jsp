@@ -73,7 +73,7 @@
         <div class="panel-body" style="">
             <div id="accordion<%=ramdom%>" class="row"   >
                 <%
-                    String[] color=new String[7];
+                    String[] color=new String[8];
                     color[0]="#BDBDBD";
                     color[1]="#30f90c";
                     color[2]="#fff80f";
@@ -81,6 +81,7 @@
                     color[4]="#ff0000";
                     color[5]="#ef00ff";
                     color[6]="#925904";
+                    color[7]="#000";
                     int i=0;
                     for (DataJson.DataUnit dat : datos.getDatos()) {
                 %>
