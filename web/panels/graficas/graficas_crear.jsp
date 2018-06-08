@@ -101,7 +101,7 @@
 
             var ctx = document.getElementById("<%=o.getvariable("var")%>").getContext('2d');
             var myChart = new Chart(ctx, {
-                type: '<%= datos.getTipo().replace("only","") %>',
+                type: '<%= datos.getTipo().replace("only", "")%>',
                 data: {
                     labels: ["<%=datos.getConcatX()%>"],
                     datasets: [
@@ -112,7 +112,7 @@
                             label: '<%=du.getLabel()%>(<%=du.getUnidadMedida()%>)',
                             data: [<%=du.getConcatDatos()%>],
                             borderWidth: 1,
-                            fill:<%=datos.getTipo().equalsIgnoreCase("onlyline")?false:true %>
+                            fill:<%=datos.getTipo().equalsIgnoreCase("onlyline") ? false : true%>
                         },
             <%}%>
 
@@ -123,15 +123,20 @@
                         xAxes: [{
                                 type: 'time',
                                 time: {
-                                    format: 'YYYY-MM-DD HH:mm',
-                                    displayFormat: 'HH:mm',
-                unit: 'minute',
-                min: '<%=datos.getMin()%>',
-                max: '<%= datos.getMax()%>'
+                                    min: '<%=datos.getMin()%>',
+                                    max: '<%= datos.getMax()%>',
+                                    format: 'YYYY-MM-DD HH:mm:ss',
+                                    unit: 'day',
+                                    displayFormats: {
+                                        day: 'YYYY-MM-DD hA'
+                                    },
                                 },
-                                    ticks: {
-                                        source: 'labels'
-                                    }
+                                distribution: 'series',
+                                ticks: {
+                                    source: 'labels',
+                                    autoSkip: true
+                                }
+
                             }]
                     }
 

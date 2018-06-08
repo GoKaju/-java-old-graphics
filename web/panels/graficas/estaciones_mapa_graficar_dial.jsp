@@ -172,7 +172,7 @@
             x: {
                 type: 'timeseries',
                 tick: {
-                    format: '%Y-%m-%d %H:%M',
+                    format: '%H:%M',
                     rotate: 75,
                     multiline: false
                 }
