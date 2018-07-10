@@ -98,9 +98,9 @@ public class Servlet_graficas extends HttpServlet {
                     out.println(" $('#pumu_sel').html(\"" + cadena + "\"); $('#carg_sel').html('')");
 
                 } else if (modulo.equals("2")) {
-                    int idPuntoMuestral=Integer.parseInt(o.getvariable("index"));
-                    DatoProcesadoJpaController datoProcesadoDao=new DatoProcesadoJpaController(emf);
-                    List<Parametros> listaParametros=datoProcesadoDao.findParametrosByIdPuntoMuestral(idPuntoMuestral);
+                    int idPuntoMuestral = Integer.parseInt(o.getvariable("index"));
+                    DatoProcesadoJpaController datoProcesadoDao = new DatoProcesadoJpaController(emf);
+                    List<Parametros> listaParametros = datoProcesadoDao.findParametrosByIdPuntoMuestral(idPuntoMuestral);
                     String cadena = "";
                     for (Parametros p : listaParametros) {
                         cadena += "<option value='" + p.getParaId() + "' >" + p.getPareNombre() + "</option>";
@@ -113,7 +113,7 @@ public class Servlet_graficas extends HttpServlet {
                 } else if (modulo.equals("3")) {
 
                     String tipo = o.getvariable("tipoGrafica");
-                    String tipoGrafica1=o.getvariable("tipoGrafica1");
+                    String tipoGrafica1 = o.getvariable("tipoGrafica1");
 
                     switch (tipo) {
                         case "1":
@@ -184,23 +184,18 @@ public class Servlet_graficas extends HttpServlet {
 
                                 out.println(" crearGrafica('" + nombre + "');");
 
-                                
-                                
-                                
-                                
                             }
                             break;
                         case "2":
                             if (o.getvariable("excel").equals("")) {
-                                int horas=Integer.parseInt(o.getvariable("horario"));
+                                int horas = Integer.parseInt(o.getvariable("horario"));
                                 //int idUnidadmedidaDeseada = Integer.parseInt(o.getvariable("unidadDeseada"));;
                                 int idUnidadmedidaDeseada = 0;
                                 PuntoMuestral pumu = pmjc.findPuntoMuestral(Integer.parseInt(o.getvariable("pumu_sel")));
-                                ParametroFactorconversionJpaController pfcDao=new ParametroFactorconversionJpaController(emf);
-                                UnidadmedidaParametroJpaController unidadMedidaDao=new UnidadmedidaParametroJpaController(emf);
+                                ParametroFactorconversionJpaController pfcDao = new ParametroFactorconversionJpaController(emf);
+                                UnidadmedidaParametroJpaController unidadMedidaDao = new UnidadmedidaParametroJpaController(emf);
                                 //String unidadMedida=unidadMedidaDao.findUnidadmedidaParametro(idUnidadmedidaDeseada).getIdUnidadMedida().getDescripcion();
-                                
-                                        
+
                                 datos = new DataJson();
 
                                 String fechaini = o.getvariable("fini_txt");
@@ -214,7 +209,7 @@ public class Servlet_graficas extends HttpServlet {
                                 int con = 0;
                                 for (String p : Param) {
                                     Parametros parametro = new ParametrosJpaController(emf).findParametros(Integer.parseInt(p));
-                                    String unidadMedida=pfcDao.findPFCByIdParametro(parametro.getParaId()).get(0).getIdUnidadMedida().getDescripcion();
+                                    String unidadMedida = pfcDao.findPFCByIdParametro(parametro.getParaId()).get(0).getIdUnidadMedida().getDescripcion();
                                     //Query cons = em.createNativeQuery(" SELECT dp.* FROM dato_procesado dp "
                                     //        + "INNER JOIN parametro_factorconversion pfc ON dp.id_parametro_factorconversion=pfc.id "
                                     //        + "WHERE dp.id_punto_muestral=? AND pfc.id_parametro=? AND fecha BETWEEN ? AND ?", DatoProcesado.class);
@@ -233,7 +228,7 @@ public class Servlet_graficas extends HttpServlet {
                                             .registerStoredProcedureParameter(4, Integer.class, ParameterMode.IN)
                                             .setParameter(4, parametro.getParaId())
                                             .registerStoredProcedureParameter(5, Integer.class, ParameterMode.IN)
-                                             .setParameter(5, pumu.getPumuId());
+                                            .setParameter(5, pumu.getPumuId());
                                     List<Object[]> lis = query.getResultList();
                                     System.out.println("--> " + lis.size());
                                     DataJson.DataUnit dat = datos.new DataUnit();
@@ -243,89 +238,90 @@ public class Servlet_graficas extends HttpServlet {
                                     dat.setDatos(new ArrayList());
                                     dat.setUnidadMedida(unidadMedida);
                                     //NivelMaximo nm=nivelMaximoDao.
-                                      //      findMaximoByIdParameterAndIdUnidadTiempo(parametro.getParaId(),idUnidadTiempo);
+                                    //      findMaximoByIdParameterAndIdUnidadTiempo(parametro.getParaId(),idUnidadTiempo);
                                     //if (nm!=null) {
-                                      //  dat.setMaxValue(nm.getNivelMaximo());
+                                    //  dat.setMaxValue(nm.getNivelMaximo());
                                     //}
-                                    double convertido=0;
+                                    double convertido = 0;
                                     for (Object[] d : lis) {
                                         /*int idParametro=d.getIdParametroFactorconversion().getIdParametro().getParaId();
-                                        int idUnidadMedidaActual=d.getIdParametroFactorconversion().getIdUnidadMedida().getId();
-                                        switch(idParametro){
-                                            case 9://SO2
-                                                if(idUnidadMedidaActual==2){//ppm
-                                                    if (idUnidadmedidaDeseada==3) {//ug/m3
-                                                        convertido=d.getValor()*2618.46;
-                                                    } else if (idUnidadmedidaDeseada==7) {//mg/m3
-                                                        convertido=d.getValor()*2.618;
-                                                    } else {
-                                                        convertido=d.getValor();
-                                                    }
-                                                } else if (idUnidadMedidaActual==1) {//ppb
-                                                    if (idUnidadmedidaDeseada==3) {//ug/m3
-                                                        convertido=d.getValor()*2.16185;
-                                                    } else if (idUnidadmedidaDeseada==7) {//mg/m3
-                                                        convertido=d.getValor()*0.00;
-                                                    } else {
-                                                        convertido=d.getValor();
-                                                    }
-                                                } else {
-                                                    convertido=d.getValor();
-                                                }
-                                                break;
-                                            case 2://NO2
-                                                if(idUnidadMedidaActual==2){//ppm
-                                                    if (idUnidadmedidaDeseada==7) {//mg/m3
-                                                        convertido=d.getValor()*1.8804;
-                                                    } else if (idUnidadmedidaDeseada==3) {//ug/m3
-                                                        convertido=d.getValor()*1880.37;
-                                                    } else {
-                                                        convertido=d.getValor();
-                                                    }
-                                                } else if (idUnidadMedidaActual==1) {//ppb
-                                                    if (idUnidadmedidaDeseada==7) {//mg/m3
-                                                        convertido=d.getValor()*0.00;
-                                                    } else if (idUnidadmedidaDeseada==3) {//ug/m3
-                                                        convertido=d.getValor()*1.880;
-                                                    } else {
-                                                        convertido=d.getValor();
-                                                    }
-                                                } else {
-                                                    convertido=d.getValor();
-                                                }
-                                                break;
-                                            case 1://NO
-                                                if(idUnidadMedidaActual==2){//ppm
-                                                    if (idUnidadmedidaDeseada==7) {//mg/m3
-                                                        convertido=d.getValor()*1.23;
-                                                    } else if (idUnidadmedidaDeseada==3) {//ug/m3
-                                                        convertido=d.getValor()*1226.43;
-                                                    } else {
-                                                        convertido=d.getValor();
-                                                    }
-                                                } else if (idUnidadMedidaActual==1) {//ppb
-                                                    if (idUnidadmedidaDeseada==7) {//mg/m3
-                                                        convertido=d.getValor()*0.00;
-                                                    } else if (idUnidadmedidaDeseada==3) {//ug/m3
-                                                        convertido=d.getValor()*1.23;
-                                                    } else {
-                                                        convertido=d.getValor();
-                                                    }
-                                                } else {
-                                                    convertido=d.getValor();
-                                                }
-                                                break;
-                                                default:
-                                                    convertido=d.getValor();
-                                                    break;
-                                        }*/
-                                        
-                                            dat.getFechas().add(d[4].toString());
-                                            dat.getDatos().add(d[5].toString());
+                                         int idUnidadMedidaActual=d.getIdParametroFactorconversion().getIdUnidadMedida().getId();
+                                         switch(idParametro){
+                                         case 9://SO2
+                                         if(idUnidadMedidaActual==2){//ppm
+                                         if (idUnidadmedidaDeseada==3) {//ug/m3
+                                         convertido=d.getValor()*2618.46;
+                                         } else if (idUnidadmedidaDeseada==7) {//mg/m3
+                                         convertido=d.getValor()*2.618;
+                                         } else {
+                                         convertido=d.getValor();
+                                         }
+                                         } else if (idUnidadMedidaActual==1) {//ppb
+                                         if (idUnidadmedidaDeseada==3) {//ug/m3
+                                         convertido=d.getValor()*2.16185;
+                                         } else if (idUnidadmedidaDeseada==7) {//mg/m3
+                                         convertido=d.getValor()*0.00;
+                                         } else {
+                                         convertido=d.getValor();
+                                         }
+                                         } else {
+                                         convertido=d.getValor();
+                                         }
+                                         break;
+                                         case 2://NO2
+                                         if(idUnidadMedidaActual==2){//ppm
+                                         if (idUnidadmedidaDeseada==7) {//mg/m3
+                                         convertido=d.getValor()*1.8804;
+                                         } else if (idUnidadmedidaDeseada==3) {//ug/m3
+                                         convertido=d.getValor()*1880.37;
+                                         } else {
+                                         convertido=d.getValor();
+                                         }
+                                         } else if (idUnidadMedidaActual==1) {//ppb
+                                         if (idUnidadmedidaDeseada==7) {//mg/m3
+                                         convertido=d.getValor()*0.00;
+                                         } else if (idUnidadmedidaDeseada==3) {//ug/m3
+                                         convertido=d.getValor()*1.880;
+                                         } else {
+                                         convertido=d.getValor();
+                                         }
+                                         } else {
+                                         convertido=d.getValor();
+                                         }
+                                         break;
+                                         case 1://NO
+                                         if(idUnidadMedidaActual==2){//ppm
+                                         if (idUnidadmedidaDeseada==7) {//mg/m3
+                                         convertido=d.getValor()*1.23;
+                                         } else if (idUnidadmedidaDeseada==3) {//ug/m3
+                                         convertido=d.getValor()*1226.43;
+                                         } else {
+                                         convertido=d.getValor();
+                                         }
+                                         } else if (idUnidadMedidaActual==1) {//ppb
+                                         if (idUnidadmedidaDeseada==7) {//mg/m3
+                                         convertido=d.getValor()*0.00;
+                                         } else if (idUnidadmedidaDeseada==3) {//ug/m3
+                                         convertido=d.getValor()*1.23;
+                                         } else {
+                                         convertido=d.getValor();
+                                         }
+                                         } else {
+                                         convertido=d.getValor();
+                                         }
+                                         break;
+                                         default:
+                                         convertido=d.getValor();
+                                         break;
+                                         }*/
+
+                                        dat.getFechas().add(d[4].toString());
+                                        dat.getDatos().add(d[5].toString());
                                     }
-                                   
-                                if(datos.getConcatX() == null || datos.getConcatX().isEmpty())
-                               datos.setConcatX(String.join("\",\"", dat.getFechas()));
+
+                                    if (datos.getConcatX() == null || datos.getConcatX().isEmpty()) {
+                                        datos.setConcatX(String.join("\",\"", dat.getFechas()));
+                                    }
                                     datos.getDatos().add(dat);
                                     con++;
                                 }
@@ -336,34 +332,49 @@ public class Servlet_graficas extends HttpServlet {
                             } else {
                                 // descarga de excel 
                                 PuntoMuestral pumu = pmjc.findPuntoMuestral(Integer.parseInt(o.getvariable("pumu_sel")));
-
-                                datos = new DataJson();
-
+                                int horas = Integer.parseInt(o.getvariable("horario"));
                                 String fechaini = o.getvariable("fini_txt");
                                 String fechafin = o.getvariable("ffin_txt");
+
+                                datos = new DataJson();
                                 datos.setNombreGraphic(pumu.getPumuNombre() + " del " + fechaini + " al " + fechafin);
 
                                 String Param[] = request.getParameterValues("para_sel");
                                 if (Param != null && Param.length > 0) {
-                                    Query cons = em.createNativeQuery("SELECT\n"
-                                            + "d.dato_fecha,\n"
-                                            + "group_concat(concat(c.para_id,'#'),d.dato_data SEPARATOR ';')\n"
-                                            + "FROM\n"
-                                            + "Datos as d\n"
-                                            + "INNER JOIN carga_parametro as c ON d.papu_id=c.capa_id\n"
-                                            + "INNER JOIN cargas ca ON ca.carg_id=c.carg_id\n"
-                                            + "WHERE\n"
-                                            + " DATE_FORMAT(d.dato_fecha, \"%Y-%m-%d\") BETWEEN ? AND ?\n"
-                                            + " AND\n"
-                                            + " ca.pumu_id=?\n"
-                                            + "GROUP BY\n"
-                                            + "d.dato_fecha\n"
-                                            + "ORDER BY\n"
-                                            + "d.dato_fecha ASC");
+                                    /*Query cons = em.createNativeQuery("SELECT\n"
+                                     + "d.dato_fecha,\n"
+                                     + "group_concat(concat(c.para_id,'#'),d.dato_data SEPARATOR ';')\n"
+                                     + "FROM\n"
+                                     + "Datos as d\n"
+                                     + "INNER JOIN carga_parametro as c ON d.papu_id=c.capa_id\n"
+                                     + "INNER JOIN cargas ca ON ca.carg_id=c.carg_id\n"
+                                     + "WHERE\n"
+                                     + " DATE_FORMAT(d.dato_fecha, \"%Y-%m-%d\") BETWEEN ? AND ?\n"
+                                     + " AND\n"
+                                     + " ca.pumu_id=?\n"
+                                     + "GROUP BY\n"
+                                     + "date_format(d.dato_fecha, \"%Y-%m-%d\")\n"
+                                     + "ORDER BY\n"
+                                     + "d.dato_fecha ASC");*/
+                                    Query cons = em.createNativeQuery("select dp.fecha, group_concat(concat(pfc.id_parametro,'#'),"
+                                            + "round(avg(dp.valor),3) SEPARATOR ';') "
+                                            + "from dato_procesado dp inner join parametro_factorconversion pfc "
+                                            + "on dp.id_parametro_factorconversion=pfc.id "
+                                            + "WHERE DATE_FORMAT(dp.fecha, \"%Y-%m-%d %H\") BETWEEN ? "
+                                            + "AND ? AND dp.id_punto_muestral=? GROUP BY (\n"
+                                            + "	CASE WHEN ? = 1 THEN DATE_FORMAT(dp.fecha, \"%Y-%m-%d %H\")\n"
+                                            + "	     WHEN ? = 24 THEN DATE_FORMAT(dp.fecha,\"%Y-%m-%d\")\n"
+                                            + "	     WHEN ? = 730 THEN DATE_FORMAT(dp.fecha,\"%Y-%m\")\n"
+                                            + "	     WHEN ? = 8760 THEN DATE_FORMAT(dp.fecha,\"%Y\")\n"
+                                            + "	END);");
 
                                     cons.setParameter(1, fechaini);
                                     cons.setParameter(2, fechafin);
                                     cons.setParameter(3, pumu.getPumuId());
+                                    cons.setParameter(4, horas);
+                                    cons.setParameter(5, horas);
+                                    cons.setParameter(6, horas);
+                                    cons.setParameter(7, horas);
                                     List<Object[]> lis = cons.getResultList();
 
                                     for (Object[] a : lis) {
@@ -390,12 +401,12 @@ public class Servlet_graficas extends HttpServlet {
                     }
 
                 } else if (modulo.equals("4")) {
-                    int idPuntoMuestral=Integer.parseInt(o.getvariable("cod"));
+                    int idPuntoMuestral = Integer.parseInt(o.getvariable("cod"));
                     String tipo = o.getvariable("tipoGrafica");
-                    
+
                     //PuntoMuestralJpaController puntoMuestralDao=new PuntoMuestralJpaController(emf);
-                    DatoProcesadoJpaController datoProcesadoDao=new DatoProcesadoJpaController(emf);
-                    ParametroFactorconversionJpaController pfcDao=new ParametroFactorconversionJpaController(emf);
+                    DatoProcesadoJpaController datoProcesadoDao = new DatoProcesadoJpaController(emf);
+                    ParametroFactorconversionJpaController pfcDao = new ParametroFactorconversionJpaController(emf);
 
                     DataJson datos = new DataJson();
                     datos.setNombreGraphic("Nombre grafica");
@@ -404,122 +415,122 @@ public class Servlet_graficas extends HttpServlet {
                     List<DatoProcesado> listaDatosProcesados;
                     List<DatoProcesado> datoPromedio;
                     int horas;
-                    int color=0;
-                    double valor=0;
-                    List<ParametroFactorconversion> listaParametroFactorconversions=pfcDao.findPFCInPunto(idPuntoMuestral);
+                    int color = 0;
+                    double valor = 0;
+                    List<ParametroFactorconversion> listaParametroFactorconversions = pfcDao.findPFCInPunto(idPuntoMuestral);
 
-                        int con = 0;
-                        for(ParametroFactorconversion pfc:listaParametroFactorconversions){
-                            valor=0;
-                            int paraId=pfc.getIdParametro().getParaId();
-                            DataJson.DataUnit dat = datos.new DataUnit();
-                            dat.setX("x" + con);
-                            dat.setLabel(pfc.getIdParametro().getPareNombre());
-                            dat.setFechas(new ArrayList());
-                            dat.setDatos(new ArrayList());
-                            dat.setUnidadMedida(pfc.getIdUnidadMedida().getDescripcion());
-                            listaDatosProcesados=datoProcesadoDao.findDatosByIdPuntoAndParametro24Hours(idPuntoMuestral,pfc.getId());
-                            if(paraId==5){
-                                datoPromedio=datoProcesadoDao.findPromedioDatosPorHorario(24, idPuntoMuestral,pfc.getId());
-                                if (!datoPromedio.isEmpty()) {
-                                valor=datoPromedio.get(0).getValor();
+                    int con = 0;
+                    for (ParametroFactorconversion pfc : listaParametroFactorconversions) {
+                        valor = 0;
+                        int paraId = pfc.getIdParametro().getParaId();
+                        DataJson.DataUnit dat = datos.new DataUnit();
+                        dat.setX("x" + con);
+                        dat.setLabel(pfc.getIdParametro().getPareNombre());
+                        dat.setFechas(new ArrayList());
+                        dat.setDatos(new ArrayList());
+                        dat.setUnidadMedida(pfc.getIdUnidadMedida().getDescripcion());
+                        listaDatosProcesados = datoProcesadoDao.findDatosByIdPuntoAndParametro24Hours(idPuntoMuestral, pfc.getId());
+                        if (paraId == 5) {
+                            datoPromedio = datoProcesadoDao.findPromedioDatosPorHorario(24, idPuntoMuestral, pfc.getId());
+                            if (!datoPromedio.isEmpty()) {
+                                valor = datoPromedio.get(0).getValor();
                             }
-                                if (valor>0 && valor <54){
-                                    color=1;
-                                } else if (valor>=54 && valor<155){
-                                    color=2;
-                                } else if (valor>=155 && valor<254){
-                                    color=3;
-                                } else if (valor>=254 && valor<354){
-                                    color=4;
-                                } else if (valor>=355 && valor<424){
-                                    color=5;
-                                } else if (valor>=425){
-                                    color=6;
-                                }
-                            } else if (paraId==6){
-                                datoPromedio=datoProcesadoDao.findPromedioDatosPorHorario(24, idPuntoMuestral,pfc.getId());
-                                if (!datoPromedio.isEmpty()) {
-                                valor=datoPromedio.get(0).getValor();
+                            if (valor > 0 && valor < 54) {
+                                color = 1;
+                            } else if (valor >= 54 && valor < 155) {
+                                color = 2;
+                            } else if (valor >= 155 && valor < 254) {
+                                color = 3;
+                            } else if (valor >= 254 && valor < 354) {
+                                color = 4;
+                            } else if (valor >= 355 && valor < 424) {
+                                color = 5;
+                            } else if (valor >= 425) {
+                                color = 6;
                             }
-                                if (valor>0 && valor <12){
-                                    color=1;
-                                } else if (valor>=13 && valor<37){
-                                    color=2;
-                                } else if (valor>=38 && valor<55){
-                                    color=3;
-                                } else if (valor>=56 && valor<150){
-                                    color=4;
-                                } else if (valor>=151 && valor<250){
-                                    color=5;
-                                } else if (valor>=251){
-                                    color=6;
-                                }
-                            } else  if (paraId==9){
-                                datoPromedio=datoProcesadoDao.findPromedioDatosPorHorario(1, idPuntoMuestral,pfc.getId());
-                                if(!datoPromedio.isEmpty()){
-                                    valor=datoPromedio.get(0).getValor()*2.16185;
-                                }
-                                if (valor>0 && valor <93){
-                                    color=1;
-                                } else if (valor>=94 && valor<197){
-                                    color=2;
-                                } else if (valor>=198 && valor<486){
-                                    color=3;
-                                } else if (valor>=487 && valor<797){
-                                    color=4;
-                                } else if (valor>=798 && valor<1583){
-                                    color=5;
-                                } else if (valor>=1584){
-                                    color=6;
-                                }
-                            } else if (paraId==2){
-                                datoPromedio=datoProcesadoDao.findPromedioDatosPorHorario(1, idPuntoMuestral,pfc.getId());
-                                if(!datoPromedio.isEmpty()){
-                                    valor=datoPromedio.get(0).getValor()*1.880;
-                                }
-                                if (valor>0 && valor <100){
-                                    color=1;
-                                } else if (valor>=101 && valor<189){
-                                    color=2;
-                                } else if (valor>=190 && valor<677){
-                                    color=3;
-                                } else if (valor>=678 && valor<1221){
-                                    color=4;
-                                } else if (valor>=1222 && valor<2349){
-                                    color=5;
-                                } else if (valor>=2350){
-                                    color=6;
-                                }
-                            } else {
-                                datoPromedio=datoProcesadoDao.findPromedioDatosPorHorario(24, idPuntoMuestral,pfc.getId());
-                                if(!datoPromedio.isEmpty()){
-                                    valor=datoPromedio.get(0).getValor();
-                                }
-                                color = 7;
+                        } else if (paraId == 6) {
+                            datoPromedio = datoProcesadoDao.findPromedioDatosPorHorario(24, idPuntoMuestral, pfc.getId());
+                            if (!datoPromedio.isEmpty()) {
+                                valor = datoPromedio.get(0).getValor();
                             }
-                            dat.setDatoPromediado(valor);
-                            dat.setColor(color);
-                            
-                            for(DatoProcesado dp:listaDatosProcesados){
-                                dat.getFechas().add(Fechas.DevuelveFormato(dp.getFecha(), "yyyy-MM-dd HH:mm"));
-                                dat.getDatos().add(dp.getValor().toString());
+                            if (valor > 0 && valor < 12) {
+                                color = 1;
+                            } else if (valor >= 13 && valor < 37) {
+                                color = 2;
+                            } else if (valor >= 38 && valor < 55) {
+                                color = 3;
+                            } else if (valor >= 56 && valor < 150) {
+                                color = 4;
+                            } else if (valor >= 151 && valor < 250) {
+                                color = 5;
+                            } else if (valor >= 251) {
+                                color = 6;
                             }
-                        
-                            datos.getDatos().add(dat);
-                            con++;
+                        } else if (paraId == 9) {
+                            datoPromedio = datoProcesadoDao.findPromedioDatosPorHorario(1, idPuntoMuestral, pfc.getId());
+                            if (!datoPromedio.isEmpty()) {
+                                valor = datoPromedio.get(0).getValor() * 2.16185;
+                            }
+                            if (valor > 0 && valor < 93) {
+                                color = 1;
+                            } else if (valor >= 94 && valor < 197) {
+                                color = 2;
+                            } else if (valor >= 198 && valor < 486) {
+                                color = 3;
+                            } else if (valor >= 487 && valor < 797) {
+                                color = 4;
+                            } else if (valor >= 798 && valor < 1583) {
+                                color = 5;
+                            } else if (valor >= 1584) {
+                                color = 6;
+                            }
+                        } else if (paraId == 2) {
+                            datoPromedio = datoProcesadoDao.findPromedioDatosPorHorario(1, idPuntoMuestral, pfc.getId());
+                            if (!datoPromedio.isEmpty()) {
+                                valor = datoPromedio.get(0).getValor() * 1.880;
+                            }
+                            if (valor > 0 && valor < 100) {
+                                color = 1;
+                            } else if (valor >= 101 && valor < 189) {
+                                color = 2;
+                            } else if (valor >= 190 && valor < 677) {
+                                color = 3;
+                            } else if (valor >= 678 && valor < 1221) {
+                                color = 4;
+                            } else if (valor >= 1222 && valor < 2349) {
+                                color = 5;
+                            } else if (valor >= 2350) {
+                                color = 6;
+                            }
+                        } else {
+                            datoPromedio = datoProcesadoDao.findPromedioDatosPorHorario(24, idPuntoMuestral, pfc.getId());
+                            if (!datoPromedio.isEmpty()) {
+                                valor = datoPromedio.get(0).getValor();
+                            }
+                            color = 7;
                         }
-                        String nombre = "grap" + Fechas.getCadena();
-                        session.setAttribute(nombre, datos);
-                        out.println(" graficarDial('" +idPuntoMuestral+ "','" + nombre + "');");
+                        dat.setDatoPromediado(valor);
+                        dat.setColor(color);
+
+                        for (DatoProcesado dp : listaDatosProcesados) {
+                            dat.getFechas().add(Fechas.DevuelveFormato(dp.getFecha(), "yyyy-MM-dd HH:mm"));
+                            dat.getDatos().add(dp.getValor().toString());
+                        }
+
+                        datos.getDatos().add(dat);
+                        con++;
+                    }
+                    String nombre = "grap" + Fechas.getCadena();
+                    session.setAttribute(nombre, datos);
+                    out.println(" graficarDial('" + idPuntoMuestral + "','" + nombre + "');");
 
                 } else if (modulo.equals("5")) {
-                    int idCliente=Integer.parseInt(o.getvariable("index"));
-                    CampanasJpaController clienteDao=new CampanasJpaController(emf);
-                    List<Campanas> listaCampanas=clienteDao.findCampanasByCliente(idCliente);
+                    int idCliente = Integer.parseInt(o.getvariable("index"));
+                    CampanasJpaController clienteDao = new CampanasJpaController(emf);
+                    List<Campanas> listaCampanas = clienteDao.findCampanasByCliente(idCliente);
                     String cadena = "<option value='' >Seleccione...</option>";
                     for (Campanas p : listaCampanas) {
-                        cadena += "<option value='" + p.getCampId()+ "' >" + p.getCampNombre()+ "</option>";
+                        cadena += "<option value='" + p.getCampId() + "' >" + p.getCampNombre() + "</option>";
                     }
 
 //                 cadena = elem.getPuntoMuestralList().stream().map((puntoMuestral) -> <).reduce(cadena, String::concat);
