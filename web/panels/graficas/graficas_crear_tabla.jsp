@@ -32,82 +32,82 @@
         Usuarios user = (Usuarios) session.getAttribute("usuarioVO");
         if (user != null && user.getUsuaId() != null) {
             Cadenas o = new Cadenas(request);
-          
+
             EntityManagerFactory emf = Persistence.createEntityManagerFactory("RPU");
-           
-             String Param[] = (String[]) session.getAttribute(o.getvariable("paramsess"));
-             List<Object[]> lis = (List<Object[]>)session.getAttribute(o.getvariable("idsess"));
-           
+
+            String Param[] = (String[]) session.getAttribute(o.getvariable("paramsess"));
+            List<Object[]> lis = (List<Object[]>) session.getAttribute(o.getvariable("idsess"));
+            ParametrosJpaController paramDao =new ParametrosJpaController(emf);
 
 %>
 <div class="panel-body table-responsive" style="max-height: 600px">
-         
-        <script type="text/javascript" src="assets/plugins/tableExport/tableExport.js"></script>
-        <script type="text/javascript" src="assets/plugins/tableExport/jquery.base64.js"></script>
- 
-      
-        
-        <table id="tableExcel324" class="table table-striped" >
-	<thead>			
-		<tr class='primary'>
-			<th>FECHA</th>
+
+    <script type="text/javascript" src="assets/plugins/tableExport/tableExport.js"></script>
+    <script type="text/javascript" src="assets/plugins/tableExport/jquery.base64.js"></script>
+
+
+
+    <table id="tableExcel324" class="table table-striped" >
+        <thead>			
+            <tr class='primary'>
+                <th>FECHA</th>
                     <%
-                    for (String elem : Param) {
-                         %>
-                        <th><%=new ParametrosJpaController(emf).findParametros(Integer.parseInt(elem)).getPareNombre() %></th>
-                        <%   
+                        for (String elem : Param) {
+                    %>
+                <th><%=paramDao.findParametros(Integer.parseInt(elem)).getPareNombre()%></th>
+                    <%
                         }
                     %>
-		
-		</tr>
-	</thead>
-	<tbody>
-            
-                      <%
-                    for (Object[] elem : lis) {
-                        HashMap map = new HashMap();
-                        if(elem[1]!=null){
-                        String[] x = ((String)elem[1]).split(";");
+
+            </tr>
+        </thead>
+        <tbody>
+
+            <%
+                for (Object[] elem : lis) {
+                    HashMap map = new HashMap();
+                    if (elem[1] != null) {
+                        String[] x = ((String) elem[1]).split(";");
                         for (String e : x) {
-                              System.out.println("--> data "+e);
+                            System.out.println("--> data " + e);
                             String[] y = e.split("#");
-                            if(y!= null&& y.length>1){
-                                System.out.println("--> data table "+ y[0]+" "+y[1]);
-                            map.put(y[0],y[1]);
-                            }
+                            if (y != null && y.length > 1) {
+                                System.out.println("--> data table " + y[0] + " " + y[1]);
+                                map.put(y[0], y[1]);
                             }
                         }
+                    }
 
-                         %>
-                       <tr>
-			<td><%=elem[0] %></td>
-			  <%
+            %>
+            <tr>
+                <td><%=elem[0]%></td>
+                <%
                     for (String e : Param) {
-                         %>
-                         <td><%=map.get(e)!=null?map.get(e):"" %></td>
-                        <%   
-                        }
-                    %>
-		</tr>
-                         
-                         
-                        <%   
-                        }
-                    %>
-	
-	</tbody>
-</table> 
+                %>
+                <td><%=map.get(e) != null ? map.get(e) : ""%></td>
+                <%
+                    }
+                %>
+            </tr>
 
-        </div>
 
-        <div class="modal-footer">
-            <div>
-        
-                          <label  onclick="$('#tableExcel324').tableExport({type:'excel',tableName:'yourTableName',escape:'false'});" class="pull-right btn btn-success m-r-5 m-b-5">Descargar</label>
-                        <button type="button"  onclick="closeModal()" class="pull-right btn btn-default m-r-5 m-b-5">Cerrar</button>
+            <%
+                }
+            %>
 
-            </div>
-        </div>
+        </tbody>
+    </table> 
+
+</div>
+
+<div class="modal-footer">
+    <div>
+
+        <label  onclick="$('#tableExcel324').tableExport({type: 'excel', tableName: 'yourTableName', escape: 'false'});" class="pull-right btn btn-success m-r-5 m-b-5">Descargar</label>
+        <button type="button"  onclick="closeModal()" class="pull-right btn btn-default m-r-5 m-b-5">Cerrar</button>
+
+    </div>
+</div>
 <%        } else {
 %>
 <script type="text/javascript">

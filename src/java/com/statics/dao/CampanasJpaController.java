@@ -40,7 +40,7 @@ public class CampanasJpaController implements Serializable {
         List<Campanas> lista=new ArrayList();
         try{
             em=getEntityManager();
-            Query q= em.createNativeQuery("select * from campanas where id_cliente="+idCliente, Campanas.class);
+            Query q= em.createNativeQuery("select * from campanas where id_cliente="+idCliente+" and esta_id=1", Campanas.class);
             lista=q.getResultList();
         } catch(Exception e) {
             System.err.println(e.toString());

@@ -53,9 +53,7 @@
         top: <%=o.getvariable("ypos")%>px;
         left: <%=o.getvariable("xpos")%>px;    
     }
-    svg{
-        width: 390px;
-    }
+ 
     .panel{background: rgba(0,0,0,0.7)}
 
 </style>
@@ -70,7 +68,7 @@
     </div>
     <div id="scrollSlim<%=ramdom%>">
 
-        <div class="panel-body" style="">
+        <div class="panel-body" style="padding:0 15px">
             <div id="accordion<%=ramdom%>" class="row"   >
                 <%
                     String[] color=new String[8];
@@ -85,18 +83,18 @@
                     int i=0;
                     for (DataJson.DataUnit dat : datos.getDatos()) {
                 %>
-                <div class=" panel col-md-12 data_header" style="margin-bottom: 10px; padding: 5px">
+                <div class=" panel col-md-12 data_header" style="margin-bottom: 1px; padding: 0px; font-size: 0.8em">
                     <div class="row">
                         <div class="col-md-8 col-sm-8">
-                            <span data-parent="#accordion<%=ramdom%>" data-toggle="collapse" style="cursor: pointer; display: inline-block; width: 96%;height: 25px;padding-top: 5px" data-target="#collapse<%=dat.hashCode() + ramdom%>"><%=dat.getLabel()%></span>
-                            <i   data-parent="#accordion<%=ramdom%>" data-toggle="collapse" style="cursor: pointer; display: inline-block; width: 4%;height: 25px;padding-top: 5px" data-target="#collapse<%=dat.hashCode() + ramdom%>" class="glyphicon glyphicon glyphicon-chevron-down pull-right"></i>
+                            <span data-parent="#accordion<%=ramdom%>" data-toggle="collapse" style="cursor: pointer; display: inline-block; width: 96%;height: 15px;padding-top: 3px;padding-left: 10px;" data-target="#collapse<%=dat.hashCode() + ramdom%>"><%=dat.getLabel()%></span>
+                            <i   data-parent="#accordion<%=ramdom%>" data-toggle="collapse" style="cursor: pointer; display: inline-block; width: 4%;height: 15px;padding-top: 3px" data-target="#collapse<%=dat.hashCode() + ramdom%>" class="glyphicon glyphicon glyphicon-chevron-down pull-right"></i>
                         </div>
-                        <div class="col-md-3 col-sm-3 pull-right text-center" style="background-color: <%= color[dat.getColor()] %>;height: 25px;margin-right: 10px">
+                        <div class="col-md-3 col-sm-3 pull-right text-center" style="background-color: <%= color[dat.getColor()] %>;height: 15px;margin-right: 10px;margin-top:3px;color:<%= dat.getColor()!=1&dat.getColor()!=2&dat.getColor()!=3?"white":"black" %>">
                             <span style="padding-top: 5px"><%=String.format("%.2f",dat.getDatoPromediado()) + " "+ dat.getUnidadMedida()%></span>
                         </div>
                     </div>
                     <div  id="collapse<%=dat.hashCode() + ramdom%>" class="collapse">
-                        <div id="chart<%=dat.hashCode() + ramdom%>" class="height-sm"></div>
+                        <div id="chart<%=dat.hashCode() + ramdom%>" class=></div>
                     </div>
                 </div>
                 <%
@@ -134,6 +132,10 @@
 
     <%for (DataJson.DataUnit dat : datos.getDatos()) {%>
     var chart = c3.generate({
+        size: {
+        height: 230,
+        width: 380
+    },
         data: {
             xs: {
                 '<%=dat.getLabel()%>': '<%=dat.getX()%>'

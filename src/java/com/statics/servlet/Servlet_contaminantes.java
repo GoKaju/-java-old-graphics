@@ -6,6 +6,7 @@
 package com.statics.servlet;
 
 import com.statics.dao.FuncionalidadesJpaController;
+import com.statics.dao.ParametroFactorconversionJpaController;
 import com.statics.dao.ParametroLabelsJpaController;
 import com.statics.dao.ParametrosJpaController;
 import com.statics.dao.RolesJpaController;
@@ -13,10 +14,12 @@ import com.statics.dao.RolfuncionalidadJpaController;
 import com.statics.util.Cadenas;
 import com.statics.util.Fechas;
 import com.statics.vo.Funcionalidades;
+import com.statics.vo.ParametroFactorconversion;
 import com.statics.vo.ParametroLabels;
 import com.statics.vo.Parametros;
 import com.statics.vo.Roles;
 import com.statics.vo.Rolfuncionalidad;
+import com.statics.vo.UnidadMedida;
 import com.statics.vo.Usuarios;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -57,6 +60,7 @@ public class Servlet_contaminantes extends HttpServlet {
                 EntityManagerFactory emf = Persistence.createEntityManagerFactory("RPU");
                 ParametrosJpaController pjc = new ParametrosJpaController(emf);
                 ParametroLabelsJpaController pljc = new ParametroLabelsJpaController(emf);
+                ParametroFactorconversionJpaController pfcDao = new ParametroFactorconversionJpaController(emf);
 
                 String modulo = o.getvariable("modulo");
                 boolean exito = true;
@@ -84,10 +88,27 @@ public class Servlet_contaminantes extends HttpServlet {
                     }
 
                     if (exito) {
+                        int idUnidad = Integer.parseInt(o.getvariable("unidadDeseada"));
 
                         if (elem.getParaId() != null) {
                             pjc.edit(elem);
+                            ParametroFactorconversion pfc = new ParametroFactorconversion();
+                            for (ParametroFactorconversion p : elem.getParametroFactorconversionList()) {
+                                if (p.getIsDefault()) {
+                                    pfc = p;
+                                    break;
+                                }
+                            }
 
+                            pfc.setIdParametro(elem);
+                            pfc.setIdUnidadMedida(new UnidadMedida(idUnidad));
+                            pfc.setIdFactorConversion(null);
+                            pfc.setIsDefault(true);
+                            if (pfc.getId() != null && pfc.getId() > 0) {
+                                pfcDao.edit(pfc);
+                            } else {
+                                pfcDao.create(pfc);
+                            }
 //                        borrar anteriores
                             for (ParametroLabels label : elem.getParametroLabelsList()) {
                                 pljc.destroy(label.getPalaId());
@@ -104,7 +125,12 @@ public class Servlet_contaminantes extends HttpServlet {
 
                         } else {
                             pjc.create(elem);
-
+                            ParametroFactorconversion pfc = new ParametroFactorconversion();
+                            pfc.setIdParametro(elem);
+                            pfc.setIdUnidadMedida(new UnidadMedida(idUnidad));
+                            pfc.setIdFactorConversion(null);
+                            pfc.setIsDefault(true);
+                            pfcDao.create(pfc);
                             for (String label : labels) {
                                 ParametroLabels pl = new ParametroLabels();
                                 pl.setParaId(elem);
@@ -128,11 +154,10 @@ public class Servlet_contaminantes extends HttpServlet {
                 } else if (modulo.equals("2")) {
                     Parametros elem = pjc.findParametros(Integer.parseInt(o.getvariable("index")));
                     elem.setParaEstado(0);
-                   elem.setPareFechacambio(Fechas.getFechaHoraTimeStamp());
-                   elem.setPareRegistradopor(user.getUsuaId());
-                   pjc.edit(elem);
+                    elem.setPareFechacambio(Fechas.getFechaHoraTimeStamp());
+                    elem.setPareRegistradopor(user.getUsuaId());
+                    pjc.edit(elem);
                     out.println("alerta('OK','¡Eliminado con exito!'); RecargaPanel('panels/contaminantes/contaminantes.jsp?rfid=" + o.getvariable("rfid") + "','content');");
-
 
                 } else {
                     out.println("alerta('ERROR','¡Modulo no encontrado!');");

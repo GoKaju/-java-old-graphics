@@ -108,7 +108,7 @@
                             <%}
 
                             if (rf.getRofuOperacion().contains("E")) {%>
-                        <a onclick=" peticionAjaxConfirm('Campanas', 'index=<%=u.getCampId()%>&rfid=<%=rfid%>&modulo=2', '¿Esta seguro de inactivar esta campaña?');" class="btn btn-danger btn-icon btn-circle" title="Remover"><i class="fa fa-remove"></i></a>
+                        <a onclick=" peticionAjaxConfirm('Campanas', 'index=<%=u.getCampId()%>&rfid=<%=rfid%>&modulo=2', '¿Esta seguro de eliminar esta campaña?');" class="btn btn-danger btn-icon btn-circle" title="Remover"><i class="fa fa-remove"></i></a>
                             <%} %>
                     </td>
 

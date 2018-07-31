@@ -65,7 +65,7 @@
                     <th>Nombre</th>
                     <th>Codigo</th>
                     <th>Descripcion</th>
-                    <th>Labels</th>
+                    <th>Unidad de medida</th>
                     <th></th>
                 </tr>
             </thead>
@@ -92,14 +92,8 @@
                         <%=o.notEmpty(u.getPareDescripcion()) %>
                     </td>
                     <td>
-                        <%
-                            if(u.getParametroLabelsList()!=null){
-                            for (ParametroLabels elem : u.getParametroLabelsList()) {
-                                %>
-                                <span class="badge badge-info"><%=o.notEmpty(elem.getPalaLabel()) %></span>
-                        
-                        <%
-                            }}
+                        <%= !u.getParametroFactorconversionList().isEmpty()?
+                            u.getParametroFactorconversionList().get(0).getIdUnidadMedida().getDescripcion():""
                         %>
                     </td>
                     <td>           

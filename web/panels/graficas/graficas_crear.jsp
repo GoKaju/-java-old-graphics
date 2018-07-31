@@ -100,6 +100,15 @@
                     {color: '#3B3EAC', bgcolor: hexToRGB('#3B3EAC', 0.5)}]};
 
             var ctx = document.getElementById("<%=o.getvariable("var")%>").getContext('2d');
+            var backgroundColor = 'white';
+            Chart.plugins.register({
+                beforeDraw: function (c) {
+                    var ctx = c.chart.ctx;
+                    ctx.fillStyle = backgroundColor;
+                    ctx.fillRect(0, 0, c.chart.width, c.chart.height);
+                }
+            });
+
             var myChart = new Chart(ctx, {
                 type: '<%= datos.getTipo().replace("only", "")%>',
                 data: {
@@ -112,7 +121,8 @@
                             label: '<%=du.getLabel()%>(<%=du.getUnidadMedida()%>)',
                             data: [<%=du.getConcatDatos()%>],
                             borderWidth: 1,
-                            fill:<%=datos.getTipo().equalsIgnoreCase("onlyline") ? false : true%>
+                            fill:<%=datos.getTipo().equalsIgnoreCase("onlyline") ? false : true%>,
+                            lineTension: 0
                         },
             <%}%>
 
@@ -128,13 +138,16 @@
                                     format: 'YYYY-MM-DD HH:mm:ss',
                                     unit: 'day',
                                     displayFormats: {
-                                        day: 'YYYY-MM-DD hA'
+                                        day: 'YYYYMMDD HH'
                                     },
                                 },
                                 distribution: 'series',
                                 ticks: {
                                     source: 'labels',
-                                    autoSkip: true
+                                    autoSkip: true,
+                                    maxTicksLimit:20,
+                                    maxRotation: 90,
+                                    minRotation:90
                                 }
 
                             }]

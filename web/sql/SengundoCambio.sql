@@ -163,10 +163,13 @@ IN id_carga INT
 BEGIN
 
 INSERT INTO dato_procesado (id_punto_muestral, id_unidad_tiempo, id_parametro_factorconversion, fecha, valor, fecha_conversion) 
-SELECT c.pumu_id, 7, pf.id, DATE_FORMAT(dato_fecha, '%Y-%m-%d %H') AS hora, AVG(dato_data), CURRENT_TIMESTAMP() FROM datos d 
-INNER JOIN carga_parametro cp ON d.papu_id=cp.capa_id INNER JOIN cargas c ON c.carg_id=cp.carg_id
-INNER JOIN parametro_factorconversion pf ON pf.id_parametro=cp.para_id AND pf.is_default=1
-WHERE cp.carg_id = id_carga GROUP BY para_id, hora;
+SELECT c.pumu_id, 5, pf.id, DATE_FORMAT(dato_fecha, '%Y-%m-%d %H') AS hora, AVG(dato_data), CURRENT_TIMESTAMP() 
+FROM datos d INNER JOIN carga_parametro cp ON d.papu_id=cp.capa_id 
+INNER JOIN cargas c ON c.carg_id=cp.carg_id INNER JOIN parametro_factorconversion pf ON pf.id_parametro=cp.para_id 
+AND pf.is_default=1 WHERE cp.carg_id = id_carga AND DATE_FORMAT(dato_fecha, '%Y-%m-%d %H') > 
+(SELECT IFNULL(MAX(dp.fecha),'2000-01-01 00:00:00') FROM datos d INNER JOIN carga_parametro cp ON d.papu_id=cp.capa_id 
+INNER JOIN cargas c ON c.carg_id=cp.carg_id INNER JOIN dato_procesado dp ON dp.id_punto_muestral=c.pumu_id 
+WHERE cp.carg_id = id_carga) GROUP BY para_id, hora;
 
 END$$
 

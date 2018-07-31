@@ -93,8 +93,8 @@
         });
         
         var icon = {
-            url: "/graphics/assets/img/map_marker.svg", // url
-            scaledSize: new google.maps.Size(50, 70), // scaled size
+            url: "/graphics/assets/img/estacion_ico.png", // url
+            scaledSize: new google.maps.Size(50, 50), // scaled size
             origin: new google.maps.Point(0, 0) // origin
 
         };
@@ -123,8 +123,9 @@
             label: {
                 text: '<%=pumu.getPumuNombre()%>',
                 color: 'white',
-                fontSize: "20px",
+                fontSize: "15px",
                 fontWeight: "bold"
+                
             },
             title: '<%=pumu.getPumuDescripcion()%>',
             icon: icon

@@ -4,6 +4,10 @@
     Author     : D4V3
 --%>
 
+<%@page import="com.statics.vo.UnidadMedida"%>
+<%@page import="java.util.List"%>
+<%@page import="javax.persistence.EntityManager"%>
+<%@page import="javax.persistence.Query"%>
 <%@page import="com.statics.vo.ParametroLabels"%>
 <%@page import="com.statics.dao.ParametrosJpaController"%>
 <%@page import="com.statics.vo.Parametros"%>
@@ -43,7 +47,7 @@
 </ol>
 <!-- end breadcrumb -->
 <!-- begin page-header -->
-<h1 class="page-header">Contaminantes <small><%=index.isEmpty()?"Nuevo":"Editar" %> Contaminante</small></h1>
+<h1 class="page-header">Contaminantes <small><%=index.isEmpty() ? "Nuevo" : "Editar"%> Contaminante</small></h1>
 <!-- end page-header -->
 
 <div class="panel panel-inverse">
@@ -68,25 +72,59 @@
                 <div class="col-md-4">
                     <div class="form-group ">
                         <label>Codigo*</label>
-                        <input type="number" name="Codigo" placeholder="Codigo" class="form-control" value="<%=elem.getParaId() != null ? elem.getParaCodigo(): ""%>"  required="" data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
+                        <input type="number" name="Codigo" placeholder="Codigo" class="form-control" value="<%=elem.getParaId() != null ? elem.getParaCodigo() : ""%>"  required="" data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
                     </div>
                 </div> 
-                <div class="col-md-4">
+                <div class="col-md-4" hidden>
                     <div class="form-group ">
                         <label>Labels *</label> <br />
                         <select class="form-control" name="labels" multiple data-role="tagsinput" required="" data-parsley-id="7052" >
-                            <%if(elem.getParaId()!= null ){
-                            for(ParametroLabels pl : elem.getParametroLabelsList()){%>
-                            <option value="<%=o.notEmpty(pl.getPalaLabel()) %>"><%=o.notEmpty(pl.getPalaLabel()) %></option>
-                            <%}}%>
+                            <%if (elem.getParaId() != null) {
+                                    for (ParametroLabels pl : elem.getParametroLabelsList()) {%>
+                            <option value="<%=o.notEmpty(pl.getPalaLabel())%>"><%=o.notEmpty(pl.getPalaLabel())%></option>
+                            <%}
+                            } else {%>
+                            <option value="label" selected>label</option>
+                            <%}%>
                         </select>
                         <ul class="parsley-errors-list" id="parsley-id-7052"></ul>
                     </div>
                 </div> 
+                <div class="col-md-4">
+                    <div class="form-group ">
+                        <label>Unidad *</label>
+                        <select type="text" id="horario" name="unidadDeseada" class="form-control" >
+                            <%
+                                EntityManager em = emf.createEntityManager();
+                                Query q = em.createNativeQuery("select * from unidad_medida", UnidadMedida.class);
+                                List<UnidadMedida> listaUnidades = q.getResultList();
+                                Integer idUnidad = 0;
+                                if (elem.getParaId() != null) {
+                                    if(!elem.getParametroFactorconversionList().isEmpty())
+                                    idUnidad = elem.getParametroFactorconversionList().get(0).getIdUnidadMedida().getId();
+                                }
+                                if (!listaUnidades.isEmpty()) {
+                                    String sel = "";
+                                    for (UnidadMedida s : listaUnidades) {
+                                        if (idUnidad == s.getId()) {
+                                            sel = "selected";
+                                        } else {
+                                            sel = "";
+                                        }
+                            %>
+                            <option <%=sel%> value="<%=o.notEmpty(s.getId().toString())%>" title=""><%=o.notEmpty(s.getDescripcion())%></option>
+                            <%
+                                    }
+                                }
+                            %>
+                        </select>
+                        <ul class="parsley-errors-list" ></ul>
+                    </div>
+                </div>
                 <div class="col-md-12">
                     <div class="form-group ">
                         <label>Descripcion *</label>
-                        <textarea name="descripcion" class="form-control" placeholder="Descripcion" rows="5" required data-parsley-id="7052"><%=elem.getParaId()!= null ? elem.getPareDescripcion(): ""%></textarea>
+                        <textarea name="descripcion" class="form-control" placeholder="Descripcion" rows="5" required data-parsley-id="7052"><%=elem.getParaId() != null ? elem.getPareDescripcion() : ""%></textarea>
                         <ul class="parsley-errors-list" id="parsley-id-7052"></ul>
                     </div>
                 </div> 
@@ -114,8 +152,8 @@
         </div>
     </form>
 </div>
-                <link rel="stylesheet" href="assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css" />              
-  <script src="assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
+<link rel="stylesheet" href="assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css" />              
+<script src="assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
 <script>
                     $(document).ready(function () {
 //        App.init();

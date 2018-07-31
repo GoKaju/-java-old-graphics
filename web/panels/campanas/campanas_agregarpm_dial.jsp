@@ -92,7 +92,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Datos básicos</a>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1" onclick="changeFlechita(this)">Datos básicos<i class="glyphicon glyphicon glyphicon-chevron-down pull-right"></i></a>
                     </h4>
                 </div>
                 <div id="collapse1" class="panel-collapse collapse in">
@@ -143,7 +143,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Ubicación del punto</a>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" onclick="changeFlechita(this)">Unicación del punto<i class="glyphicon glyphicon glyphicon-chevron-left pull-right"></i></a>
                     </h4>
                 </div>
                 <div id="collapse2" class="panel-collapse collapse">
@@ -228,7 +228,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Fotos del punto</a>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse3" onclick="changeFlechita(this)">Fotos del punto<i class="glyphicon glyphicon glyphicon-chevron-left pull-right"></i></a>
                     </h4>
                 </div>
                 <div id="collapse3" class="panel-collapse collapse">
@@ -290,7 +290,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">Niveles I a III</a>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse4" onclick="changeFlechita(this)">Niveles I a III<i class="glyphicon glyphicon glyphicon-chevron-left pull-right"></i></a>
                     </h4>
                 </div>
                 <div id="collapse4" class="panel-collapse collapse">
@@ -355,7 +355,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse5">Nivel IV</a>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse5" onclick="changeFlechita(this)">Nivel IV<i class="glyphicon glyphicon glyphicon-chevron-left pull-right"></i></a>
                     </h4>
                 </div>
                 <div id="collapse5" class="panel-collapse collapse">
@@ -364,7 +364,7 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading accordionSub">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSub1">Tráfico</a>
+                                        <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSub1" onclick="changeFlechita(this)">Tráfico<i class="glyphicon glyphicon glyphicon-chevron-left pull-right"></i></a>
                                     </h4>
                                 </div>
                                 <div id="collapseSub1" class="panel-collapse collapse">
@@ -440,7 +440,7 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading accordionSub">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSub2">Indicativas</a>
+                                        <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSub2" onclick="changeFlechita(this)">Indicativas<i class="glyphicon glyphicon glyphicon-chevron-left pull-right"></i></a>
                                     </h4>
                                 </div>
                                 <div id="collapseSub2" class="panel-collapse collapse">
@@ -480,7 +480,7 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading accordionSub">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSub3">Industrial</a>
+                                        <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSub3" onclick="changeFlechita(this)">Industrial<i class="glyphicon glyphicon glyphicon-chevron-left pull-right"></i></a>
                                     </h4>
                                 </div>
                                 <div id="collapseSub3" class="panel-collapse collapse">
@@ -509,7 +509,7 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading accordionSub">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSub4">Punto crítico/Rurales fondo</a>
+                                        <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSub4" onclick="changeFlechita(this)">Punto critico/Rurales fondo<i class="glyphicon glyphicon glyphicon-chevron-left pull-right"></i></a>
                                     </h4>
                                 </div>
                                 <div id="collapseSub4" class="panel-collapse collapse">
@@ -542,7 +542,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse6">Datos de logística</a>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse6" onclick="changeFlechita(this)">Datos de logistica<i class="glyphicon glyphicon glyphicon-chevron-left pull-right"></i></a>
                     </h4>
                 </div>
                 <div id="collapse6" class="panel-collapse collapse">
@@ -586,7 +586,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse7">Criterios de microlocalización</a>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse7" onclick="changeFlechita(this)">Criterios de Microlocalización<i class="glyphicon glyphicon glyphicon-chevron-left pull-right"></i></a>
                     </h4>
                 </div>
                 <div id="collapse7" class="panel-collapse collapse">
@@ -640,7 +640,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse8">Personal de contacto</a>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse8" onclick="changeFlechita(this)">Personal de contacto<i class="glyphicon glyphicon glyphicon-chevron-left pull-right"></i></a>
                     </h4>
                 </div>
                 <div id="collapse8" class="panel-collapse collapse">
@@ -750,6 +750,15 @@
     </div>
 </form>
 <script>
+    function changeFlechita(e){
+        if($(e).children("i").hasClass("glyphicon-chevron-down")){
+            $(e).children("i").removeClass("glyphicon-chevron-down");
+            $(e).children("i").addClass("glyphicon-chevron-left");
+        } else {
+            $(e).children("i").removeClass("glyphicon-chevron-left");
+            $(e).children("i").addClass("glyphicon-chevron-down");
+        }
+    }
     function addDatoAdicional() {
         var indexRow = 0;
         var parent = document.querySelector('#rowsDatosAdicionales');
