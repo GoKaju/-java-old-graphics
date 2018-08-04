@@ -88,11 +88,16 @@
                         <select name="Cliente" class="form-control"  required="" data-parsley-id="7052" onchange="recargarCampanas(this.value)">
                             <option value="">Seleccone...</option>
                             <%  EntityManager em = emf.createEntityManager();
-                                Query qqq = em.createNativeQuery("select * from cliente", Cliente.class);
+                                Query qqq = em.createNativeQuery("select c.* from cliente c "+
+                                                                    "inner join campanas cp on c.id = cp.id_cliente "+
+                                                                    "inner join grupo gr on gr.grup_id= cp.grup_id "+
+                                                                    "inner join grupo_usuarios gu on gu.grup_id = gr.grup_id and gu.usua_id =?  GROUP by c.id", Cliente.class);
+                                qqq.setParameter(1, user.getUsuaId());
                                 List<Cliente> listaClientes = qqq.getResultList();
 
                                 if (!listaClientes.isEmpty()) {
                                     for (Cliente s : listaClientes) {
+                                      
                                         String sel = "";
                             %>
                             <option <%=sel%> value="<%=o.notEmpty(s.getId().toString())%>" title=""><%=o.notEmpty(s.getNombre())%></option>

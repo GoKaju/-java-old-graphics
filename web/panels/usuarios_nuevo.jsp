@@ -4,6 +4,8 @@
     Author     : D4V3
 --%>
 
+<%@page import="com.statics.dao.GrupoJpaController"%>
+<%@page import="com.statics.vo.Grupo"%>
 <%@page import="com.statics.dao.FuncionalidadesJpaController"%>
 <%@page import="com.statics.vo.Funcionalidades"%>
 <%@page import="com.statics.vo.Roles"%>
@@ -78,6 +80,21 @@
                     <input type="text" name="pass" placeholder="Contraseña" class="form-control"  required="" data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
                 </div>
             </div> 
+            <div class="col-md-4" id="grupoContainer">
+                    <div class="form-group"  id="grupoContent">
+                        <label>Grupo *</label>
+                        <select type="text" id="grupo" name="grupo" class="form-control" required="">
+                            <%
+                             for(Grupo g : new GrupoJpaController(emf).findGrupoEntities()){
+                            %>
+                            <option value="<%=o.notEmpty(g.getGrupId().toString())%>" title="<%=o.notEmpty(g.getGrupDescripcion())%>"><%=o.notEmpty(g.getGrupNombre())%></option>
+                            <%
+                                }
+                            %>
+                        </select>
+                        <ul class="parsley-errors-list" ></ul>
+                    </div>
+                </div>
             <div class="form-group col-md-4">
 
                             <label class="control-label" for="firma_input">
@@ -139,6 +156,9 @@
                             $('#FormAplication').submit();
                         }
                         " class="pull-right btn btn-success m-r-5 m-b-5">Guardar</button>
+                           <button type="button"  onclick="
+                    modalDialog('Agregar Nuevo Grupo', 'panels/grupo_usuarios/grupo_nuevo_dial.jsp', 'rfid=<%=rfid%>', 'small')
+                    " class="pull-right btn btn-success m-r-5 m-b-5">Crear Grupo</button>
             <button type="button"  onclick="RecargaPanel('panels/usuarios.jsp?rfid=<%=rfid%>','content')" class="pull-right btn btn-default m-r-5 m-b-5">Atras</button>
 
         </div>

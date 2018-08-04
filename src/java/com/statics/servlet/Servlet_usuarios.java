@@ -5,11 +5,16 @@
  */
 package com.statics.servlet;
 
+import com.statics.dao.EstadosJpaController;
+import com.statics.dao.GrupoJpaController;
+import com.statics.dao.GrupoUsuariosJpaController;
 import com.statics.dao.RolesJpaController;
 import com.statics.dao.UsuariorolJpaController;
 import com.statics.dao.UsuariosJpaController;
 import com.statics.util.Cadenas;
 import com.statics.util.Fechas;
+import com.statics.vo.Grupo;
+import com.statics.vo.GrupoUsuarios;
 import com.statics.vo.Roles;
 import com.statics.vo.Usuariorol;
 import com.statics.vo.Usuarios;
@@ -84,6 +89,14 @@ public class Servlet_usuarios extends HttpServlet {
 
                         }
                     }
+                    // usuario grupo
+                    GrupoUsuarios gu = new GrupoUsuarios();
+                    gu.setGrupId(new GrupoJpaController(emf).findGrupo(Integer.parseInt(o.getvariable("grupo"))));
+                    gu.setUsuaId(u);
+                    gu.setGrusFechacambio(Fechas.getFechaHoraTimeStamp());
+                    gu.setGrusRegistradopor(user.getUsuaId());
+                    new GrupoUsuariosJpaController(emf).create(gu);
+                    
 
                     out.println("alerta('OK','¡Creado con exito!'); RecargaPanel('panels/usuarios.jsp?rfid=" + o.getvariable("rfid") + "','content');");
 
@@ -97,7 +110,19 @@ public class Servlet_usuarios extends HttpServlet {
                     udao.destroy(u.getUsuaId());
                     out.println("alerta('OK','¡Eliminado con exito!'); RecargaPanel('panels/usuarios.jsp?rfid=" + o.getvariable("rfid") + "','content');");
 
-                } else {
+                } else if(modulo.equals("nuevoGrupo")){
+                    Grupo g = new Grupo();
+                    g.setGrupNombre(o.getvariable("nombre"));
+                    g.setGrupDescripcion(o.getvariable("descripcion"));
+                    g.setGrupFechacambio(Fechas.getFechaHoraTimeStamp());
+                    g.setGrupRegistradopor(user.getUsuaId());
+                    g.setEstaId(new EstadosJpaController(emf).findEstados(1));
+                    new GrupoJpaController(emf).create(g);
+                   out.println("closeModalAll(); alerta('OK','¡Creado con exito!'); $('#grupoContainer').load('panels/usuarios_nuevo.jsp?rfid=" + o.getvariable("rfid") + "  #grupoContent');");
+
+                
+                }
+                else {
                     out.println("alerta('ERROR','¡Modulo no encontrado!');");
                 }
 

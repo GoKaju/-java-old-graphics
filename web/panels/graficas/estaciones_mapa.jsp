@@ -94,7 +94,7 @@
         
         var icon = {
             url: "/graphics/assets/img/estacion_ico.png", // url
-            scaledSize: new google.maps.Size(50, 50), // scaled size
+            scaledSize: new google.maps.Size(30, 50), // scaled size
             origin: new google.maps.Point(0, 0) // origin
 
         };

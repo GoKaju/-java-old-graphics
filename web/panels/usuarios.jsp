@@ -4,6 +4,7 @@
     Author     : D4V3
 --%>
 
+<%@page import="com.statics.vo.GrupoUsuarios"%>
 <%@page import="com.statics.util.Fechas"%>
 <%@page import="com.statics.dao.UsuariosJpaController"%>
 <%@page import="com.statics.vo.Roles"%>
@@ -59,6 +60,7 @@
                                 <thead>
                                     <tr>
                                         <th>Usuario</th>
+                                        <th>Grupo</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
@@ -69,6 +71,7 @@
                                         for(Usuarios u :udao.findUsuariosEntities()){
                                     %>
                                     <tr >
+                               
                                         <td>
 
                                             <div class="img img-circle " style="float: left">
@@ -95,6 +98,13 @@
                       
                                             
                                             
+                                        </td>
+                                                 <td>
+                                            <ul>
+                                                <% for(GrupoUsuarios gu :u.getGrupoUsuariosList()){%>
+                                                <li><%=gu.getGrupId().getGrupNombre()%></li>
+                                                <%}%>
+                                            </ul>
                                         </td>
                                         <td>           
                                             <% if(!user.getUsuaId().toString().equals(u.getUsuaId().toString()) ){
