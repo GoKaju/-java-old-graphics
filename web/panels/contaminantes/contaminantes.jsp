@@ -66,6 +66,8 @@
                     <th>Codigo</th>
                     <th>Descripcion</th>
                     <th>Unidad de medida</th>
+                    <th>Borde</th>
+                    <th>Fondo</th>
                     <th></th>
                 </tr>
             </thead>
@@ -96,6 +98,8 @@
                             u.getParametroFactorconversionList().get(0).getIdUnidadMedida().getDescripcion():""
                         %>
                     </td>
+                    <td><span style="background-color: <%= u.getPareColorBackground() %>"><%= u.getPareColorBorde() %></span></td>
+                    <td><span style="background-color: <%= u.getPareColorBackground() %>"><%= u.getPareColorBackground() %></span></td>
                     <td>           
                      
                         <% if (rf.getRofuOperacion().contains("M")) {%>

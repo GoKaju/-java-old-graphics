@@ -140,7 +140,7 @@
             xs: {
                 '<%=dat.getLabel()%>': '<%=dat.getX()%>'
             },
-            xFormat: '%Y-%m-%d %H:%M',
+            xFormat: '%Y-%m-%d %H:%M:%S',
             columns: [
     <%
 
@@ -166,7 +166,8 @@
             ],
             type: 'area',
             colors: {
-                '<%=dat.getLabel()%>': colors[Math.floor((Math.random() * 8) + 1)]
+                '<%=dat.getLabel()%>': '<%= dat.getColorBorde()!=null?dat.getColorBorde():"#fff" %>'
+                        //colors[Math.floor((Math.random() * 8) + 1)]
 
             }
         },

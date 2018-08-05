@@ -47,9 +47,6 @@ public class Parametros implements Serializable {
     private List<UnidadmedidaParametro> unidadmedidaParametroList;
 
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "masa_molar")
-    private Double masaMolar;
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,6 +69,10 @@ public class Parametros implements Serializable {
     private int paraCodigo;
     @Column(name = "para_tipografica")
     private String paraTipografica;
+    @Column(name="pare_color_borde")
+    private String pareColorBorde;
+    @Column(name="pare_color_background")
+    private String pareColorBackground;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "paraId")
     private List<ParametroLabels> parametroLabelsList;
     @OneToMany(mappedBy = "idParametro")
@@ -207,14 +208,6 @@ public class Parametros implements Serializable {
         return "com.statics.vo.Parametros[ paraId=" + paraId + " ]";
     }
 
-    public Double getMasaMolar() {
-        return masaMolar;
-    }
-
-    public void setMasaMolar(Double masaMolar) {
-        this.masaMolar = masaMolar;
-    }
-
     @XmlTransient
     public List<UnidadmedidaParametro> getUnidadmedidaParametroList() {
         return unidadmedidaParametroList;
@@ -222,6 +215,22 @@ public class Parametros implements Serializable {
 
     public void setUnidadmedidaParametroList(List<UnidadmedidaParametro> unidadmedidaParametroList) {
         this.unidadmedidaParametroList = unidadmedidaParametroList;
+    }
+
+    public String getPareColorBorde() {
+        return pareColorBorde;
+    }
+
+    public void setPareColorBorde(String pareColorBorde) {
+        this.pareColorBorde = pareColorBorde;
+    }
+
+    public String getPareColorBackground() {
+        return pareColorBackground;
+    }
+
+    public void setPareColorBackground(String pareColorBackground) {
+        this.pareColorBackground = pareColorBackground;
     }
     
 }

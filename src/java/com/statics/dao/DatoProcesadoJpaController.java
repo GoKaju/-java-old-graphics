@@ -41,7 +41,7 @@ public class DatoProcesadoJpaController implements Serializable {
     public List<Parametros> findParametrosByIdPuntoMuestral(int idPuntoMuestral){
         String sqlQuery="SELECT DISTINCT(p.para_id), pare_nombre, pare_descripcion,"
                 + " pare_registradopor, pare_fechacambio, para_estado, para_codigo,"
-                + " para_tipografica, masa_molar FROM dato_procesado dp "
+                + " para_tipografica FROM dato_procesado dp "
                 + "INNER JOIN parametro_factorconversion pfc ON pfc.id=dp.id_parametro_factorconversion "
                 + "INNER JOIN parametros p ON p.para_id=pfc.id_parametro "
                 + "WHERE id_punto_muestral="+idPuntoMuestral;
@@ -61,13 +61,13 @@ public class DatoProcesadoJpaController implements Serializable {
         return lista;
     }
     
-    public List<DatoProcesado> findDatosByIdPuntoAndParametro24Hours(int idPuntoMuestral, int idPFC){
+    public List<Object[]> findDatosByIdPuntoAndParametro24Hours(int idPuntoMuestral, int idPFC){
         String sqlQuery="findDatosByIdPuntoAndParametro24Hours";
-        List<DatoProcesado> lista=new ArrayList();
+        List<Object[]> lista=new ArrayList();
         EntityManager em=null;
         try{
             em=getEntityManager();
-            StoredProcedureQuery  q=em.createStoredProcedureQuery(sqlQuery, DatoProcesado.class);
+            StoredProcedureQuery  q=em.createStoredProcedureQuery(sqlQuery);
             q.registerStoredProcedureParameter("pumu", Integer.class, ParameterMode.IN);
             q.registerStoredProcedureParameter("pfc", Integer.class, ParameterMode.IN);
             q.setParameter("pumu", idPuntoMuestral);

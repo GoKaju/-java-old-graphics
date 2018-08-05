@@ -316,7 +316,6 @@ $('#btn_datos').css('visibility', 'visible');
 
                         modalDialog('Datos(' + title + ')', 'panels/graficas/graficas_crear_tabla.jsp', 'idsess=' + idsess + '&paramsess=' + paramsess + '', 'large');
 
-
                     }
 
 

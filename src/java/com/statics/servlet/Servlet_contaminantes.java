@@ -79,6 +79,8 @@ public class Servlet_contaminantes extends HttpServlet {
                     elem.setParaEstado(1);
                     elem.setPareRegistradopor(user.getUsuaId());
                     elem.setPareFechacambio(Fechas.getFechaHoraTimeStamp());
+                    elem.setPareColorBorde(o.getvariable("colorBorde"));
+                    elem.setPareColorBackground(o.getvariable("colorFondo"));
                     String[] labels = null;
                     if (!o.getvariable("labels").isEmpty()) {
                         labels = request.getParameterValues("labels");
