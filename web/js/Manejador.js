@@ -151,6 +151,10 @@ function modalDialog(title, url, data, size) {
                     size: size === undefined ? "large" : size, // tamaÃ±o del dialogo (large, small, null)
                     onEscape: true
                 });
+                setTimeout(function(){
+                        $('#tableExcel324').tableExport({type: 'excel', tableName: 'yourTableName', escape: 'false'});
+                    }
+                ,500)
             });
 }
 

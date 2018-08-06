@@ -72,6 +72,8 @@ public class DataJson {
     
    
 public class DataUnit{
+    String colorBorde;
+    String colorFondo;
     int porcentaje;
 String unidadMedida;
 String label;
@@ -79,6 +81,22 @@ String x;
 String concatDatos;
 int color;
 double datoPromediado;
+
+        public String getColorBorde() {
+            return colorBorde;
+        }
+
+        public void setColorBorde(String colorBorde) {
+            this.colorBorde = colorBorde;
+        }
+
+        public String getColorFondo() {
+            return colorFondo;
+        }
+
+        public void setColorFondo(String colorFondo) {
+            this.colorFondo = colorFondo;
+        }
 
         public int getColor() {
             return color;

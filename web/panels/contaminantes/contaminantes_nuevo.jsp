@@ -69,7 +69,7 @@
                         <input type="text" name="Nombre" placeholder="Nombre" class="form-control" value="<%=elem.getParaId() != null ? elem.getPareNombre() : ""%>"  required="" data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
                     </div>
                 </div> 
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <div class="form-group ">
                         <label>Codigo*</label>
                         <input type="number" name="Codigo" placeholder="Codigo" class="form-control" value="<%=elem.getParaId() != null ? elem.getParaCodigo() : ""%>"  required="" data-parsley-id="7052"><ul class="parsley-errors-list" id="parsley-id-7052"></ul>
@@ -90,7 +90,7 @@
                         <ul class="parsley-errors-list" id="parsley-id-7052"></ul>
                     </div>
                 </div> 
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <div class="form-group ">
                         <label>Unidad *</label>
                         <select type="text" id="horario" name="unidadDeseada" class="form-control" >
@@ -119,6 +119,18 @@
                             %>
                         </select>
                         <ul class="parsley-errors-list" ></ul>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Color borde</label>
+                        <input class="form-control" type="text" name="colorBorde" value="<%=elem.getParaId()!=null?elem.getPareColorBorde():""%>" placeholder="Borde"/>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Color fondo</label>
+                        <input class="form-control" type="text" name="colorFondo" value="<%=elem.getParaId()!=null?elem.getPareColorBackground():""%>" placeholder="Background"/>
                     </div>
                 </div>
                 <div class="col-md-12">
@@ -156,8 +168,8 @@
 <script src="assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
 <script>
                     $(document).ready(function () {
-//        App.init();
-//			TableManageResponsive.init();
+                        $("input[name=colorBorde]").colorpicker();
+                        $("input[name=colorFondo]").colorpicker();
                     });
 </script>
 <%        } else {

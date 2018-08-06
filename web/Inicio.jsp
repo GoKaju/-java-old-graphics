@@ -56,6 +56,7 @@
  <!-- Load c3.css -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.14/c3.min.css" rel="stylesheet">
         <link href="assets/css/bootstrap-toggle.min.css" rel="stylesheet" type="text/css"/>
+        <link href="assets/css/bootstrap-colorpicker.min.css" rel="stylesheet" type="text/css"/>
         <link href="assets/css/customStyles.css" rel="stylesheet" />
 
     </head>
@@ -349,6 +350,7 @@ RecargaPanel('panels/graficas/estaciones_mapa.jsp?rfid=33', 'content')
         </script>
         <script src="assets/js/customJs.js"></script>
         <script src="assets/js/bootstrap-toggle.min.js" type="text/javascript"></script>
+        <script src="assets/js/bootstrap-colorpicker.min.js" type="text/javascript"></script>
     </body>
 </html>
 <%

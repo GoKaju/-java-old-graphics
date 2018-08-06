@@ -116,8 +116,8 @@
                     datasets: [
             <%for (DataJson.DataUnit du : datos.getDatos()) {%>
                         {
-                            backgroundColor: getColor(true).bgcolor,
-                            borderColor: getColor(false).color,
+                            backgroundColor: "<%= du.getColorFondo()!=null ? du.getColorFondo(): "#000"%>",
+                            borderColor: "<%= du.getColorBorde()!=null? du.getColorBorde() : "#000" %>",
                             label: '<%=du.getLabel()%>(<%=du.getUnidadMedida()%>)',
                             data: [<%=du.getConcatDatos()%>],
                             borderWidth: 1,

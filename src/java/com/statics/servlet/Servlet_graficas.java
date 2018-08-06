@@ -239,6 +239,8 @@ public class Servlet_graficas extends HttpServlet {
                                     dat.setFechas(new ArrayList());
                                     dat.setDatos(new ArrayList());
                                     dat.setUnidadMedida(unidadMedida);
+                                    dat.setColorBorde(parametro.getPareColorBorde());
+                                    dat.setColorFondo(parametro.getPareColorBackground());
                                     //NivelMaximo nm=nivelMaximoDao.
                                     //      findMaximoByIdParameterAndIdUnidadTiempo(parametro.getParaId(),idUnidadTiempo);
                                     //if (nm!=null) {
@@ -292,25 +294,15 @@ public class Servlet_graficas extends HttpServlet {
                                      + "date_format(d.dato_fecha, \"%Y-%m-%d\")\n"
                                      + "ORDER BY\n"
                                      + "d.dato_fecha ASC");*/
-                                    Query cons = em.createNativeQuery("select dp.fecha, group_concat(concat(pfc.id_parametro,'#'),"
-                                            + "round(dp.valor,3) SEPARATOR ';') "
-                                            + "from dato_procesado dp inner join parametro_factorconversion pfc "
-                                            + "on dp.id_parametro_factorconversion=pfc.id "
-                                            + "WHERE DATE_FORMAT(dp.fecha, \"%Y-%m-%d %H\") BETWEEN ? "
-                                            + "AND ? AND dp.id_punto_muestral=? GROUP BY (\n"
-                                            + "	CASE WHEN ? = 1 THEN DATE_FORMAT(dp.fecha, \"%Y-%m-%d %H\")\n"
-                                            + "	     WHEN ? = 24 THEN DATE_FORMAT(dp.fecha,\"%Y-%m-%d\")\n"
-                                            + "	     WHEN ? = 730 THEN DATE_FORMAT(dp.fecha,\"%Y-%m\")\n"
-                                            + "	     WHEN ? = 8760 THEN DATE_FORMAT(dp.fecha,\"%Y\")\n"
-                                            + "	END);");
-
-                                    cons.setParameter(1, fechaini);
-                                    cons.setParameter(2, fechafin);
-                                    cons.setParameter(3, pumu.getPumuId());
-                                    cons.setParameter(4, horas);
-                                    cons.setParameter(5, horas);
-                                    cons.setParameter(6, horas);
-                                    cons.setParameter(7, horas);
+                                    Query cons = em.createStoredProcedureQuery("calculaPromediosPorHorarioExcel")
+                                            .registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN)
+                                            .setParameter(1, horas)
+                                            .registerStoredProcedureParameter(2, String.class, ParameterMode.IN)
+                                            .setParameter(2, fechaini)
+                                            .registerStoredProcedureParameter(3, String.class, ParameterMode.IN)
+                                            .setParameter(3, fechafin)
+                                            .registerStoredProcedureParameter(4, Integer.class, ParameterMode.IN)
+                                            .setParameter(4, pumu.getPumuId());
                                     List<Object[]> lis = cons.getResultList();
 
                                     for (Object[] a : lis) {
@@ -349,9 +341,8 @@ public class Servlet_graficas extends HttpServlet {
                     datos.setNombreGraphic("Nombre grafica");
                     datos.setTipo("Timeseries");
                     datos.setDatos(new ArrayList());
-                    List<DatoProcesado> listaDatosProcesados;
+                    List<Object[]> listaDatosProcesados;
                     List<DatoProcesado> datoPromedio;
-                    int horas;
                     int color = 0;
                     double valor = 0;
                     List<ParametroFactorconversion> listaParametroFactorconversions = pfcDao.findPFCInPunto(idPuntoMuestral);
@@ -366,6 +357,7 @@ public class Servlet_graficas extends HttpServlet {
                         dat.setFechas(new ArrayList());
                         dat.setDatos(new ArrayList());
                         dat.setUnidadMedida(pfc.getIdUnidadMedida().getDescripcion());
+                        dat.setColorBorde(pfc.getIdParametro().getPareColorBorde());
                         listaDatosProcesados = datoProcesadoDao.findDatosByIdPuntoAndParametro24Hours(idPuntoMuestral, pfc.getId());
                         if (paraId == 5) {
                             datoPromedio = datoProcesadoDao.findPromedioDatosPorHorario(24, idPuntoMuestral, pfc.getId());
@@ -449,9 +441,9 @@ public class Servlet_graficas extends HttpServlet {
                         dat.setDatoPromediado(valor);
                         dat.setColor(color);
 
-                        for (DatoProcesado dp : listaDatosProcesados) {
-                            dat.getFechas().add(Fechas.DevuelveFormato(dp.getFecha(), "yyyy-MM-dd HH:mm"));
-                            dat.getDatos().add(dp.getValor().toString());
+                        for (Object[] dp : listaDatosProcesados) {
+                            dat.getFechas().add(dp[4].toString());
+                            dat.getDatos().add(dp[5].toString());
                         }
 
                         datos.getDatos().add(dat);
