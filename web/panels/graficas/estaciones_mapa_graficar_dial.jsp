@@ -34,7 +34,7 @@
             EntityManagerFactory emf = Persistence.createEntityManagerFactory("RPU");
             PuntoMuestral pumu = new PuntoMuestralJpaController(emf).findPuntoMuestral(Integer.parseInt(o.getvariable("cod")));
             String ramdom = Fechas.getCadena();
-            String jh=o.getvariable("nomsess");
+            String jh = o.getvariable("nomsess");
             DataJson datos = (DataJson) session.getAttribute(jh);
 
 
@@ -53,8 +53,10 @@
         top: <%=o.getvariable("ypos")%>px;
         left: <%=o.getvariable("xpos")%>px;    
     }
- 
+
     .panel{background: rgba(0,0,0,0.7)}
+    .red-color{color: #cd0a0a}
+    .green-color{color: #00CF00}
 
 </style>
 <div id="graficaDialMap<%=ramdom%>" class="panel  panelFloatGraf" style="" >
@@ -71,34 +73,36 @@
         <div class="panel-body" style="padding:0 15px">
             <div id="accordion<%=ramdom%>" class="row"   >
                 <%
-                    String[] color=new String[8];
-                    color[0]="#BDBDBD";
-                    color[1]="#30f90c";
-                    color[2]="#fff80f";
-                    color[3]="#ff7600";
-                    color[4]="#ff0000";
-                    color[5]="#ef00ff";
-                    color[6]="#925904";
-                    color[7]="#000";
-                    int i=0;
+                    String[] color = new String[8];
+                    color[0] = "#BDBDBD";
+                    color[1] = "#30f90c";
+                    color[2] = "#fff80f";
+                    color[3] = "#ff7600";
+                    color[4] = "#ff0000";
+                    color[5] = "#ef00ff";
+                    color[6] = "#925904";
+                    color[7] = "#000";
+                    int i = 0;
                     for (DataJson.DataUnit dat : datos.getDatos()) {
                 %>
                 <div class=" panel col-md-12 data_header" style="margin-bottom: 1px; padding: 0px; font-size: 0.8em">
-                    <div class="row">
-                        <div class="col-md-8 col-sm-8">
-                            <span data-parent="#accordion<%=ramdom%>" data-toggle="collapse" style="cursor: pointer; display: inline-block; width: 96%;height: 15px;padding-top: 3px;padding-left: 10px;" data-target="#collapse<%=dat.hashCode() + ramdom%>"><%=dat.getLabel()%></span>
-                            <i   data-parent="#accordion<%=ramdom%>" data-toggle="collapse" style="cursor: pointer; display: inline-block; width: 4%;height: 15px;padding-top: 3px" data-target="#collapse<%=dat.hashCode() + ramdom%>" class="glyphicon glyphicon glyphicon-chevron-down pull-right"></i>
-                        </div>
-                        <div class="col-md-3 col-sm-3 pull-right text-center" style="background-color: <%= color[dat.getColor()] %>;height: 15px;margin-right: 10px;margin-top:3px;color:<%= dat.getColor()!=1&dat.getColor()!=2&dat.getColor()!=3?"white":"black" %>">
-                            <span style="padding-top: 5px"><%=String.format("%.2f",dat.getDatoPromediado()) + " "+ dat.getUnidadMedida()%></span>
+                    <div class="row ">
+                        <div class="col-md-12 col-sm-12">
+                            <div data-parent="#accordion<%=ramdom%>" data-toggle="collapse" style=" display: inline-block; cursor: pointer; width: 99%;height: 15px;padding-top: 3px;padding-left: 10px;" data-target="#collapse<%=dat.hashCode() + ramdom%>"><%=dat.getLabel()%>
+
+                                <i   data-parent="#accordion<%=ramdom%>" data-toggle="collapse" style="cursor: pointer; display: inline-block;height: 15px" data-target="#collapse<%=dat.hashCode() + ramdom%>" class="glyphicon glyphicon glyphicon-chevron-down pull-right"></i>
+                                <i style="margin-left: 5px;margin-right: 8px;" class="pull-right glyphicon  <%=Double.parseDouble(dat.getUltimoDato()) == 0?"glyphicon-alert red-color":"glyphicon-ok green-color" %>"   ></i>
+                                <span class="text-center pull-right" style="background-color: <%= color[dat.getColor()] %>;height: 15px;width:15px;color:<%= dat.getColor()!=1&dat.getColor()!=2&dat.getColor()!=3?"white":"black" %>"><%=dat.getHoraICA()==0?"": dat.getHoraICA() %></span>
+                                <span class="pull-right" style="">(UltimaHora):<%=dat.getUltimoDato()+ " "+ dat.getUnidadMedida()%></span>
+                            </div>
                         </div>
                     </div>
-                    <div  id="collapse<%=dat.hashCode() + ramdom%>" class="collapse">
+                    <div  id="collapse<%=dat.hashCode() + ramdom%>" class="collapse ">
                         <div id="chart<%=dat.hashCode() + ramdom%>" class=></div>
                     </div>
                 </div>
                 <%
-                    i++;
+                        i++;
                     }
                 %>
             </div>
@@ -133,9 +137,9 @@
     <%for (DataJson.DataUnit dat : datos.getDatos()) {%>
     var chart = c3.generate({
         size: {
-        height: 230,
-        width: 380
-    },
+            height: 230,
+            width: 380
+        },
         data: {
             xs: {
                 '<%=dat.getLabel()%>': '<%=dat.getX()%>'
@@ -166,7 +170,7 @@
             ],
             type: 'area',
             colors: {
-                '<%=dat.getLabel()%>': '<%= dat.getColorBorde()!=null?dat.getColorBorde():"#fff" %>'
+                '<%=dat.getLabel()%>': '<%= dat.getColorBorde() != null ? dat.getColorBorde() : "#fff"%>'
                         //colors[Math.floor((Math.random() * 8) + 1)]
 
             }

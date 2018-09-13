@@ -81,6 +81,25 @@ String x;
 String concatDatos;
 int color;
 double datoPromediado;
+int horaICA;
+String ultimoDato;
+
+        public String getUltimoDato() {
+            return ultimoDato;
+        }
+
+        public void setUltimoDato(String ultimoDato) {
+            this.ultimoDato = ultimoDato;
+        }
+
+
+        public int getHoraICA() {
+            return horaICA;
+        }
+
+        public void setHoraICA(int horaICA) {
+            this.horaICA = horaICA;
+        }
 
         public String getColorBorde() {
             return colorBorde;

@@ -344,6 +344,7 @@ public class Servlet_graficas extends HttpServlet {
                     List<Object[]> listaDatosProcesados;
                     List<DatoProcesado> datoPromedio;
                     int color = 0;
+                    int horarioICA = 0;
                     double valor = 0;
                     List<ParametroFactorconversion> listaParametroFactorconversions = pfcDao.findPFCInPunto(idPuntoMuestral);
 
@@ -361,6 +362,7 @@ public class Servlet_graficas extends HttpServlet {
                         listaDatosProcesados = datoProcesadoDao.findDatosByIdPuntoAndParametro24Hours(idPuntoMuestral, pfc.getId());
                         if (paraId == 5) {
                             datoPromedio = datoProcesadoDao.findPromedioDatosPorHorario(24, idPuntoMuestral, pfc.getId());
+                            horarioICA =24;
                             if (!datoPromedio.isEmpty()) {
                                 valor = datoPromedio.get(0).getValor();
                             }
@@ -378,6 +380,7 @@ public class Servlet_graficas extends HttpServlet {
                                 color = 6;
                             }
                         } else if (paraId == 6) {
+                              horarioICA =24;
                             datoPromedio = datoProcesadoDao.findPromedioDatosPorHorario(24, idPuntoMuestral, pfc.getId());
                             if (!datoPromedio.isEmpty()) {
                                 valor = datoPromedio.get(0).getValor();
@@ -396,6 +399,7 @@ public class Servlet_graficas extends HttpServlet {
                                 color = 6;
                             }
                         } else if (paraId == 9) {
+                              horarioICA =1;
                             datoPromedio = datoProcesadoDao.findPromedioDatosPorHorario(1, idPuntoMuestral, pfc.getId());
                             if (!datoPromedio.isEmpty()) {
                                 valor = datoPromedio.get(0).getValor() * 2.16185;
@@ -414,6 +418,7 @@ public class Servlet_graficas extends HttpServlet {
                                 color = 6;
                             }
                         } else if (paraId == 2) {
+                              horarioICA =1;
                             datoPromedio = datoProcesadoDao.findPromedioDatosPorHorario(1, idPuntoMuestral, pfc.getId());
                             if (!datoPromedio.isEmpty()) {
                                 valor = datoPromedio.get(0).getValor() * 1.880;
@@ -433,6 +438,7 @@ public class Servlet_graficas extends HttpServlet {
                             }
                         } else {
                             datoPromedio = datoProcesadoDao.findPromedioDatosPorHorario(24, idPuntoMuestral, pfc.getId());
+                              horarioICA =0;
                             if (!datoPromedio.isEmpty()) {
                                 valor = datoPromedio.get(0).getValor();
                             }
@@ -440,10 +446,12 @@ public class Servlet_graficas extends HttpServlet {
                         }
                         dat.setDatoPromediado(valor);
                         dat.setColor(color);
-
+                        dat.setHoraICA(horarioICA);
+                        dat.setUltimoDato("0");
                         for (Object[] dp : listaDatosProcesados) {
                             dat.getFechas().add(dp[4].toString());
                             dat.getDatos().add(dp[5].toString());
+                            dat.setUltimoDato(dp[5].toString());
                         }
 
                         datos.getDatos().add(dat);

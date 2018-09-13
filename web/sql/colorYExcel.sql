@@ -3,7 +3,7 @@ ALTER TABLE `rstatics`.`parametros` ADD COLUMN `pare_color_borde` VARCHAR(20) NU
 AFTER `para_tipografica`, ADD COLUMN `pare_color_background` VARCHAR(20) NULL AFTER `pare_color_borde`; 
 
 DELIMITER //
-DROP PROCEDURE IF EXISTS calculaPromediosPorHorarioExcel; //
+DROP PROCEDURE IF EXISTS calculaPromediosPorHorarioExcel; 
 CREATE PROCEDURE calculaPromediosPorHorarioExcel
 (IN horas INT,
 IN fechaInicio DATETIME,
