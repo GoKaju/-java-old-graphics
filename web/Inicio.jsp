@@ -266,7 +266,7 @@
             <!-- end #content -->
 
             <!-- begin theme-panel -->
-            <div class="theme-panel">
+            <div class="theme-panel" style="display: none">
                 <a href="javascript:;" data-click="theme-panel-expand" class="theme-collapse-btn"><i class="fa fa-cog"></i></a>
                 <div class="theme-panel-content">
                     <h5 class="m-t-0">Color </h5>

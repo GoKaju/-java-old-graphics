@@ -65,7 +65,7 @@
             <a href="javascript:;" class="" data-click="panel-remove"><i style="color: white" class="fa fa-times"></i></a>
         </div>
         <h2 class="panel-title"> <b> 
-            <%= pumu.getPumuNombre()%></h2>
+            <%= pumu.getPumuNombre()+"  "+ Fechas.DevuelveFormato(Fechas.getFechaHora(), "dd/MM/yy HH:00")  %>  </h2>
         </b> 
     </div>
     <div id="scrollSlim<%=ramdom%>">
@@ -90,10 +90,10 @@
                         <div class="col-md-12 col-sm-12">
                             <div data-parent="#accordion<%=ramdom%>" data-toggle="collapse" style=" display: inline-block; cursor: pointer; width: 99%;height: 15px;padding-top: 3px;padding-left: 10px;" data-target="#collapse<%=dat.hashCode() + ramdom%>"><%=dat.getLabel()%>
 
-                                <i   data-parent="#accordion<%=ramdom%>" data-toggle="collapse" style="cursor: pointer; display: inline-block;height: 15px" data-target="#collapse<%=dat.hashCode() + ramdom%>" class="glyphicon glyphicon glyphicon-chevron-down pull-right"></i>
-                                <i style="margin-left: 5px;margin-right: 8px;" class="pull-right glyphicon  <%=Double.parseDouble(dat.getUltimoDato()) == 0?"glyphicon-alert red-color":"glyphicon-ok green-color" %>"   ></i>
+                                <i   data-parent="#accordion<%=ramdom%>" data-toggle="collapse" style="cursor: pointer; display: inline-block;height: 15px" data-target="#collapse<%=dat.hashCode() + ramdom%>" class="glyphicon glyphicon glyphicon-chevron-down pull-right "></i>
+                                <i style="margin-left: 5px;margin-right: 8px;" class="pull-right glyphicon  <%=Double.parseDouble(dat.getUltimoDato()) == 0?"glyphicon-alert text-warning":"glyphicon-ok green-color" %>"   ></i>
                                 <span class="text-center pull-right" style="background-color: <%= color[dat.getColor()] %>;height: 15px;width:15px;color:<%= dat.getColor()!=1&dat.getColor()!=2&dat.getColor()!=3?"white":"black" %>"><%=dat.getHoraICA()==0?"": dat.getHoraICA() %></span>
-                                <span class="pull-right" style="">(UltimaHora):<%=dat.getUltimoDato()+ " "+ dat.getUnidadMedida()%></span>
+                                <span class="pull-right" style="">&nbsp;&nbsp;<%= Double.parseDouble(dat.getUltimoDato()) == 0?"-.-":dat.getUltimoDato()%>&nbsp;<%=dat.getUnidadMedida()%></span>
                             </div>
                         </div>
                     </div>
