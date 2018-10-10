@@ -36,7 +36,7 @@
             String ramdom = Fechas.getCadena();
             String jh = o.getvariable("nomsess");
             DataJson datos = (DataJson) session.getAttribute(jh);
-
+System.out.println("GENERACOPN GRAF INIT::: " + Fechas.getFechaHoraTimeStamp());
 
 %>
 
@@ -135,6 +135,8 @@
     var colors = ['#00FFFF', '#00FF00', '#fdfe02', '#fe00f6', '#fe0000', '#FF9A00', '#45FDF8', '#FE5BFF'];
 
     <%for (DataJson.DataUnit dat : datos.getDatos()) {%>
+
+
     var chart = c3.generate({
         size: {
             height: 230,
@@ -193,7 +195,7 @@
     $("#chart<%=dat.hashCode() + ramdom%>").append(chart.element);
     <% }%>
 </script>
-<%            } else {
+<%      System.out.println("GENERACOPN GRAF FIN::: " + Fechas.getFechaHoraTimeStamp());      } else {
 %>
 <script type="text/javascript">
     location.href = 'logout.jsp';

@@ -5,6 +5,7 @@
  */
 package com.statics.task;
 
+import com.statics.carga.DatReaderDOM;
 import com.statics.carga.ParametrizacionAppJpaController;
 import com.statics.carga.XMLReaderDOM;
 import com.statics.dao.CargasJpaController;
@@ -47,8 +48,8 @@ public class ReadFilesCargaJob implements Runnable {
 
 //                        iterar dias segun parametrizacion
                         int diasBusqueda = 0;
-                        String extencion = "xml";
-                        ParametrizacionApp app = new ParametrizacionAppJpaController(emf).findParametrizacionApp(2);
+                        String extencion = ".dat";
+                         ParametrizacionApp app = new ParametrizacionAppJpaController(emf).findParametrizacionApp(2);
                         if (app != null && app.getPaapValor() != null && !app.getPaapValor().isEmpty()) {
                             try {
                                 diasBusqueda = Integer.parseInt(app.getPaapValor());
@@ -73,7 +74,7 @@ public class ReadFilesCargaJob implements Runnable {
                             //System.out.println("### RFC_JOB INFO ::" + nombre_job + ":: --> ruta lectura: " + ruta);
                             //System.out.println("### RFC_JOB INFO ::" + nombre_job + ":: -->archivo xml: " + nombre_arc);
 
-                            File file = new File(ruta + nombre_arc + ".xml");
+                            File file = new File(ruta + nombre_arc + extencion);
 
                             if (file.exists()) {
                                 Cargas carga = new Cargas();
@@ -106,7 +107,12 @@ public class ReadFilesCargaJob implements Runnable {
                                     new CargasJpaController(emf).create(carga);
 
                                 }
-                                XMLReaderDOM.LeerXmlCarga(file, carga, emf);
+                               // XMLReaderDOM.LeerXmlCarga(file, carga, emf);
+                               if(extencion.equals(".dat")){
+                                DatReaderDOM.LeerDatCarga(file, carga, emf);}
+                               else{
+                               XMLReaderDOM.LeerXmlCarga(file, carga, emf);
+                               }
 
                             } else {
                                 //System.out.println("### RFC_JOB INFO ::" + nombre_job + ":: --> No se encontro el archivo :: " + ruta + nombre_arc + ".xml");
